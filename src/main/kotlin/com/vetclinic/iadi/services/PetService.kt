@@ -9,11 +9,15 @@ class PetService {
 
     //fun getPetByID(id:Number) = return PetDTO(id, )
 
-    //fun getPets() =
+    //fun getPets() = emptyList<PetDTO>()
 
-    //fun addPet(id:Number, name:String, species:String)
+    //fun addPet(id:Number, name:String, species:String) = new PetDTO(id, name, species)
 
-    //fun updatePet
+
+    //fun updatePet(oldId:Number, newId:Number) {
+    //PetDTO oldPet = getPetByID(oldId)
+    //return PetDTO (newId, oldPet.name, oldPet.species)
+    //}
 
 
 
