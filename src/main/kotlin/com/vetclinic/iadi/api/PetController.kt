@@ -31,7 +31,7 @@ class PetController(val service: PetService) {
         ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
     ])
     @GetMapping("/{id}")
-    fun getOnePet(@PathVariable id:Number) = PetDTO(1, "Pantufas", "Dog")
+    fun getOnePet(@PathVariable id:Number) = PetDTO(1, "Pantufas", "Dog", 8, "Me")
 
     @ApiOperation(value="Add a new pet to the database")
     @ApiResponses(value = [
