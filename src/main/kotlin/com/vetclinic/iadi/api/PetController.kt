@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/pets")
 class PetController(val service: PetService) {
-    
-    @ApiOperation(value="View a list of registered pets", response = PetDTO::class)
+
+    @ApiOperation(value="View a list of registered pets", response = PetDTO::class, responseContainer = "List")
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully retrieved list of pets"),
         ApiResponse(code = 401, message = "You are not authorized to view the resource"),
