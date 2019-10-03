@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/pets")
-class PetController {
+class PetController(val service:PetService) {
     
     @ApiOperation(value="View a list of registered pets", response = PetDTO::class)
     @ApiResponses(value = [
