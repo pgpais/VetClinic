@@ -7,7 +7,13 @@ import org.springframework.stereotype.Service
 class PetService {
     //var pet:PetDTO;
 
-    fun getPetByID(val id:Long)
+    //fun getPetByID(id:Number) = return PetDTO(id, )
+
+    //fun getPets() =
+
+    //fun addPet(id:Number, name:String, species:String)
+
+    //fun updatePet
 
 
 
