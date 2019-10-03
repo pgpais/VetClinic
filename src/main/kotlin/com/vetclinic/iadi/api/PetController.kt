@@ -1,5 +1,6 @@
 package com.vetclinic.iadi.api
 
+import com.vetclinic.iadi.services.PetService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/pets")
-class PetController(val service:PetService) {
+class PetController(val service: PetService) {
     
     @ApiOperation(value="View a list of registered pets", response = PetDTO::class)
     @ApiResponses(value = [

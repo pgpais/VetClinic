@@ -5,8 +5,9 @@ import org.springframework.stereotype.Service
 
 @Service
 class PetService {
-    var pet:PetDTO;
+    //var pet:PetDTO;
 
+    fun getPetByID(val id:Long)
 
 
 
