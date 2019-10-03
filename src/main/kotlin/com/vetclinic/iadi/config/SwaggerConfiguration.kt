@@ -26,7 +26,7 @@ class SwaggerConfiguration {
         ApiInfoBuilder()
                 .title("Spring Boot REST API Example for IADI 2019/20")
                 .description("IADI 2019 VetClinic REST API")
-                .contact(Contact("Pedro Pais", "", "pg.pais@campus.fct.unl.pt"))
+                .contact(Contact("Pedro Pais, João Pacheco", "", "pg.pais@campus.fct.unl.pt, jr.pacheco@campus.fct.unl.pt"))
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
                 .version("1.0.0")
