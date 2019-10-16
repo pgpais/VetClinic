@@ -15,7 +15,7 @@ limitations under the License.
  */
 
 package pt.unl.fct.di.iadi.vetclinic.api
-import pt.unl.fct.di.iadi.vetclinic.services.NotFoundException
+import com.vetclinic.iadi.services.NotFoundException
 
 fun <T> handle404(inner: () -> T): T =
         try {
