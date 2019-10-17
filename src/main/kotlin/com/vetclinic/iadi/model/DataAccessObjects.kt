@@ -43,3 +43,8 @@ data class ClientDAO(@Id                                val username:String,
                      @OneToMany(mappedBy = "id")  val pet:List<PetDAO>)
 
  */
+data class ClientDAO(@Id val username:String, val name:String, val password:String,
+                     @OneToMany(mappedBy = "username") val pet:List<PetDAO>)
+
+@Entity
+data class VeterinarianDAO(@Id @GeneratedValue val workerId:Long)
