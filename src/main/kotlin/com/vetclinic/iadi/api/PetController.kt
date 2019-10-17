@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 class PetController(val PetSer: PetService) {
 
 
-    @ApiOperation(value="View a list of registered pets", response = PetDTO::class, responseContainer = "List")
+    @ApiOperation(value="View a list of registered pets", response = List::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully retrieved list of pets"),
         ApiResponse(code = 401, message = "You are not authorized to view the resource"),
@@ -35,7 +35,7 @@ class PetController(val PetSer: PetService) {
         ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
     ])
     @GetMapping("/{id}")
-    fun getOnePet(@PathVariable id:Long) =PetSer.getPetByID(id).let { PetDTO(it.id,it.name,it.species) }
+    fun getOnePet(@PathVariable id:Long) = PetSer.getPetByID(id).let { PetDTO(it.id,it.name,it.species) }
 
     @ApiOperation(value="Add a new pet to the database")
     @ApiResponses(value = [
@@ -47,7 +47,7 @@ class PetController(val PetSer: PetService) {
     ])
     @PostMapping("")
     fun addOnePet(@RequestBody pet:PetDTO) {
-        PetSer.addPet(PetDAO(pet.id,pet.name,pet.species))
+        PetSer.addPet(PetDAO(pet.id,pet.name,pet.species, emptyList()))
     }
 
 }
