@@ -1,6 +1,7 @@
 package com.vetclinic.iadi.services
 
 import com.vetclinic.iadi.model.AppointmentDAO
+import com.vetclinic.iadi.model.AppointmentRepository
 import com.vetclinic.iadi.model.PetDAO
 import com.vetclinic.iadi.model.PetRepository
 import org.springframework.stereotype.Service
@@ -9,7 +10,7 @@ import org.springframework.web.client.HttpClientErrorException
 import java.util.*
 
 @Service
-class PetService(val pets: PetRepository) {
+class PetService(val pets: PetRepository, val appointments: AppointmentRepository) {
     //var pet:PetDTO;
 
     /*fun getPetByID(id:Long):PetDAO =
@@ -22,31 +23,40 @@ class PetService(val pets: PetRepository) {
 
     fun getAllPets():Iterable<PetDAO> = pets.findAll()
 
-    fun addPet(pet: PetDAO) {
+    fun addNew(pet: PetDAO) {
 
         //if it exists
-        pet?.let { pets.save(PetDAO(0, it.name, it.species, emptyList())) }
-        pets.save(pet)
-
+        if(pet.id != 0L){
+            throw PreconditionFailedException("Id must be 0 on insertion")
+        }
+        else{
+            pets.save(pet)
+        }
     }
 
-    fun appointmentOfPet(id:Long) : List<AppointmentDAO>{
-        val pet: Optional<PetDAO> = pets.findById(id)
+
+
+    fun getAppointments(id:Long) : List<AppointmentDAO>{
+        val pet = pets.findByIdWithAppointment(id)
+                .orElseThrow { NotFoundException("There is no Pet with Id $id") }
         return pet.appointments
+    }
 
+    fun newAppointment(id: Long, apt: AppointmentDAO) {
+        // defensive programming
+        if (apt.id != 0L)
+            throw PreconditionFailedException("Id must be 0 in insertion")
+        else
+            appointments.save(apt)
+    }
+
+    fun update(pet: PetDAO, id: Long) {
 
     }
 
-    fun newAppointmentOfPet(id: Long, appointment: AppointmentDAO) {
-        val pet: PetDAO = getPetByID(id)
+    fun delete(id: Long) {
 
-        appointment.pet = pet
-        appointments.save(appointment)
-
-        pet.appointments = pet.appointments.plus(appointment)
-        pets.save(pet)
     }
-
 
 
 }
