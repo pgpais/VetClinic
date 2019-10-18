@@ -16,10 +16,13 @@ limitations under the License.
 
 package pt.unl.fct.di.iadi.vetclinic.api
 import com.vetclinic.iadi.services.NotFoundException
+import com.vetclinic.iadi.services.PreconditionFailedException
 
 fun <T> handle404(inner: () -> T): T =
         try {
             inner()
         } catch (e: NotFoundException) {
             throw HTTPNotFoundException(e.message ?: "Not Found")
+        } catch (e: PreconditionFailedException){
+            throw HTTPBadRequestException(e.message ?: "Bad Request")
         }

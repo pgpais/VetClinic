@@ -1,9 +1,8 @@
-package pt.unl.fct.di.iadi.vetclinic.api
+package com.vetclinic.iadi.api
 
 import com.vetclinic.iadi.model.AppointmentDAO
 import com.vetclinic.iadi.model.PetDAO
 import com.vetclinic.iadi.services.PetService
-import com.vetclinic.iadi.api.AppointmentDTO
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -14,6 +13,7 @@ import pt.unl.fct.di.iadi.vetclinic.api.handle404
 
 @Api(value = "VetClinic Management System - Pet API",
         description = "Management operations of Pets in the IADI 2019 Pet Clinic")
+
 @RestController
 @RequestMapping("/pets")
 class PetController(val pets: PetService) {
@@ -37,7 +37,7 @@ class PetController(val pets: PetService) {
     ])
     @PostMapping("")
     fun addNewPet(@RequestBody pet: PetDTO) =
-            pets.addNewPet(PetDAO(pet, emptyList()))
+            pets.addNew(PetDAO(pet, emptyList()))
 
     @ApiOperation(value = "Get the details of a single pet by id", response = PetDTO::class)
     @ApiResponses(value = [
@@ -48,7 +48,7 @@ class PetController(val pets: PetService) {
     ])
     @GetMapping("/{id}")
     fun getOnePet(@PathVariable id:Long) : PetAptsDTO =
-            handle404 { pets.getOnePet(id).let { PetAptsDTO(PetDTO(it), it.appointments.map { AppointmentDTO(it) }) } }
+            handle404 { pets.getPetByID(id).let { PetAptsDTO(PetDTO(it), it.appointments.map { AppointmentDTO(it) }) } }
 
     @ApiOperation(value = "Update a pet", response = Unit::class)
     @ApiResponses(value = [
@@ -58,7 +58,7 @@ class PetController(val pets: PetService) {
     ])
     @PutMapping("/{id}")
     fun updatePet(@RequestBody pet: PetDTO, @PathVariable id: Long) =
-            handle404 { pets.updatePet(PetDAO(pet, emptyList()), id) }
+            handle404 { pets.update(PetDAO(pet, emptyList()), id) }
 
     @ApiOperation(value = "Delete a pet", response = Unit::class)
     @ApiResponses(value = [
@@ -68,21 +68,7 @@ class PetController(val pets: PetService) {
     ])
     @DeleteMapping("/{id}")
     fun deletePet(@PathVariable id: Long) =
-            handle404 { pets.deletePet(id) }
-
-    @ApiOperation(value = "List the appointments related to a Pet", response = List::class)
-    @ApiResponses(value = [
-        ApiResponse(code = 200, message = "Successfully retrieved the list of appointments"),
-        ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-        ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
-    ])
-    @GetMapping("/{id}/appointments")
-    fun appointemntsOfPet(@PathVariable id:Long): List<AppointmentDTO> =
-            handle404 {
-                pets.appointmentsOfPet(id)
-                        .map { AppointmentDTO(it) }
-            }
+            handle404 { pets.delete(id) }
 
     @ApiOperation(value = "Add a new appointment to a pet", response = Unit::class)
     @ApiResponses(value = [
@@ -95,11 +81,19 @@ class PetController(val pets: PetService) {
     fun newAppointment(@PathVariable id:Long,
                        @RequestBody apt:AppointmentDTO) =
             handle404 {
-                val pet = pets.getOnePet(id)
-                pets.newAppointment(AppointmentDAO(apt, pet))
+                val pet = pets.getPetByID(id)
+                pets.newAppointment(id, AppointmentDAO(apt, pet))
             }
+
+    @ApiOperation(value = "Get a list of a pet's appointments", response = List::class)
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "Successfully retrieved list of pet's appointments"),
+        ApiResponse(code = 404, message = "Pet not found"),
+        ApiResponse(code = 401, message = "You are not authorized to use this resource"),
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
+    ])
     @GetMapping("/{id}/appointments")
     fun appointmentsOfPet(@PathVariable id:Long) : List<AppointmentDTO> =
-            handle404 { PetSer.appointmentOfPet(id).map{ AppointmentDTO(it) } }
+            handle404 { pets.getAppointments(id).map{ AppointmentDTO(it) } }
 }
 

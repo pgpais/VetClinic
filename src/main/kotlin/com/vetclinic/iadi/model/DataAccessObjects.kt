@@ -18,6 +18,7 @@ data class PetDAO(@Id @GeneratedValue           val id:Long,
                  )
 {constructor(): this(0, "","", emptyList())
 constructor(pet:PetDTO): this(pet.id, pet.name, pet.species, emptyList())
+    constructor(pet: PetDTO, emptyList: List<AppointmentDTO>) : this()
 
     fun update(other:PetDAO) {
         this.name = other.name
@@ -33,7 +34,7 @@ data class AppointmentDAO(
                             val desc: String,
         @ManyToOne          val pet: PetDAO)
 {
-    constructor() : this (0,Date(),"",PetDAO())
+    constructor() : this(0,Date(),"",PetDAO())
     constructor(apt: AppointmentDTO, pet: PetDAO) : this(apt.id, apt.date, apt.desc, pet)
 }
 
