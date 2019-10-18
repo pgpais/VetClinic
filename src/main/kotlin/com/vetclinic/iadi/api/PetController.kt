@@ -4,6 +4,11 @@ import com.vetclinic.iadi.model.AppointmentDAO
 import com.vetclinic.iadi.model.PetDAO
 import com.vetclinic.iadi.services.PetService
 import com.vetclinic.iadi.api.AppointmentDTO
+import com.vetclinic.iadi.api.PetAptsDTO
+import com.vetclinic.iadi.api.PetDTO
+import com.vetclinic.iadi.model.AppointmentDAO
+import com.vetclinic.iadi.model.PetDAO
+import com.vetclinic.iadi.services.PetService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -95,7 +100,7 @@ class PetController(val pets: PetService) {
     fun newAppointment(@PathVariable id:Long,
                        @RequestBody apt:AppointmentDTO) =
             handle404 {
-                val pet = pets.getOnePet(id)
+                val pet = pets.getPetByID(id)
                 pets.newAppointment(AppointmentDAO(apt, pet))
             }
     @GetMapping("/{id}/appointments")
