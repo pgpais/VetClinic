@@ -1,14 +1,15 @@
 package pt.unl.fct.di.iadi.vetclinic.api
 
+import com.vetclinic.iadi.model.AppointmentDAO
+import com.vetclinic.iadi.model.PetDAO
+import com.vetclinic.iadi.services.PetService
 import com.vetclinic.iadi.api.AppointmentDTO
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.web.bind.annotation.*
-import pt.unl.fct.di.iadi.vetclinic.model.AppointmentDAO
-import pt.unl.fct.di.iadi.vetclinic.model.PetDAO
-import pt.unl.fct.di.iadi.vetclinic.services.PetService
+import pt.unl.fct.di.iadi.vetclinic.api.handle404
 
 
 @Api(value = "VetClinic Management System - Pet API",
@@ -97,4 +98,8 @@ class PetController(val pets: PetService) {
                 val pet = pets.getOnePet(id)
                 pets.newAppointment(AppointmentDAO(apt, pet))
             }
+    @GetMapping("/{id}/appointments")
+    fun appointmentsOfPet(@PathVariable id:Long) : List<AppointmentDTO> =
+            handle404 { PetSer.appointmentOfPet(id).map{ AppointmentDTO(it) } }
 }
+
