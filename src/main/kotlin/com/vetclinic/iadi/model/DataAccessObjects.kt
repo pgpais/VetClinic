@@ -16,7 +16,8 @@ data class PetDAO(@Id @GeneratedValue           val id:Long,
                                                // you don't have to explicitly send this variable in the constructor
                   @OneToMany(mappedBy = "pet")  var appointments:List<AppointmentDAO>
                  )
-{
+{constructor(): this(0, "","", emptyList())
+constructor(pet:PetDTO): this(pet.id, pet.name, pet.species, emptyList())
 
     fun update(other:PetDAO) {
         this.name = other.name
@@ -32,6 +33,7 @@ data class AppointmentDAO(
                             val desc: String,
         @ManyToOne          val pet: PetDAO)
 {
+    constructor() : this (0,Date(),"",PetDAO())
     constructor(apt: AppointmentDTO, pet: PetDAO) : this(apt.id, apt.date, apt.desc, pet)
 }
 
