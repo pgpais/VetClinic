@@ -14,7 +14,7 @@ data class PetDAO(@Id @GeneratedValue           val id:Long,
                                                 var species:String,
 
                                                // you don't have to explicitly send this variable in the constructor
-                  @OneToMany(mappedBy = "pet")  var appointments:List<AppointmentDAO>
+                  @OneToMany(mappedBy = "pet")  var appointments:List<AppointmentDAO> = emptyList()
                  )
 {constructor(): this(0, "","", emptyList())
 constructor(pet:PetDTO): this(pet.id, pet.name, pet.species, emptyList())
