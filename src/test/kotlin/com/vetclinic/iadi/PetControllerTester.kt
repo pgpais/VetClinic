@@ -65,7 +65,7 @@ class PetControllerTester {
         val responseDTO = mapper.readValue<List<PetDTO>>(responseString)
         assertThat(responseDTO, equalTo(petsDTO))
     }
-
+/*
     @Test
     fun `Test Get One Pet`() {
         Mockito.`when`(pets.getPetByID(1)).thenReturn(pantufas)
