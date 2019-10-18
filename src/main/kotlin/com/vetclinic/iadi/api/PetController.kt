@@ -83,8 +83,6 @@ class PetController(val pets: PetService) {
                         .map { AppointmentDTO(it) }
             }
 
-    
-
     @ApiOperation(value = "Add a new appointment to a pet", response = Unit::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully added an appointment to a pet"),
