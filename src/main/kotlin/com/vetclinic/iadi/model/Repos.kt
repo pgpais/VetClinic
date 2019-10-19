@@ -1,6 +1,7 @@
 package com.vetclinic.iadi.model
 
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import java.util.*
@@ -14,12 +15,18 @@ interface PetRepository : JpaRepository<PetDAO, Long> {
 }
 
 
-interface AppointmentRepository: JpaRepository<AppointmentDAO, Long>
+interface AppointmentRepository: JpaRepository<AppointmentDAO, Long>{
+
+    @Modifying
+    @Query("update AppointmentDAO apt set apt.status = :status, apt.reason = :reason where apt.id = :id")
+    fun updateStatusById(id: Long, reason:String, status:Boolean)
+}
 
 
 interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long>{
 
-    @Query("select v from VeterinarianDAO v inner join fetch v.acceptedAppointments where p.vetId = :id")
+    @Query("select v from VeterinarianDAO v inner join fetch v.appointments where v.vetId = :id")
     fun findByIdWithAppointment(id:Long) : Optional<VeterinarianDAO>
+
 
 }
