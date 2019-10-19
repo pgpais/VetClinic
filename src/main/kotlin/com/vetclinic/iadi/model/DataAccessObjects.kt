@@ -53,7 +53,6 @@ data class AppointmentDAO(
         @ManyToOne
         var pet: PetDAO,
         @ManyToOne(fetch=FetchType.LAZY)
-        @NotFound(action = NotFoundAction.IGNORE)
         var vet: VeterinarianDAO
 ) {
     constructor() : this(0, Date(), "", true, "", PetDAO(), VeterinarianDAO())
