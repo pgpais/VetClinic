@@ -15,3 +15,11 @@ interface PetRepository : JpaRepository<PetDAO, Long> {
 
 
 interface AppointmentRepository: JpaRepository<AppointmentDAO, Long>
+
+
+interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long>{
+
+    @Query("select v from VeterinarianDAO v inner join fetch v.acceptedAppointments where p.vetId = :id")
+    fun findByIdWithAppointment(id:Long) : Optional<VeterinarianDAO>
+
+}

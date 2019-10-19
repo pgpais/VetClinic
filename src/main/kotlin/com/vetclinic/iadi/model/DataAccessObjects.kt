@@ -18,6 +18,7 @@ package com.vetclinic.iadi.model
 
 import com.vetclinic.iadi.api.AppointmentDTO
 import com.vetclinic.iadi.api.PetDTO
+import com.vetclinic.iadi.api.VeterinarianDTO
 import java.util.*
 import javax.persistence.*
 
@@ -45,10 +46,40 @@ data class AppointmentDAO(
         @Id @GeneratedValue val id:Long,
         var date: Date,
         var desc:String,
-        @ManyToOne          var pet: PetDAO
+        var status:Boolean,
+        var reason:String,
+        @ManyToOne          var pet: PetDAO,
+        @ManyToOne          var vet: VeterinarianDAO
 ) {
-    constructor() : this(0, Date(),"", PetDAO())
-    constructor(apt: AppointmentDTO, pet: PetDAO) : this(apt.id, apt.date, apt.desc, pet)
+    constructor() : this(0, Date(), "", true, "", PetDAO(), VeterinarianDAO())
+    constructor(apt: AppointmentDTO, pet: PetDAO, vet: VeterinarianDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, pet, vet)
+
+    fun update(other: AppointmentDAO) {
+        this.date = other.date
+        this.desc = other.desc
+        this.status = other.status
+        this.reason = other.reason
+        this.pet = other.pet
+        this.vet = other.vet
+    }
 }
+
+
+@Entity
+data class VeterinarianDAO(
+        @Id @GeneratedValue val vetId: Long,
+        var name: String,
+        @OneToMany(mappedBy = "vet")
+        var appointments: List<AppointmentDAO>
+) {
+    constructor() : this(0, "", emptyList())
+    constructor(vet: VeterinarianDTO, apt: List<AppointmentDAO>) : this(vet.vetId, vet.name, apt)
+
+    fun update(other: VeterinarianDAO) {
+        this.name = other.name
+        this.appointments = other.appointments
+    }
+}
+
 
 

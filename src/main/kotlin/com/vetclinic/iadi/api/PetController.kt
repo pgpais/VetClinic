@@ -82,7 +82,7 @@ class PetController(val pets: PetService) {
                        @RequestBody apt:AppointmentDTO) =
             handle404 {
                 val pet = pets.getPetByID(id)
-                pets.newAppointment(id, AppointmentDAO(apt, pet))
+                pets.newAppointment(id, AppointmentDAO(apt, pet,vet))
             }
 
     @ApiOperation(value = "Get a list of a pet's appointments", response = List::class)
