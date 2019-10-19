@@ -2,6 +2,7 @@ package com.vetclinic.iadi.api
 
 import com.vetclinic.iadi.model.AppointmentDAO
 import com.vetclinic.iadi.model.PetDAO
+import com.vetclinic.iadi.model.VeterinarianDAO
 import com.vetclinic.iadi.services.PetService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -79,10 +80,11 @@ class PetController(val pets: PetService) {
     ])
     @PostMapping("/{id}/appointments")
     fun newAppointment(@PathVariable id:Long,
-                       @RequestBody apt:AppointmentDTO) =
+                       @RequestBody apt:AppointmentDTO,
+                       @RequestBody vet: VeterinarianDAO) =
             handle404 {
                 val pet = pets.getPetByID(id)
-                pets.newAppointment(id, AppointmentDAO(apt, pet))
+                pets.newAppointment(id, AppointmentDAO(apt, pet,vet))
             }
 
     @ApiOperation(value = "Get a list of a pet's appointments", response = List::class)
