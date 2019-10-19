@@ -17,10 +17,14 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
     }
     fun rejectAppointment(id:Long, reason:String){
 
-        val apt = appointments.findById(id).orElseThrow { NotFoundException("There is no Vet with Id $id") }
-        apt.status = false
-        apt.reason = reason
-        apt.update(apt)
+        appointments.updateStatusById(id, reason, false)
+
+    }
+
+    fun acceptAppointment(id:Long){
+
+        appointments.updateStatusById(id, "", true)
+
     }
 
     }

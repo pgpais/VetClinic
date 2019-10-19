@@ -13,15 +13,22 @@ class VetClinicApplication {
     @Bean
     fun init(
             pets: PetRepository,
-            apts: AppointmentRepository
+            apts: AppointmentRepository,
+            vets: VeterinaryRepository
     ) = CommandLineRunner {
         val pantufas = PetDAO(1L, "pantufas", "Dog", emptyList())
         val bigodes = PetDAO(2L, "bigodes", "Cat", emptyList())
-        val manel = VeterinarianDAO(3L, "manel", emptyList())
+
+        //idk why it can't be 1 or 2
+        val manel =  VeterinarianDAO(3, "manel", emptyList())
         val petsDAO = mutableListOf(pantufas, bigodes);
         pets.saveAll(petsDAO)
-        val apt = AppointmentDAO(1L, Date(), "consulta", pantufas, manel)
+        vets.save(manel)
+
+        val apt = AppointmentDAO(1L, Date(), "consulta",true, "", pantufas, manel)
         apts.save(apt)
+
+        apts.updateStatusById(1,"i'm sick",false)
     }
 }
 
