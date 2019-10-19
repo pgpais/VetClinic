@@ -19,6 +19,8 @@ package com.vetclinic.iadi.model
 import com.vetclinic.iadi.api.AppointmentDTO
 import com.vetclinic.iadi.api.PetDTO
 import com.vetclinic.iadi.api.VeterinarianDTO
+import org.hibernate.annotations.NotFound
+import org.hibernate.annotations.NotFoundAction
 import java.util.*
 import javax.persistence.*
 
@@ -48,8 +50,11 @@ data class AppointmentDAO(
         var desc:String,
         var status:Boolean,
         var reason:String,
-        @ManyToOne          var pet: PetDAO,
-        @ManyToOne          var vet: VeterinarianDAO
+        @ManyToOne
+        var pet: PetDAO,
+        @ManyToOne(fetch=FetchType.LAZY)
+        @NotFound(action = NotFoundAction.IGNORE)
+        var vet: VeterinarianDAO
 ) {
     constructor() : this(0, Date(), "", true, "", PetDAO(), VeterinarianDAO())
     constructor(apt: AppointmentDTO, pet: PetDAO, vet: VeterinarianDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, pet, vet)
