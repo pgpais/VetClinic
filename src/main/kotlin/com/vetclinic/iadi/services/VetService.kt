@@ -21,6 +21,7 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
         apt.status = false
         apt.reason = reason
         apt.update(apt)
+        
     }
 
     }
