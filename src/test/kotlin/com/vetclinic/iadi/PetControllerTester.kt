@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.vetclinic.iadi.api.PetDTO
 import com.vetclinic.iadi.model.PetDAO
+import com.vetclinic.iadi.model.RegisteredUserDAO
 import com.vetclinic.iadi.services.NotFoundException
 import com.vetclinic.iadi.services.PetService
 import org.hamcrest.CoreMatchers.equalTo
@@ -43,8 +44,10 @@ class PetControllerTester {
         // see: https://discuss.kotlinlang.org/t/data-class-and-jackson-annotation-conflict/397/6
         val mapper = ObjectMapper().registerModule(KotlinModule())
 
-        val pantufas = PetDAO(1L, "pantufas", "Dog", emptyList())
-        val bigodes = PetDAO(2L, "bigodes", "Cat", emptyList())
+        val user = RegisteredUserDAO(3L,"", emptyList(), emptyList())
+
+        val pantufas = PetDAO(1L, "pantufas", "Dog", user, emptyList())
+        val bigodes = PetDAO(2L, "bigodes", "Cat",user, emptyList())
         val petsDAO = ArrayList(listOf(pantufas, bigodes))
 
         val petsDTO = petsDAO.map { PetDTO(it.id, it.name, it.species) }
