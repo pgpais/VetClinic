@@ -27,5 +27,9 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
 
     }
 
+    fun getPendingAppointments(id: Long): List<AppointmentDAO> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+}
 
