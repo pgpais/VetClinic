@@ -13,8 +13,14 @@ interface PetRepository : JpaRepository<PetDAO, Long> {
 
     @Query("select p from PetDAO p inner join fetch p.appointments where p.id = :id")
     fun findByIdWithAppointment(id:Long) : Optional<PetDAO>
-}
 
+    @Query("select p from PetDAO p where p.owner =:owner")
+    fun findAllByOwner(owner:String)
+
+    @Query("select p from PetDAO p where p.owner =:owner and p.id = :id")
+    fun findPetByOwnerAndId(id:Long,owner:String)
+
+}
 
 interface AppointmentRepository: JpaRepository<AppointmentDAO, Long>{
 
@@ -29,6 +35,11 @@ interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long>{
 
     @Query("select v from VeterinarianDAO v inner join fetch v.appointments where v.vetId = :id")
     fun findByIdWithAppointment(id:Long) : Optional<VeterinarianDAO>
+
+
+}
+
+interface ClientRepository : JpaRepository<RegisteredUserDAO, Long> {
 
 
 }

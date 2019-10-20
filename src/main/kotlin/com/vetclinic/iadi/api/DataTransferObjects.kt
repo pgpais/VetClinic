@@ -2,6 +2,7 @@ package com.vetclinic.iadi.api
 
 import com.vetclinic.iadi.model.AppointmentDAO
 import com.vetclinic.iadi.model.PetDAO
+import com.vetclinic.iadi.model.RegisteredUserDAO
 import com.vetclinic.iadi.model.VeterinarianDAO
 import java.util.*
 
@@ -28,3 +29,7 @@ data class VeterinarianDTO(val vetId:Long, val name:String, val apts: List<Appoi
 }
 
 data class AdminDTO(val name:String, val password:String)
+
+data class RegisteredUserDTO(val Id:Long, val name: String, val apts: List<AppointmentDTO>, val pets: List<PetDTO>){
+    constructor(user: RegisteredUserDAO, apts: List<AppointmentDTO>, pets: List<PetDTO>) : this(user.clientId, user.name, apts, pets)
+}
