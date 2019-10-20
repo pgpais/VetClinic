@@ -14,22 +14,50 @@ class VetClinicApplication {
     fun init(
             pets: PetRepository,
             apts: AppointmentRepository,
-            vets: VeterinaryRepository
+            vets: VeterinaryRepository,
+            users: ClientRepository
     ) = CommandLineRunner {
-        val pantufas = PetDAO(1L, "pantufas", "Dog", emptyList())
-        val bigodes = PetDAO(2L, "bigodes", "Cat", emptyList())
 
-        //idk why it can't be 1 or 2
-        val manel =  VeterinarianDAO(3, "manel", emptyList())
-        val petsDAO = mutableListOf(pantufas, bigodes);
-        pets.saveAll(petsDAO)
+        val user = RegisteredUserDAO(1,"", emptyList(), emptyList())
+        users.save(user)
+
+        val pantufas = PetDAO(2L, "pantufas", "Dog", user, emptyList())
+
+        val manel =  VeterinarianDAO(4L, "manel", emptyList())
+
+        pets.save(pantufas)
+
+        val bigodes = PetDAO(3L, "bigodes", "Cat", user, emptyList())
+
+        pets.save(bigodes)
+
         vets.save(manel)
 
-        val apt = AppointmentDAO(1L, Date(), "consulta", true," ", pantufas, manel)
+        val apt = AppointmentDAO(1L, Date(), "consulta", true," ", pantufas, user, manel)
+
         apts.save(apt)
 
         apts.updateStatusById(1,"i'm sick",false)
+
+        apts.updateStatusById(1,"",true)
+
+
+        /*
+
+        //idk why it can't be 1 or 2
+
+        pets.saveAll(petsDAO)
+        vets.save(manel)
+
+        val apt = AppointmentDAO(1L, Date(), "consulta", true," ", pantufas, user, manel)
+        apts.save(apt)
+
+        apts.updateStatusById(1,"i'm sick",false)
+
+ */
     }
+
+
 }
 
 

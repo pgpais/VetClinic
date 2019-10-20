@@ -18,6 +18,7 @@ package com.vetclinic.iadi.model
 
 import com.vetclinic.iadi.api.AppointmentDTO
 import com.vetclinic.iadi.api.PetDTO
+import com.vetclinic.iadi.api.RegisteredUserDTO
 import com.vetclinic.iadi.api.VeterinarianDTO
 import org.hibernate.annotations.NotFound
 import org.hibernate.annotations.NotFoundAction
@@ -29,12 +30,15 @@ data class PetDAO(
         @Id @GeneratedValue val id:Long,
         var name: String,
         var species: String,
+        @ManyToOne(fetch = FetchType.LAZY)
+        var owner:RegisteredUserDAO,
         @OneToMany(mappedBy = "pet")
         var appointments:List<AppointmentDAO>
-) {
-    constructor() : this(0,"","", emptyList())
 
-    constructor(pet: PetDTO, apts:List<AppointmentDAO>) : this(pet.id,pet.name,pet.species, apts)
+) {
+    constructor() : this(0,"","", RegisteredUserDAO(),emptyList())
+
+    constructor(pet: PetDTO, owner: RegisteredUserDAO, apts:List<AppointmentDAO>) : this(pet.id,pet.name,pet.species, owner, apts)
 
     fun update(other: PetDAO) {
         this.name = other.name
@@ -50,13 +54,15 @@ data class AppointmentDAO(
         var desc:String,
         var status:Boolean,
         var reason:String,
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.LAZY)
         var pet: PetDAO,
+        @ManyToOne(fetch = FetchType.LAZY)
+        var client:RegisteredUserDAO,
         @ManyToOne(fetch=FetchType.LAZY)
         var vet: VeterinarianDAO
 ) {
-    constructor() : this(0, Date(), "", true, "", PetDAO(), VeterinarianDAO())
-    constructor(apt: AppointmentDTO, pet: PetDAO, vet: VeterinarianDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, pet, vet)
+    constructor() : this(0, Date(), "", true, "",PetDAO(), RegisteredUserDAO(), VeterinarianDAO())
+    constructor(apt: AppointmentDTO, pet: PetDAO, user: RegisteredUserDAO, vet: VeterinarianDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, pet, user, vet)
 
     fun update(other: AppointmentDAO) {
         this.date = other.date
@@ -83,6 +89,19 @@ data class VeterinarianDAO(
         this.name = other.name
         this.appointments = other.appointments
     }
+}
+
+@Entity
+data class RegisteredUserDAO(
+        @Id @GeneratedValue val clientId: Long,
+        var name: String,
+        @OneToMany(mappedBy = "client")
+        var appointments: List<AppointmentDAO>,
+        @OneToMany(mappedBy = "owner")
+        var pets: List<PetDAO>
+){
+    constructor() : this(0, "", emptyList(), emptyList())
+    constructor(user: RegisteredUserDTO, apt: List<AppointmentDAO>, pet: List<PetDAO>) : this(user.Id,user.name, apt, pet)
 }
 
 

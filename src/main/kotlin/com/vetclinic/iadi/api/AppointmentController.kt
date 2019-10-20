@@ -2,6 +2,7 @@ package com.vetclinic.iadi.api
 
 import com.vetclinic.iadi.model.AppointmentDAO
 import com.vetclinic.iadi.model.PetDAO
+import com.vetclinic.iadi.model.RegisteredUserDAO
 import com.vetclinic.iadi.model.VeterinarianDAO
 import com.vetclinic.iadi.services.AppointmentService
 import io.swagger.annotations.Api
@@ -48,8 +49,8 @@ class AppointmentController(val apts: AppointmentService) {
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
     ])
     @PostMapping("")
-    fun newAppointment(@RequestBody apt: AppointmentDTO, @RequestBody pet: PetDAO, @RequestBody vet: VeterinarianDAO) =
-            handle404 { apts.newAppointment(AppointmentDAO(apt, pet, vet))}
+    fun newAppointment(@RequestBody apt: AppointmentDTO, @RequestBody pet: PetDAO, @RequestBody user:RegisteredUserDAO, @RequestBody vet: VeterinarianDAO) =
+            handle404 { apts.newAppointment(AppointmentDAO(apt , pet, user, vet))}
 
     @ApiOperation(value = "Delete an appointment", response = Unit::class)
     @ApiResponses(value = [
