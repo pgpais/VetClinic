@@ -25,7 +25,7 @@ class VetClinicApplication {
         pets.saveAll(petsDAO)
         vets.save(manel)
 
-        val apt = AppointmentDAO(1L, Date(), "consulta",true, "", pantufas, manel)
+        val apt = AppointmentDAO(1L, Date(), "consulta", true," ", pantufas, manel)
         apts.save(apt)
 
         apts.updateStatusById(1,"i'm sick",false)
