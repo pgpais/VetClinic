@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.*
         description = "Management access operations in the IADI 2019 Pet Clinic")
 
 @RestController
-@RequestMapping("/session")
+@RequestMapping("")
 class UnRegUserController { //TODO: add service (call it something related with accounts?)
 
     @ApiOperation(value = "Login with given user") // TODO: should probably return a token
     @ApiResponses(value = [
-        ApiResponse(code = 200, message = "Successfully logged in"), //201 for successful token creation?
+        ApiResponse(code = 201, message = "Successfully logged in"), //201 for successful token creation?
         ApiResponse(code = 404, message = "Could not find provided user"),
         ApiResponse(code = 403, message = "Could not login with provided information")
 
@@ -32,8 +32,18 @@ class UnRegUserController { //TODO: add service (call it something related with 
         ApiResponse(code = 201, message = "Successfully created a new user"),
         ApiResponse(code = 403, message = "You cannot access this resource (maybe already logged in?)")
     ])
-    @PostMapping("/login")
+    @PostMapping("/register")
     fun register(@RequestBody user:ClientDTO) = {
             // TODO: create new ClientDAO and save it in database?
+    }
+
+    @ApiOperation(value = "Get the list of Employees", response = List::class)
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "Successfully retrieved the list of Employees"),
+        ApiResponse(code = 404, message = "There are no Employees registered")
+    ])
+    @GetMapping("/listVets")
+    fun listVets():List<VeterinarianDTO>  {
+        return emptyList()
     }
 }
