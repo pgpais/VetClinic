@@ -4,6 +4,7 @@ import com.vetclinic.iadi.model.AppointmentDAO
 import com.vetclinic.iadi.model.AppointmentRepository
 import com.vetclinic.iadi.model.VeterinaryRepository
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRepository) {
@@ -28,6 +29,10 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
     }
 
     fun getPendingAppointments(id: Long): List<AppointmentDAO> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun setSchedule(vetId: Long, adminId: Long, shifts: List<Pair<Date, Date>>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
