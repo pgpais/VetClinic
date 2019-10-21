@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.web.bind.annotation.*
-import pt.unl.fct.di.iadi.vetclinic.api.handle404
+import pt.unl.fct.di.iadi.vetclinic.api.handle4xx
 import java.util.*
 
 @Api(value="VetClinic Management System - Admin API",
@@ -26,7 +26,7 @@ class AdminController(val admins: AdminService, val vets: VetService) {
     ])
     @PostMapping("/createAdmin")
     fun createAdmin(@RequestBody adminDTO:AdminDTO) {
-        handle404 { admins.createAdmin(adminDTO) }
+        handle4xx { admins.createAdmin(adminDTO) }
     }
 
     @ApiOperation(value="Delete an admin")
@@ -38,7 +38,7 @@ class AdminController(val admins: AdminService, val vets: VetService) {
     ])
     @DeleteMapping("/deleteAdmin/{id}")
     fun deleteAdmin(@PathVariable id:Long) {
-        handle404 { admins.deleteAdmin(id) }
+        handle4xx { admins.deleteAdmin(id) }
     }
 
     @ApiOperation(value="Create a new Veterinarian")
@@ -50,7 +50,7 @@ class AdminController(val admins: AdminService, val vets: VetService) {
     ])
     @PostMapping("/createVet")
     fun createVet(@RequestBody vetDTO:VeterinarianDTO) {
-        handle404 { admins.createVet(vetDTO) }
+        handle4xx { admins.createVet(vetDTO) }
     }
 
     @ApiOperation(value="Set a schedule for a veterinarian")
