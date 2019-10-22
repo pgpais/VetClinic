@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.vetclinic.iadi.api.PetDTO
+import com.vetclinic.iadi.model.ClientDAO
 import com.vetclinic.iadi.model.PetDAO
 import com.vetclinic.iadi.model.RegisteredUserDAO
 import com.vetclinic.iadi.services.NotFoundException
@@ -25,6 +26,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.net.URL
 
 
 @RunWith(SpringRunner::class)
@@ -44,13 +46,13 @@ class PetControllerTester {
         // see: https://discuss.kotlinlang.org/t/data-class-and-jackson-annotation-conflict/397/6
         val mapper = ObjectMapper().registerModule(KotlinModule())
 
-        val user = RegisteredUserDAO(3L,"", emptyList(), emptyList())
+        val user = ClientDAO(4L, "manel", "123", emptyList())
 
-        val pantufas = PetDAO(1L, "pantufas", "Dog", user, emptyList())
-        val bigodes = PetDAO(2L, "bigodes", "Cat",user, emptyList())
+        val pantufas = PetDAO(1L, "pantufas", "Dog", URL("www.google.com"), user, emptyList())
+        val bigodes = PetDAO(2L, "bigodes", "Cat",URL("www.google.com"),user, emptyList())
         val petsDAO = ArrayList(listOf(pantufas, bigodes))
 
-        val petsDTO = petsDAO.map { PetDTO(it.id, it.name, it.species) }
+        val petsDTO = petsDAO.map { PetDTO(it.id, it.name, it.species, it.photo, it.owner.id) }
 
         val petsURL = "/pets"
     }

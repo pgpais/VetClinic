@@ -16,12 +16,8 @@ limitations under the License.
 
 package com.vetclinic.iadi.model
 
-import com.vetclinic.iadi.api.AppointmentDTO
-import com.vetclinic.iadi.api.PetDTO
-import com.vetclinic.iadi.api.RegisteredUserDTO
-import com.vetclinic.iadi.api.VeterinarianDTO
-import org.hibernate.annotations.NotFound
-import org.hibernate.annotations.NotFoundAction
+import com.vetclinic.iadi.api.*
+import java.net.URL
 import java.util.*
 import javax.persistence.*
 
@@ -30,15 +26,16 @@ data class PetDAO(
         @Id @GeneratedValue val id:Long,
         var name: String,
         var species: String,
+        var photo:URL,
         @ManyToOne(fetch = FetchType.LAZY)
-        var owner:RegisteredUserDAO,
+        var owner:ClientDAO,
         @OneToMany(mappedBy = "pet")
         var appointments:List<AppointmentDAO>
 
 ) {
-    constructor() : this(0,"","", RegisteredUserDAO(),emptyList())
+    constructor() : this(0,"","" , URL(""), ClientDAO(),emptyList())
 
-    constructor(pet: PetDTO, owner: RegisteredUserDAO, apts:List<AppointmentDAO>) : this(pet.id,pet.name,pet.species, owner, apts)
+    constructor(pet: PetDTO, owner: ClientDAO, apts:List<AppointmentDAO>) : this(pet.id,pet.name,pet.species, pet.photo, owner, apts)
 
     fun update(other: PetDAO) {
         this.name = other.name
@@ -52,17 +49,21 @@ data class AppointmentDAO(
         @Id @GeneratedValue val id:Long,
         var date: Date,
         var desc:String,
-        var status:Boolean,
+
+        var status:String,
         var reason:String,
+
         @ManyToOne(fetch = FetchType.LAZY)
         var pet: PetDAO,
+
         @ManyToOne(fetch = FetchType.LAZY)
-        var client:RegisteredUserDAO,
+        var client:ClientDAO,
+
         @ManyToOne(fetch=FetchType.LAZY)
         var vet: VeterinarianDAO
 ) {
-    constructor() : this(0, Date(), "", true, "",PetDAO(), RegisteredUserDAO(), VeterinarianDAO())
-    constructor(apt: AppointmentDTO, pet: PetDAO, user: RegisteredUserDAO, vet: VeterinarianDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, pet, user, vet)
+    constructor() : this(0, Date(), "", "pending", "",PetDAO(), ClientDAO(), VeterinarianDAO())
+    constructor(apt: AppointmentDTO, pet: PetDAO, vet: VeterinarianDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, pet, pet.owner, vet)
 
     fun update(other: AppointmentDAO) {
         this.date = other.date
@@ -74,16 +75,18 @@ data class AppointmentDAO(
     }
 }
 
-
 @Entity
 data class VeterinarianDAO(
-        @Id @GeneratedValue val vetId: Long,
+        @Id @GeneratedValue val id: Long,
         var name: String,
+        var photo: URL,
+        var schedule:List<Pair<Date, Date>>,
         @OneToMany(mappedBy = "vet")
         var appointments: List<AppointmentDAO>
 ) {
-    constructor() : this(0, "", emptyList())
-    constructor(vet: VeterinarianDTO, apt: List<AppointmentDAO>) : this(vet.vetId, vet.name, apt)
+    constructor() : this(0, "",URL(""), emptyList(), emptyList())
+    constructor(vet: VeterinarianDTO, apt: List<AppointmentDAO>) : this(vet.vetId, vet.name, vet.photo, vet.schedule, apt)
+    constructor(vet: VeterinarianDTO):this(vet.vetId, vet.name, vet.photo, vet.schedule, emptyList())
 
     fun update(other: VeterinarianDAO) {
         this.name = other.name
@@ -93,16 +96,26 @@ data class VeterinarianDAO(
 
 @Entity
 data class RegisteredUserDAO(
-        @Id @GeneratedValue val clientId: Long,
+        @Id @GeneratedValue val id: Long,
         var name: String,
-        @OneToMany(mappedBy = "client")
-        var appointments: List<AppointmentDAO>,
-        @OneToMany(mappedBy = "owner")
-        var pets: List<PetDAO>
-){
-    constructor() : this(0, "", emptyList(), emptyList())
-    constructor(user: RegisteredUserDTO, apt: List<AppointmentDAO>, pet: List<PetDAO>) : this(user.Id,user.name, apt, pet)
+        var password: String){
+
+    constructor() : this(0, "", "")
+    constructor(user: RegisteredUserDTO) : this(user.Id,user.name, user.password)
 }
+
+@Entity
+data class ClientDAO(
+        @Id @GeneratedValue val id:Long,
+        var name:String,
+        var pass:String,
+        @OneToMany(mappedBy = "owner")
+        var pets:List<PetDAO>){
+
+    constructor(): this(0, "", "", emptyList())
+    constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.username, client.password, pets)
+}
+
 
 
 

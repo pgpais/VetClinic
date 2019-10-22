@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
+import java.net.URL
 import java.util.*
 
 @SpringBootApplication
@@ -18,16 +19,16 @@ class VetClinicApplication {
             users: ClientRepository
     ) = CommandLineRunner {
 
-        val user = RegisteredUserDAO(1,"", emptyList(), emptyList())
+        val user = ClientDAO(1,"","", emptyList())
         users.save(user)
 
-        val pantufas = PetDAO(2L, "pantufas", "Dog", user, emptyList())
+        val pantufas = PetDAO(2L, "pantufas", "Dog", URL(""), user, emptyList())
 
-        val manel =  VeterinarianDAO(4L, "manel", emptyList())
+        val manel =  VeterinarianDAO(4L, "manel",URL("") ,emptyList())
 
         pets.save(pantufas)
 
-        val bigodes = PetDAO(3L, "bigodes", "Cat", user, emptyList())
+        val bigodes = PetDAO(3L, "bigodes", "Cat",URL(""), user, emptyList())
 
         pets.save(bigodes)
 
