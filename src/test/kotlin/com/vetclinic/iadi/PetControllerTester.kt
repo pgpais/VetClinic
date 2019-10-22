@@ -44,8 +44,8 @@ class PetControllerTester {
 
         val user = ClientDAO(4L, "manel", "123", emptyList())
 
-        val pantufas = PetDAO(1L, "pantufas", "Dog", URL("www.google.com"), user, emptyList())
-        val bigodes = PetDAO(2L, "bigodes", "Cat",URL("www.google.com"),user, emptyList())
+        val pantufas = PetDAO(1L, "pantufas", "Dog", "www.google.com", user, emptyList())
+        val bigodes = PetDAO(2L, "bigodes", "Cat","www.google.com",user, emptyList())
         val petsDAO = ArrayList(listOf(pantufas, bigodes))
 
         val petsDTO = petsDAO.map { PetDTO(it.id, it.name, it.species, it.photo, it.owner.id) }

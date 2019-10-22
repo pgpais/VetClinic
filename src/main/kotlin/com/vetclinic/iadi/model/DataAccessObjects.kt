@@ -10,14 +10,14 @@ data class PetDAO(
         @Id @GeneratedValue val id:Long,
         var name: String,
         var species: String,
-        var photo:URL,
+        var photo:String,
         @ManyToOne(fetch = FetchType.LAZY)
         var owner:ClientDAO,
         @OneToMany(mappedBy = "pet")
         var appointments:List<AppointmentDAO>
 
 ) {
-    constructor() : this(0,"","" , URL(""), ClientDAO(),emptyList())
+    constructor() : this(0,"","" , "", ClientDAO(),emptyList())
 
     constructor(pet: PetDTO, owner: ClientDAO, apts:List<AppointmentDAO>) : this(pet.id,pet.name,pet.species, pet.photo, owner, apts)
 
@@ -64,13 +64,14 @@ data class VeterinarianDAO(
         @Id @GeneratedValue override val id: Long,
         override var name: String,
         override var pass:String,
-        var photo: URL,
+        var photo: String,
+        @OneToMany(mappedBy = "vet")
         var schedule:List<ShiftsDAO>,
         @OneToMany(mappedBy = "vet")
         var appointments: List<AppointmentDAO>
 ):RegisteredUsersDAO() {
 
-    constructor() : this(0, "","",URL(""), emptyList(), emptyList())
+    constructor() : this(0, "","","", emptyList(), emptyList())
     constructor(vet: VeterinarianDTO, apt: List<AppointmentDAO>) : this(vet.vetId, vet.name, vet.password, vet.photo, vet.schedule, apt)
     constructor(vet: VeterinarianDTO):this(vet.vetId, vet.name, vet.password, vet.photo, vet.schedule, emptyList())
 
@@ -105,6 +106,13 @@ data class AdminDAO(
         override  var name: String,
         override  var pass: String) : RegisteredUsersDAO()
 
+@Entity
+data class ShiftsDAO(
+        @Id @GeneratedValue val id:Long,
+        var start:Date, var end:Date,
+        @ManyToOne var vet: VeterinarianDAO){
 
-class ShiftsDAO(start:Date, end:Date)
+    constructor(): this(0, Date(), Date(),VeterinarianDAO())
+    constructor(schedule:ShiftsDTO, vet: VeterinarianDAO): this(schedule.id, schedule.start, schedule.end, vet)
+}
 
