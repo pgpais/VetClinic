@@ -6,8 +6,6 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.vetclinic.iadi.api.PetDTO
 import com.vetclinic.iadi.model.ClientDAO
 import com.vetclinic.iadi.model.PetDAO
-import com.vetclinic.iadi.model.RegisteredUserDAO
-import com.vetclinic.iadi.services.NotFoundException
 import com.vetclinic.iadi.services.PetService
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.Matchers.hasSize
@@ -19,11 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.http.MediaType
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.net.URL

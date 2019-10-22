@@ -65,7 +65,7 @@ data class VeterinarianDAO(
         override var name: String,
         override var pass:String,
         var photo: URL,
-        var schedule:List<Pair<Date, Date>>,
+        var schedule:List<ShiftsDAO>,
         @OneToMany(mappedBy = "vet")
         var appointments: List<AppointmentDAO>
 ):RegisteredUsersDAO() {
@@ -87,6 +87,7 @@ abstract class RegisteredUsersDAO {
     abstract var pass: String
 }
 
+@Entity
 data class ClientDAO (
         @Id @GeneratedValue override val id:Long,
         override var name:String,
@@ -105,5 +106,5 @@ data class AdminDAO(
         override  var pass: String) : RegisteredUsersDAO()
 
 
-
+class ShiftsDAO(start:Date, end:Date)
 

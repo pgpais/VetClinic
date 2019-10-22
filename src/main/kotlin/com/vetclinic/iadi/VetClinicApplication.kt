@@ -24,7 +24,7 @@ class VetClinicApplication {
 
         val pantufas = PetDAO(2L, "pantufas", "Dog", URL(""), user, emptyList())
 
-        val manel =  VeterinarianDAO(4L, "manel",URL("") ,emptyList())
+        val manel =  VeterinarianDAO(4L, "manel","",URL("") ,emptyList(), emptyList())
 
         pets.save(pantufas)
 
@@ -34,13 +34,13 @@ class VetClinicApplication {
 
         vets.save(manel)
 
-        val apt = AppointmentDAO(1L, Date(), "consulta", true," ", pantufas, user, manel)
+        val apt = AppointmentDAO(1L, Date(), "consulta", "accepted"," ", pantufas, user, manel)
 
         apts.save(apt)
 
-        apts.updateStatusById(1,"i'm sick",false)
+        apts.updateStatusById(1,"i'm sick","declined")
 
-        apts.updateStatusById(1,"",true)
+        apts.updateStatusById(1,"","declined")
 
 
         /*

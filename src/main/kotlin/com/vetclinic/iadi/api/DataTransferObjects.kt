@@ -1,8 +1,6 @@
 package com.vetclinic.iadi.api
 
-import com.vetclinic.iadi.model.AppointmentDAO
-import com.vetclinic.iadi.model.PetDAO
-import com.vetclinic.iadi.model.VeterinarianDAO
+import com.vetclinic.iadi.model.*
 import java.net.URL
 import java.util.*
 
@@ -24,12 +22,12 @@ data class AppointmentDTO(val id:Long, val date: Date, val desc: String, var sta
 
 data class UserDTO(val username:String, val password: String) // TODO: check if password makes sense
 
-data class ClientDTO(val id:Long, val username:String, val password:String, val pets:List<PetDTO>)
+data class ClientDTO(val id:Long, val username:String, val password:String)
 
 data class ClientPetDTO(val clientID:Long, val petDTO: List<PetDTO>)
 
 
-data class VeterinarianDTO(val vetId:Long, val name:String, val password: String, val photo: URL, val schedule: List<Pair<Date, Date>>){
+data class VeterinarianDTO(val vetId:Long, val name:String, val password: String, val photo: URL, val schedule: List<ShiftsDAO>){
 
 
     constructor(vetDAO: VeterinarianDAO) : this(vetDAO.id,  vetDAO.name, vetDAO.pass, vetDAO.photo, vetDAO.schedule)
