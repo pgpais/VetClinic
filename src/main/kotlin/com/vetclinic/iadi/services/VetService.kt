@@ -13,23 +13,23 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
 
     fun getAppointments(id:Long): List<AppointmentDAO> {
 
-        val vet  = vets.findByIdWithAppointment(id).orElseThrow { NotFoundException("There is no Vet with Id $id") }
-        return vet.appointments
+        return appointments.findAllByVet_Id(id)
     }
     fun rejectAppointment(id:Long, reason:String){
 
-        appointments.updateStatusById(id, reason, false)
+        appointments.updateStatusById(id, reason, "refused")
 
     }
 
     fun acceptAppointment(id:Long){
 
-        appointments.updateStatusById(id, "", true)
+        appointments.updateStatusById(id, "", "accepted")
 
     }
 
-    fun getPendingAppointments(id: Long): List<AppointmentDAO> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun getPendingAppointments(id: Long): List<AppointmentDAO>{
+
+        return appointments.findAllByIdAndStatus(id, "pending")
     }
 
     fun setSchedule(vetId: Long, adminId: Long, shifts: List<Pair<Date, Date>>) {

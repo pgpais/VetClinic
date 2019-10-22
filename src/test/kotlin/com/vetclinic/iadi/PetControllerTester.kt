@@ -4,9 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.vetclinic.iadi.api.PetDTO
+import com.vetclinic.iadi.model.ClientDAO
 import com.vetclinic.iadi.model.PetDAO
-import com.vetclinic.iadi.model.RegisteredUserDAO
-import com.vetclinic.iadi.services.NotFoundException
 import com.vetclinic.iadi.services.PetService
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.Matchers.hasSize
@@ -18,13 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
-import org.springframework.http.MediaType
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import java.net.URL
 
 
 @RunWith(SpringRunner::class)
@@ -44,13 +42,13 @@ class PetControllerTester {
         // see: https://discuss.kotlinlang.org/t/data-class-and-jackson-annotation-conflict/397/6
         val mapper = ObjectMapper().registerModule(KotlinModule())
 
-        val user = RegisteredUserDAO(3L,"", emptyList(), emptyList())
+        val user = ClientDAO(4L, "manel", "123", emptyList())
 
-        val pantufas = PetDAO(1L, "pantufas", "Dog", user, emptyList())
-        val bigodes = PetDAO(2L, "bigodes", "Cat",user, emptyList())
+        val pantufas = PetDAO(1L, "pantufas", "Dog", "www.google.com", user, emptyList())
+        val bigodes = PetDAO(2L, "bigodes", "Cat","www.google.com",user, emptyList())
         val petsDAO = ArrayList(listOf(pantufas, bigodes))
 
-        val petsDTO = petsDAO.map { PetDTO(it.id, it.name, it.species) }
+        val petsDTO = petsDAO.map { PetDTO(it.id, it.name, it.species, it.photo, it.owner.id) }
 
         val petsURL = "/pets"
     }

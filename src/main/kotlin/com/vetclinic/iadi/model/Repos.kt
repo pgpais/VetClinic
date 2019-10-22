@@ -24,22 +24,34 @@ interface PetRepository : JpaRepository<PetDAO, Long> {
 
 interface AppointmentRepository: JpaRepository<AppointmentDAO, Long>{
 
+    fun findAllByIdAndStatus(id:Long, status: String) : List<AppointmentDAO>
+
+    fun findAllByVet_Id(id: Long) : List<AppointmentDAO>
+
     @Modifying
     @Transactional
     @Query("update AppointmentDAO apt set apt.status = :status, apt.reason = :reason where apt.id = :id")
-    fun updateStatusById(id: Long, reason:String, status:Boolean)
+    fun updateStatusById(id: Long, reason:String, status:String)
 }
 
 
 interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long>{
 
-    @Query("select v from VeterinarianDAO v inner join fetch v.appointments where v.vetId = :id")
-    fun findByIdWithAppointment(id:Long) : Optional<VeterinarianDAO>
+
+
+}
+interface ShiftsRepository: JpaRepository<ShiftsDAO, Long>{
+
+}
+
+
+interface AdminRepository: JpaRepository<AdminDAO, Long>{
+
 
 
 }
 
-interface ClientRepository : JpaRepository<RegisteredUserDAO, Long> {
+interface ClientRepository : JpaRepository<ClientDAO, Long> {
 
 
 }
