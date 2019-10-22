@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.web.bind.annotation.*
-import pt.unl.fct.di.iadi.vetclinic.api.handle404
+import pt.unl.fct.di.iadi.vetclinic.api.handle4xx
 
 @Api(value = "VetClinic Management System - Veterinarian API",
         description = "Management operations of Veterinarians in the IADI 2019 Pet Clinic")
@@ -25,11 +25,11 @@ class VetController (val vets:VetService) {
     ])
     @GetMapping("/appointments/pending/{id}")
     fun getPendingAppointments(@PathVariable id:Long):List<AppointmentDTO> =
-        handle404 {
+        handle4xx {
             vets.getPendingAppointments(id).map{AppointmentDTO(it)}
         }
 
-    @ApiOperation(value = "Get a list of all appointments", response = List::class)
+    @ApiOperation(value = "Get a list of all appointments by Id", response = List::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully retrieved list of all appointments"),
         ApiResponse(code = 404, message = "Provided Veterinarian not found"),
@@ -38,7 +38,7 @@ class VetController (val vets:VetService) {
     ])
     @GetMapping("/appointments/{id}")
     fun getAppointments(@PathVariable id:Long):List<AppointmentDTO> =
-            handle404 {
+            handle4xx {
                 vets.getAppointments(id).map{AppointmentDTO(it)}
             }
 

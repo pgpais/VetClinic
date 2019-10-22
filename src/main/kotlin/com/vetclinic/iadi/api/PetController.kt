@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.web.bind.annotation.*
-import pt.unl.fct.di.iadi.vetclinic.api.handle404
+import pt.unl.fct.di.iadi.vetclinic.api.handle4xx
 
 
 @Api(value = "VetClinic Management System - Pet API",
@@ -50,7 +50,7 @@ class PetController(val pets: PetService) {
     ])
     @GetMapping("/{id}")
     fun getOnePet(@PathVariable id:Long) : PetAptsDTO =
-            handle404 { pets.getPetByID(id).let { PetAptsDTO(PetDTO(it), it.appointments.map { AppointmentDTO(it) }) } }
+            handle4xx { pets.getPetByID(id).let { PetAptsDTO(PetDTO(it), it.appointments.map { AppointmentDTO(it) }) } }
 
     @ApiOperation(value = "Update a pet", response = Unit::class)
     @ApiResponses(value = [
@@ -60,7 +60,7 @@ class PetController(val pets: PetService) {
     ])
     @PutMapping("/{id}")
     fun updatePet(@RequestBody pet: PetDTO, @RequestBody user: RegisteredUserDAO, @RequestBody apt:List<AppointmentDAO>, @PathVariable id: Long) =
-            handle404 { pets.update(PetDAO(pet, user, apt), id) }
+            handle4xx { pets.update(PetDAO(pet, user, apt), id) }
 
     @ApiOperation(value = "Delete a pet", response = Unit::class)
     @ApiResponses(value = [
@@ -70,7 +70,7 @@ class PetController(val pets: PetService) {
     ])
     @DeleteMapping("/{id}")
     fun deletePet(@PathVariable id: Long) =
-            handle404 { pets.delete(id) }
+            handle4xx { pets.delete(id) }
 
     @ApiOperation(value = "Add a new appointment to a pet", response = Unit::class)
     @ApiResponses(value = [
@@ -84,7 +84,7 @@ class PetController(val pets: PetService) {
                        @RequestBody apt:AppointmentDTO,
                        @RequestBody user: RegisteredUserDAO,
                        @RequestBody vet: VeterinarianDAO) =
-            handle404 {
+            handle4xx {
                 val pet = pets.getPetByID(id)
                 pets.newAppointment(id, AppointmentDAO(apt, pet,user,vet))
             }
@@ -98,6 +98,6 @@ class PetController(val pets: PetService) {
     ])
     @GetMapping("/{id}/appointments")
     fun appointmentsOfPet(@PathVariable id:Long) : List<AppointmentDTO> =
-            handle404 { pets.getAppointments(id).map{ AppointmentDTO(it) } }
+            handle4xx { pets.getAppointments(id).map{ AppointmentDTO(it) } }
 }
 

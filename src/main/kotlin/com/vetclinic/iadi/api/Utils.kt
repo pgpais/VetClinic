@@ -18,7 +18,7 @@ package pt.unl.fct.di.iadi.vetclinic.api
 import com.vetclinic.iadi.services.NotFoundException
 import com.vetclinic.iadi.services.PreconditionFailedException
 
-fun <T> handle404(inner: () -> T): T =
+fun <T> handle4xx(inner: () -> T): T =
         try {
             inner()
         } catch (e: NotFoundException) {

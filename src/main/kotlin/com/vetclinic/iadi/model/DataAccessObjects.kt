@@ -30,7 +30,7 @@ data class PetDAO(
         @Id @GeneratedValue val id:Long,
         var name: String,
         var species: String,
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.LAZY)
         var owner:RegisteredUserDAO,
         @OneToMany(mappedBy = "pet")
         var appointments:List<AppointmentDAO>
@@ -54,9 +54,9 @@ data class AppointmentDAO(
         var desc:String,
         var status:Boolean,
         var reason:String,
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.LAZY)
         var pet: PetDAO,
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.LAZY)
         var client:RegisteredUserDAO,
         @ManyToOne(fetch=FetchType.LAZY)
         var vet: VeterinarianDAO
