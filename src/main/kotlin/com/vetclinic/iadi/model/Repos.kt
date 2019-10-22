@@ -27,19 +27,19 @@ interface AppointmentRepository: JpaRepository<AppointmentDAO, Long>{
     @Modifying
     @Transactional
     @Query("update AppointmentDAO apt set apt.status = :status, apt.reason = :reason where apt.id = :id")
-    fun updateStatusById(id: Long, reason:String, status:Boolean)
+    fun updateStatusById(id: Long, reason:String, status:String)
 }
 
 
 interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long>{
 
-    @Query("select v from VeterinarianDAO v inner join fetch v.appointments where v.vetId = :id")
+    @Query("select v from VeterinarianDAO v inner join fetch v.appointments where v.getId = :id")
     fun findByIdWithAppointment(id:Long) : Optional<VeterinarianDAO>
 
 
 }
 
-interface ClientRepository : JpaRepository<RegisteredUserDAO, Long> {
+interface ClientRepository : JpaRepository<ClientDAO, Long> {
 
 
 }

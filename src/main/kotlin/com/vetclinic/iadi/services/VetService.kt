@@ -18,13 +18,13 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
     }
     fun rejectAppointment(id:Long, reason:String){
 
-        appointments.updateStatusById(id, reason, false)
+        appointments.updateStatusById(id, reason, "refused")
 
     }
 
     fun acceptAppointment(id:Long){
 
-        appointments.updateStatusById(id, "", true)
+        appointments.updateStatusById(id, "", "accepted")
 
     }
 
