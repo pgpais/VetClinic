@@ -1,19 +1,3 @@
-/**
-Copyright 2019 João Costa Seco
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
- */
-
 package com.vetclinic.iadi.model
 
 import com.vetclinic.iadi.api.*
@@ -77,44 +61,48 @@ data class AppointmentDAO(
 
 @Entity
 data class VeterinarianDAO(
-        @Id @GeneratedValue val id: Long,
-        var name: String,
+        @Id @GeneratedValue override val id: Long,
+        override var name: String,
+        override var pass:String,
         var photo: URL,
         var schedule:List<Pair<Date, Date>>,
         @OneToMany(mappedBy = "vet")
         var appointments: List<AppointmentDAO>
-) {
-    constructor() : this(0, "",URL(""), emptyList(), emptyList())
-    constructor(vet: VeterinarianDTO, apt: List<AppointmentDAO>) : this(vet.vetId, vet.name, vet.photo, vet.schedule, apt)
-    constructor(vet: VeterinarianDTO):this(vet.vetId, vet.name, vet.photo, vet.schedule, emptyList())
+):RegisteredUsersDAO() {
+
+    constructor() : this(0, "","",URL(""), emptyList(), emptyList())
+    constructor(vet: VeterinarianDTO, apt: List<AppointmentDAO>) : this(vet.vetId, vet.name, vet.password, vet.photo, vet.schedule, apt)
+    constructor(vet: VeterinarianDTO):this(vet.vetId, vet.name, vet.password, vet.photo, vet.schedule, emptyList())
 
     fun update(other: VeterinarianDAO) {
         this.name = other.name
         this.appointments = other.appointments
     }
 }
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+abstract class RegisteredUsersDAO {
 
-@Entity
-data class RegisteredUserDAO(
-        @Id @GeneratedValue val id: Long,
-        var name: String,
-        var password: String){
-
-    constructor() : this(0, "", "")
-    constructor(user: RegisteredUserDTO) : this(user.Id,user.name, user.password)
+    abstract val id: Long
+    abstract var name: String
+    abstract var pass: String
 }
 
-@Entity
-data class ClientDAO(
-        @Id @GeneratedValue val id:Long,
-        var name:String,
-        var pass:String,
+data class ClientDAO (
+        @Id @GeneratedValue override val id:Long,
+        override var name:String,
+        override var pass:String,
         @OneToMany(mappedBy = "owner")
-        var pets:List<PetDAO>){
+        var pets:List<PetDAO>) : RegisteredUsersDAO() {
 
     constructor(): this(0, "", "", emptyList())
     constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.username, client.password, pets)
 }
+
+@Entity
+data class AdminDAO(
+        @Id @GeneratedValue override val id:Long,
+        override  var name: String,
+        override  var pass: String) : RegisteredUsersDAO()
 
 
 
