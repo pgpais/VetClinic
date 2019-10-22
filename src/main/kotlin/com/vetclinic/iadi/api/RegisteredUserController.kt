@@ -1,6 +1,5 @@
 package com.vetclinic.iadi.api
 
-import com.vetclinic.iadi.services.PetService
 import com.vetclinic.iadi.services.RegisteredUserService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import pt.unl.fct.di.iadi.vetclinic.api.handle404
 
 @Api(value = "VetClinic Management System - Access API",
         description = "Management access operations in the IADI 2019 Pet Clinic")

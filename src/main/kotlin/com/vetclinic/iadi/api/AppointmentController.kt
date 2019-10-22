@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.web.bind.annotation.*
-import pt.unl.fct.di.iadi.vetclinic.api.handle404
+import pt.unl.fct.di.iadi.vetclinic.api.handle4xx
 
 @Api(value = "VetClinic Management System - Appointment API",
         description = "Management operations of Appointments in the IADI 2019 Pet Clinic")
@@ -39,7 +39,7 @@ class AppointmentController(val apts: AppointmentService) {
     ])
     @GetMapping("/{id}")
     fun getOneAppointment(@PathVariable id:Long) : AppointmentDTO =
-            handle404 { apts.getAppointmentByID(id).let { AppointmentDTO(it.id, it.date, it.desc, it.status, it.reason) } }
+            handle4xx { apts.getAppointmentByID(id).let { AppointmentDTO(it.id, it.date, it.desc, it.status, it.reason) } }
 
 
     @ApiOperation(value = "Add an appointment", response = Unit::class)
@@ -50,7 +50,7 @@ class AppointmentController(val apts: AppointmentService) {
     ])
     @PostMapping("")
     fun newAppointment(@RequestBody apt: AppointmentDTO, @RequestBody pet: PetDAO, @RequestBody user:RegisteredUserDAO, @RequestBody vet: VeterinarianDAO) =
-            handle404 { apts.newAppointment(AppointmentDAO(apt , pet, user, vet))}
+            handle4xx { apts.newAppointment(AppointmentDAO(apt , pet, user, vet))}
 
     @ApiOperation(value = "Delete an appointment", response = Unit::class)
     @ApiResponses(value = [
@@ -60,7 +60,7 @@ class AppointmentController(val apts: AppointmentService) {
     ])
     @DeleteMapping("/{id}")
     fun deleteAppointment(@PathVariable id: Long) =
-            handle404 { apts.delete(id) }
+            handle4xx { apts.delete(id) }
 
 }
 
