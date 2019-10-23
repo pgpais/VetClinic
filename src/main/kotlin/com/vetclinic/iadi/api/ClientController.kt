@@ -1,6 +1,11 @@
 package com.vetclinic.iadi.api
 
+import com.vetclinic.iadi.model.AppointmentDAO
+import com.vetclinic.iadi.model.PetDAO
+import com.vetclinic.iadi.services.AppointmentService
 import com.vetclinic.iadi.services.ClientService
+import com.vetclinic.iadi.services.PetService
+import com.vetclinic.iadi.services.VetService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -12,7 +17,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/client")
-class ClientController(val client:ClientService){
+class ClientController(val client:ClientService, val apts:AppointmentService, val pets:PetService, val vets:VetService){ //TODO: so many services up here....
 
 
     @GetMapping("/{id}")
@@ -36,6 +41,7 @@ class ClientController(val client:ClientService){
     @PostMapping("/apts/{userId}")
     fun bookAppointment(@PathVariable userId:Long, @RequestBody apt:AppointmentDTO){
         //TODO: the client needs to choose a pet (which is chosen on appointment?)
+        apts.newAppointment(AppointmentDAO(apt, pets.getPetByID(apt.petId), getOneClient(apt.clientID), vets.getVetbyId(apt.vetId))) //TODO: check this, so many arguments
     }
 
     @GetMapping("/pets/{userId}")
@@ -46,6 +52,7 @@ class ClientController(val client:ClientService){
     @PostMapping("/pets/{userId}")
     fun addPet(@PathVariable userId: Long, @RequestBody pet:PetDTO){
         // TODO:
+        pets.addNew(PetDAO(pet, client.getClientById(userId)))
     }
 
     @DeleteMapping("/pets/{userId}/{petId}")

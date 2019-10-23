@@ -19,9 +19,11 @@ data class PetDAO(
         var physDesc: String,
         var healthDesc: String
 ) {
+    constructor(pet: PetDTO, owner: ClientDAO) : this(pet.id,pet.name,pet.species, pet.photo, owner, emptyList(), pet.chip, "", "")
     constructor(pet: PetDTO, owner: ClientDAO, apts:List<AppointmentDAO>) : this(pet.id,pet.name,pet.species, pet.photo, owner, apts, pet.chip, "", "")
     constructor(id: Long, name: String, species: String, photo: String, owner: ClientDAO, appointments: List<AppointmentDAO>) :
             this(id, name, species, photo, owner, appointments, physDesc = "", healthDesc = "")
+
 
     fun update(other: PetDAO) {
         this.name = other.name
