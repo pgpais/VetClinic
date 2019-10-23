@@ -63,4 +63,16 @@ class AdminController(val admins: AdminService, val vets: VetService) {
     fun setSchedule(@PathVariable vetId: Long, @RequestBody adminId: Long, @RequestBody shifts:List<Pair<Date, Date>>){
         vets.setSchedule(vetId, adminId, shifts)
     }
+
+    @ApiOperation(value = "Check a Vet's appointments")
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "Successfully retrieved vet's schedule"),
+        ApiResponse(code = 401, message = "You are not logged in as admin"),
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+        ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
+    ])
+    @GetMapping("/appointments/{vetId}")
+    fun checkAppointments(@PathVariable vetId: Long){
+        vets.getAppointments(vetId)
+    }
 }
