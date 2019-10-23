@@ -11,7 +11,7 @@ data class PetDTO(val id:Long, val name: String, val species: String, val photo:
     constructor(pet: PetDAO) : this(pet.id, pet.name, pet.species, pet.photo, pet.owner.id)
 }
 
-data class PetAptsDTO(val petId:Long, val apts:List<AppointmentDTO>) {
+data class PetAptsDTO(val pet:PetDTO, val apts:List<AppointmentDTO>) {
 }
 
 data class AppointmentDTO(val id:Long, val date: Date, val desc: String, var status:String,

@@ -27,7 +27,7 @@ class PetController(val pets: PetService, val clientService: ClientService, val 
     ])
     @GetMapping("")
     fun getAllPets() : List<PetAptsDTO> =
-            pets.getAllPets().map { PetAptsDTO(it.id,
+            pets.getAllPets().map { PetAptsDTO(PetDTO(it),
                     it.appointments.map { AppointmentDTO(it) }) }
 
     @ApiOperation(value = "Add a new pet", response = Unit::class)
@@ -52,7 +52,7 @@ class PetController(val pets: PetService, val clientService: ClientService, val 
     ])
     @GetMapping("/{id}")
     fun getOnePet(@PathVariable id:Long) : PetAptsDTO =
-            handle4xx { pets.getPetByID(id).let { PetAptsDTO(PetDTO(it).id, it.appointments.map { AppointmentDTO(it) }) } }
+            handle4xx { pets.getPetByID(id).let { PetAptsDTO(PetDTO(it), it.appointments.map { AppointmentDTO(it) }) } }
 
     @ApiOperation(value = "Update a pet", response = Unit::class)
     @ApiResponses(value = [
@@ -87,7 +87,7 @@ class PetController(val pets: PetService, val clientService: ClientService, val 
                        @PathVariable vetId:Long
                        ) =
             handle4xx {
-                pets.newAppointment(id, AppointmentDAO(apt, pets.getPetByID(id), vets.getVetbyId(vetId)))
+                pets.newAppointment(AppointmentDAO(apt, pets.getPetByID(id), vets.getVetbyId(vetId)))
             }
 
     @ApiOperation(value = "Get a list of a pet's appointments", response = List::class)

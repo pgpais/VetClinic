@@ -7,15 +7,17 @@ import javax.persistence.*
 
 @Entity
 data class PetDAO(
-        @Id @GeneratedValue val id:Long,
+        @Id @GeneratedValue val id: Long,
         var name: String,
         var species: String,
         var photo:String,
         @ManyToOne(fetch = FetchType.LAZY)
         var owner:ClientDAO,
         @OneToMany(mappedBy = "pet")
-        var appointments:List<AppointmentDAO>
-
+        var appointments: List<AppointmentDAO>,
+        val chip: UUID = UUID.randomUUID(), //TODO: is this called on every constructor? can it be overwritten?
+        var physDesc: String = "",
+        var healthDesc: String = ""
 ) {
     constructor() : this(0,"","" , "", ClientDAO(),emptyList())
 
