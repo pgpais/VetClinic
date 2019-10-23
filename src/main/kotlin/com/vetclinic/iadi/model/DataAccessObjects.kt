@@ -19,9 +19,11 @@ data class PetDAO(
         var physDesc: String,
         var healthDesc: String
 ) {
+    constructor(pet: PetDTO, owner: ClientDAO) : this(pet.id,pet.name,pet.species, pet.photo, owner, emptyList(), pet.chip, "", "")
     constructor(pet: PetDTO, owner: ClientDAO, apts:List<AppointmentDAO>) : this(pet.id,pet.name,pet.species, pet.photo, owner, apts, pet.chip, "", "")
     constructor(id: Long, name: String, species: String, photo: String, owner: ClientDAO, appointments: List<AppointmentDAO>) :
             this(id, name, species, photo, owner, appointments, physDesc = "", healthDesc = "")
+
 
     fun update(other: PetDAO) {
         this.name = other.name
@@ -47,12 +49,11 @@ data class AppointmentDAO(
         @ManyToOne(fetch = FetchType.LAZY)
         var pet: PetDAO,
         @ManyToOne(fetch = FetchType.LAZY)
-        var client:RegisteredUserDAO,
+        var client:ClientDAO,
         @ManyToOne(fetch=FetchType.LAZY)
         var vet: VeterinarianDAO
 ) {
-    constructor() : this(0, Date(), "", AppointmentStatus.PENDING, "",PetDAO(), RegisteredUserDAO(), VeterinarianDAO())
-    constructor(apt: AppointmentDTO, pet: PetDAO, user: RegisteredUserDAO, vet: VeterinarianDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, pet, user, vet)
+    constructor(apt: AppointmentDTO, pet: PetDAO, user: ClientDAO, vet: VeterinarianDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, pet, user, vet)
 
     fun update(other: AppointmentDAO) {
         this.date = other.date
@@ -76,7 +77,6 @@ data class VeterinarianDAO(
         var appointments: List<AppointmentDAO>
 ):RegisteredUsersDAO() {
 
-    constructor() : this(0, "","","", emptyList(), emptyList())
     constructor(vet: VeterinarianDTO, apt: List<AppointmentDAO>) : this(vet.vetId, vet.name, vet.password, vet.photo, vet.schedule, apt)
     constructor(vet: VeterinarianDTO):this(vet.vetId, vet.name, vet.password, vet.photo, vet.schedule, emptyList())
 
@@ -103,7 +103,6 @@ data class ClientDAO(
         @OneToMany(mappedBy = "client")
         var appointments: List<AppointmentDAO>) : RegisteredUsersDAO() {
 
-    constructor(): this(0, "", "", emptyList(), emptyList())
     constructor(client: ClientDTO): this(client.id, client.name, client.password, emptyList(), emptyList())
     constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.name, client.password, pets, emptyList())
 }
@@ -119,8 +118,6 @@ data class ShiftsDAO(
         @Id @GeneratedValue val id:Long,
         var start:Date, var end:Date,
         @ManyToOne var vet: VeterinarianDAO){
-
-    constructor(): this(0, Date(), Date(),VeterinarianDAO())
     constructor(schedule:ShiftsDTO, vet: VeterinarianDAO): this(schedule.id, schedule.start, schedule.end, vet)
 }
 
