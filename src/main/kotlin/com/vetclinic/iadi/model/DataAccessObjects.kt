@@ -16,12 +16,12 @@ data class PetDAO(
         @OneToMany(mappedBy = "pet")
         var appointments: List<AppointmentDAO>,
         val chip: UUID = UUID.randomUUID(), //TODO: is this called on every constructor? can it be overwritten?
-        var physDesc: String = "",
-        var healthDesc: String = ""
+        var physDesc: String,
+        var healthDesc: String
 ) {
-    constructor() : this(0,"","" , "", ClientDAO(),emptyList())
-
-    constructor(pet: PetDTO, owner: ClientDAO, apts:List<AppointmentDAO>) : this(pet.id,pet.name,pet.species, pet.photo, owner, apts)
+    constructor(pet: PetDTO, owner: ClientDAO, apts:List<AppointmentDAO>) : this(pet.id,pet.name,pet.species, pet.photo, owner, apts, pet.chip, "", "")
+    constructor(id: Long, name: String, species: String, photo: String, owner: ClientDAO, appointments: List<AppointmentDAO>) :
+            this(id, name, species, photo, owner, appointments, physDesc = "", healthDesc = "")
 
     fun update(other: PetDAO) {
         this.name = other.name
@@ -48,7 +48,6 @@ data class AppointmentDAO(
         @ManyToOne(fetch=FetchType.LAZY)
         var vet: VeterinarianDAO
 ) {
-    constructor() : this(0, Date(), "", "pending", "",PetDAO(), ClientDAO(), VeterinarianDAO())
     constructor(apt: AppointmentDTO, pet: PetDAO, vet: VeterinarianDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, pet, pet.owner, vet)
 
     fun update(other: AppointmentDAO) {
