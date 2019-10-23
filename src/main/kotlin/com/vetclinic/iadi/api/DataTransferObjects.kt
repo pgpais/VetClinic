@@ -13,10 +13,10 @@ data class PetDTO(val id:Long, val name: String, val species: String, val photo:
 data class PetAptsDTO(val pet:PetDTO, val apts:List<AppointmentDTO>) {
 }
 
-data class AppointmentDTO(val id:Long, val date: Date, val desc: String, var status:String,
-                          var reason:String, var clientID: Long, var vetId: Long){
+data class AppointmentDTO(val id:Long, val date: Date, val desc: String, var status:AppointmentStatus,
+                          var reason:String, var petId: Long, var clientId: Long, var vetId: Long){
 
-    constructor(apt: AppointmentDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, apt.client.id, apt.vet.id)
+    constructor(apt: AppointmentDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, apt.pet.id, apt.client.id, apt.vet.id)
 }
 
 data class UserDTO(val username:String, val password: String) // TODO: check if password makes sense

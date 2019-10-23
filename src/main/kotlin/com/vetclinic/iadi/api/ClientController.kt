@@ -41,7 +41,7 @@ class ClientController(val client:ClientService, val apts:AppointmentService, va
     @PostMapping("/apts/{userId}")
     fun bookAppointment(@PathVariable userId:Long, @RequestBody apt:AppointmentDTO){
         //TODO: the client needs to choose a pet (which is chosen on appointment?)
-        apts.newAppointment(AppointmentDAO(apt, pets.getPetByID(apt.petId), getOneClient(apt.clientID), vets.getVetbyId(apt.vetId))) //TODO: check this, so many arguments
+        apts.newAppointment(AppointmentDAO(apt, pets.getPetByID(apt.petId), client.getClientById(apt.clientId), vets.getVetbyId(apt.vetId))) //TODO: check this, so many arguments
     }
 
     @GetMapping("/pets/{userId}")

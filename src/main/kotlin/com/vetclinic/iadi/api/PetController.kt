@@ -85,7 +85,7 @@ class PetController(val pets: PetService, val clientService: ClientService, val 
                        @RequestBody apt:AppointmentDTO
                        ) =
             handle4xx {
-                pets.newAppointment(AppointmentDAO(apt, pets.getPetByID(id), vets.getVetbyId(apt.vetId)))
+                pets.newAppointment(AppointmentDAO(apt, pets.getPetByID(id), clientService.getClientById(apt.clientId),vets.getVetbyId(apt.vetId)))
             }
 
     @ApiOperation(value = "Get a list of a pet's appointments", response = List::class)
