@@ -1,6 +1,7 @@
 package com.vetclinic.iadi.api
 
 import com.vetclinic.iadi.model.AppointmentDAO
+import com.vetclinic.iadi.model.ClientDAO
 import com.vetclinic.iadi.model.PetDAO
 import com.vetclinic.iadi.model.VeterinarianDAO
 import com.vetclinic.iadi.services.AppointmentService
