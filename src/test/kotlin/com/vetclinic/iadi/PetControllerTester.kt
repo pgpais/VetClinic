@@ -21,9 +21,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import com.vetclinic.iadi.api.AppointmentDTO
+import com.vetclinic.iadi.api.ClientDTO
 import com.vetclinic.iadi.api.PetAptsDTO
 import com.vetclinic.iadi.api.PetDTO
 import com.vetclinic.iadi.model.*
+import com.vetclinic.iadi.services.ClientService
 import com.vetclinic.iadi.services.NotFoundException
 import com.vetclinic.iadi.services.PetService
 import com.vetclinic.iadi.services.PreconditionFailedException
@@ -41,6 +43,9 @@ class PetControllerTester {
 
     @MockBean
     lateinit var pets:PetService
+
+    @MockBean
+    lateinit var clients:ClientService
 
     companion object {
         // To avoid all annotations JsonProperties in data classes
@@ -61,6 +66,7 @@ class PetControllerTester {
                         it.appointments.map { AppointmentDTO(it) }) }
 
         val petsURL = "/pets"
+        val usersURL= ""
     }
 
     @Test
@@ -105,10 +111,20 @@ class PetControllerTester {
         val louro = PetDTO(0, "louro", "Papagaio", "www.google.com", 4L)
         val louroDAO = PetDAO(louro.id, louro.name, louro.species,"www.google.com", user, emptyList())
 
+        val userDTO = ClientDTO(user.id, user.name, user.pass)
+
+        val userJSON = mapper.writeValueAsString(userDTO)
         val louroJSON = mapper.writeValueAsString(louro)
 
         Mockito.`when`(pets.addNew(nonNullAny(PetDAO::class.java)))
-                .then { assertThat(it.getArgument(0), equalTo(louroDAO)); assertThat(it.getArgument(4), equalTo(user)); it.getArgument(0) }
+                .then { assertThat(it.getArgument(0), equalTo(louroDAO)); it.getArgument(0) }
+        Mockito.`when`(clients.register(nonNullAny(ClientDAO::class.java)))
+                .then{ assertThat(it.getArgument(0), equalTo(user)); it.getArgument(0)}
+
+        mvc.perform(post("$usersURL/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(userJSON))
+                .andExpect(status().isOk)
 
         mvc.perform(post(petsURL)
                 .contentType(MediaType.APPLICATION_JSON)

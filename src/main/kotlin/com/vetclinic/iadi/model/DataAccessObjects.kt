@@ -85,7 +85,7 @@ data class VeterinarianDAO(
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 abstract class RegisteredUsersDAO {
 
-    abstract val id: Long
+    abstract val id: Long //TODO: change to username
     abstract var name: String
     abstract var pass: String
 }
@@ -101,7 +101,8 @@ data class ClientDAO(
         var appointments: List<AppointmentDAO>) : RegisteredUsersDAO() {
 
     constructor(): this(0, "", "", emptyList(), emptyList())
-    constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.username, client.password, pets, emptyList())
+    constructor(client: ClientDTO): this(client.id, client.name, client.password, emptyList(), emptyList())
+    constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.name, client.password, pets, emptyList())
 }
 
 @Entity

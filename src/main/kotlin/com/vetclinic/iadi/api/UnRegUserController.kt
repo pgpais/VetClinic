@@ -1,5 +1,7 @@
 package com.vetclinic.iadi.api
 
+import com.vetclinic.iadi.model.ClientDAO
+import com.vetclinic.iadi.services.ClientService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("")
-class UnRegUserController { //TODO: add service (call it something related with accounts?)
+class UnRegUserController(val clientService: ClientService) { //TODO: add service (call it something related with accounts?)
 
     @ApiOperation(value = "Login with given user") // TODO: should probably return a token
     @ApiResponses(value = [
@@ -22,7 +24,7 @@ class UnRegUserController { //TODO: add service (call it something related with 
 
     ])
     @PostMapping("/login")
-    fun login(@RequestBody username:String, @RequestBody password:String) =
+    fun login(@RequestBody username:String, @RequestBody password:String)
             {
                 // TODO: execute login, maybe encrypt password here
             }
@@ -33,9 +35,8 @@ class UnRegUserController { //TODO: add service (call it something related with 
         ApiResponse(code = 403, message = "You cannot access this resource (maybe already logged in?)")
     ])
     @PostMapping("/register")
-    fun register(@RequestBody user:ClientDTO) = {
-            // TODO: create new ClientDAO and save it in database?
-    }
+    fun register(@RequestBody user:ClientDTO)  =
+            handle4xx { clientService.register(ClientDAO(user)) }
 
     @ApiOperation(value = "Get the list of Employees", response = List::class)
     @ApiResponses(value = [

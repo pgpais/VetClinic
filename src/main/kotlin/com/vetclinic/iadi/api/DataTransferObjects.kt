@@ -22,7 +22,7 @@ data class AppointmentDTO(val id:Long, val date: Date, val desc: String, var sta
 
 data class UserDTO(val username:String, val password: String) // TODO: check if password makes sense
 
-data class ClientDTO(val id:Long, val username:String, val password:String)
+data class ClientDTO(val id:Long, val name:String, val password:String)
 
 data class ClientPetDTO(val clientID:Long, val petDTO: List<PetDTO>)
 
