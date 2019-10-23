@@ -1,4 +1,4 @@
-package com.vetclinic.iadi
+package com.vetclinic.iadi.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
@@ -187,7 +187,7 @@ class PetControllerTester {
     fun `Bad request on id not 0`() {
         val louro = PetDAO(1, "louro", "Papagaio","www.google.com", user, emptyList())
         val apt = AppointmentDTO(2, Date(), "consulta", AppointmentStatus.ACCEPTED, "", louro.id, user.id, vet.id)
-        val aptDAO = AppointmentDAO(apt,louro, user,vet)
+        val aptDAO = AppointmentDAO(apt,louro, user, vet)
         louro.appointments = listOf(aptDAO)
 
         val aptJSON = mapper.writeValueAsString(apt)
