@@ -32,6 +32,7 @@ interface AppointmentRepository: JpaRepository<AppointmentDAO, Long>{
     @Query("select a from AppointmentDAO a where a.vet.id = :id and a.status = 0 ")
     fun getPendingByVetId(id:Long) : List<AppointmentDAO>
 
+    fun getById(id:Long)
 }
 
 

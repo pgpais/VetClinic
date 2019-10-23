@@ -164,9 +164,10 @@ class PetControllerTester {
 
     @Test
     fun `Test adding an appointment to a pet`() {
+        val bla = ClientDAO(0, "manel","123", emptyList(), emptyList())
         val louro = PetDAO(0, "louro", "Papagaio","www.google.com", user, emptyList())
-        val apt = AppointmentDTO(0, Date(), "consulta", AppointmentStatus.ACCEPTED, "", louro.id, user.id, vet.id)
-        val aptDAO = AppointmentDAO(apt,louro, user, vet)
+        val apt = AppointmentDTO(0, Date(), "consulta", AppointmentStatus.ACCEPTED, "", user.id, vet.id)
+        val aptDAO = AppointmentDAO(apt,louro, bla, vet)
         louro.appointments = listOf(aptDAO)
 
         val aptJSON = mapper.writeValueAsString(apt)
@@ -185,9 +186,10 @@ class PetControllerTester {
 
     @Test
     fun `Bad request on id not 0`() {
+        val bla = ClientDAO(0, "manel", "123", emptyList(), emptyList())
         val louro = PetDAO(1, "louro", "Papagaio","www.google.com", user, emptyList())
-        val apt = AppointmentDTO(2, Date(), "consulta", AppointmentStatus.ACCEPTED, "", louro.id, user.id, vet.id)
-        val aptDAO = AppointmentDAO(apt,louro, user,vet)
+        val apt = AppointmentDTO(2, Date(), "consulta", AppointmentStatus.ACCEPTED, "", user.id, vet.id)
+        val aptDAO = AppointmentDAO(apt,louro, bla, vet)
         louro.appointments = listOf(aptDAO)
 
         val aptJSON = mapper.writeValueAsString(apt)
