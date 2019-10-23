@@ -30,25 +30,29 @@ data class PetDAO(
     }
 }
 
+enum class AppointmentStatus(val status: Int) {
+    PENDING(0),
+    ACCEPTED(1),
+    REJECTED(2),
+    COMPLETED(3)
+}
+
 @Entity
 data class AppointmentDAO(
         @Id @GeneratedValue val id:Long,
         var date: Date,
         var desc:String,
-
-        var status:String,
+        var status: AppointmentStatus,
         var reason:String,
-
         @ManyToOne(fetch = FetchType.LAZY)
         var pet: PetDAO,
-
         @ManyToOne(fetch = FetchType.LAZY)
-        var client:ClientDAO,
-
+        var client:RegisteredUserDAO,
         @ManyToOne(fetch=FetchType.LAZY)
         var vet: VeterinarianDAO
 ) {
-    constructor(apt: AppointmentDTO, pet: PetDAO, vet: VeterinarianDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, pet, pet.owner, vet)
+    constructor() : this(0, Date(), "", AppointmentStatus.PENDING, "",PetDAO(), RegisteredUserDAO(), VeterinarianDAO())
+    constructor(apt: AppointmentDTO, pet: PetDAO, user: RegisteredUserDAO, vet: VeterinarianDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, pet, user, vet)
 
     fun update(other: AppointmentDAO) {
         this.date = other.date
