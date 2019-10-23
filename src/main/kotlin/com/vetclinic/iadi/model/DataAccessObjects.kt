@@ -51,6 +51,7 @@ data class AppointmentDAO(
         @ManyToOne(fetch=FetchType.LAZY)
         var vet: VeterinarianDAO
 ) {
+    constructor() : this(0, Date(), "", AppointmentStatus.PENDING, "",PetDAO(), RegisteredUserDAO(), VeterinarianDAO())
     constructor(apt: AppointmentDTO, pet: PetDAO, user: RegisteredUserDAO, vet: VeterinarianDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, pet, user, vet)
 
     fun update(other: AppointmentDAO) {
