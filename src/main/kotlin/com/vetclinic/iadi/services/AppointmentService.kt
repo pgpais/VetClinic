@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service
 class AppointmentService(val appointments: AppointmentRepository) {
 
     fun getAllAppointments():Iterable<AppointmentDAO> = appointments.findAll()
+
     fun getAppointmentByID(id:Long) = appointments.findById(id).orElseThrow{NotFoundException("There is no Appointment with Id $id")}
 
 

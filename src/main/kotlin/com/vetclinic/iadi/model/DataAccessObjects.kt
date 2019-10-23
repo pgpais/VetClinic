@@ -47,12 +47,11 @@ data class AppointmentDAO(
         @ManyToOne(fetch = FetchType.LAZY)
         var pet: PetDAO,
         @ManyToOne(fetch = FetchType.LAZY)
-        var client:RegisteredUserDAO,
+        var client:ClientDAO,
         @ManyToOne(fetch=FetchType.LAZY)
         var vet: VeterinarianDAO
 ) {
-    constructor() : this(0, Date(), "", AppointmentStatus.PENDING, "",PetDAO(), RegisteredUserDAO(), VeterinarianDAO())
-    constructor(apt: AppointmentDTO, pet: PetDAO, user: RegisteredUserDAO, vet: VeterinarianDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, pet, user, vet)
+    constructor(apt: AppointmentDTO, pet: PetDAO, client: ClientDAO, vet: VeterinarianDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, pet, client, vet)
 
     fun update(other: AppointmentDAO) {
         this.date = other.date

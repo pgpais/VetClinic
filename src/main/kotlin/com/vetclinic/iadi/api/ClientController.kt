@@ -26,7 +26,7 @@ class ClientController(val client:ClientService){
     )
     @GetMapping("/apts/{userId}")
     fun getAppointments(@PathVariable userId:Long): List<AppointmentDTO> =
-        handle4xx { client.getAppointments(userId).map{AppointmentDTO(it)} }
+            handle4xx { client.getAppointments(userId).map{AppointmentDTO(it)} }
 
 
     @ApiOperation(value = "Book appointment for this user")
@@ -40,7 +40,7 @@ class ClientController(val client:ClientService){
 
     @GetMapping("/pets/{userId}")
     fun getPets(@PathVariable userId: Long): List<PetDTO> =
-        handle4xx { client.getPets(userId).map{PetDTO(it)} }
+            handle4xx { client.getPets(userId).map{PetDTO(it)} }
 
 
     @PostMapping("/pets/{userId}")

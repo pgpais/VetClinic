@@ -9,15 +9,15 @@ data class PetDTO(val id:Long, val name: String, val species: String, val photo:
 ) {
     constructor(pet: PetDAO) : this(pet.id, pet.name, pet.species, pet.photo, pet.owner.id, pet.chip)
 }
-
+{}
 data class PetAptsDTO(val pet:PetDTO, val apts:List<AppointmentDTO>) {
 }
 
-data class AppointmentDTO(val id:Long, val date: Date, val desc: String, var status:String,
-                          var reason:String, var clientID: Long, var vetId: Long){
-
+data class AppointmentDTO(val id:Long, val date: Date, val desc: String, var status: AppointmentStatus,
+                          var reason:String, val clientId: Long, val vetId: Long){
     constructor(apt: AppointmentDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, apt.client.id, apt.vet.id)
 }
+
 
 data class UserDTO(val username:String, val password: String) // TODO: check if password makes sense
 
@@ -42,4 +42,3 @@ data class VetShiftDTO(val vetId: Long, val shiftsDTO: List<ShiftsDTO>)
 data class VetAptsDTO(val vetId: Long, val apts: List<AppointmentDTO>)
 
 data class AdminDTO(val name:String, val password:String)
-

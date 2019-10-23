@@ -38,7 +38,7 @@ class PetController(val pets: PetService, val clientService: ClientService, val 
     @PostMapping("")
     fun addNewPet(@RequestBody pet: PetDTO) =
 
-        handle4xx { pets.addNew(PetDAO(pet, clientService.getClientById(pet.ownerId), emptyList())) }
+            handle4xx { pets.addNew(PetDAO(pet, clientService.getClientById(pet.ownerId), emptyList())) }
 
 
 
@@ -83,9 +83,9 @@ class PetController(val pets: PetService, val clientService: ClientService, val 
     @PostMapping("/appointments/{id}")
     fun newAppointment(@PathVariable id:Long,
                        @RequestBody apt:AppointmentDTO
-                       ) =
+    ) =
             handle4xx {
-                pets.newAppointment(AppointmentDAO(apt, pets.getPetByID(id), vets.getVetbyId(apt.vetId)))
+                pets.newAppointment(AppointmentDAO(apt, pets.getPetByID(id), pets.getPetByID(id).owner, vets.getVetbyId(apt.vetId)))
             }
 
     @ApiOperation(value = "Get a list of a pet's appointments", response = List::class)

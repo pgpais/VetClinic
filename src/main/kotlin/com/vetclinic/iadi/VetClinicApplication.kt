@@ -45,13 +45,13 @@ class VetClinicApplication {
 
         shifts.save(turnodas8)
 
-        val apt = AppointmentDAO(1L, Date(), "consulta", "accepted"," ", pantufas, user, manel)
+        val apt = AppointmentDAO(1L, Date(), "consulta", AppointmentStatus.PENDING," ", pantufas, user, manel)
 
         apts.save(apt)
 
-        apts.updateStatusById(1,"i'm sick","declined")
+        apts.updateStatusById(1,"i'm sick",AppointmentStatus.REJECTED)
 
-        apts.updateStatusById(1,"","accepted")
+        apts.updateStatusById(1,"",AppointmentStatus.ACCEPTED)
 
         /*
 
