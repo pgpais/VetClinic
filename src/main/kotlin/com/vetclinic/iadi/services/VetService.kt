@@ -13,23 +13,29 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
 
     fun getAppointments(id:Long): List<AppointmentDAO> {
 
-        return appointments.findAllByVet_Id(id)
+        val vet  = vets.findByIdWithAppointment(id).orElseThrow { NotFoundException("There is no Vet with Id $id") }
+        return vet.appointments
     }
     fun rejectAppointment(id:Long, reason:String){
-
-        appointments.updateStatusById(id, reason, "refused")
-
+        appointments.getById(id).orElseThrow(){NotFoundException("There is no Appointment with Id $id")}
+        appointments.updateStatusById(id, reason, AppointmentStatus.REJECTED)
     }
 
     fun acceptAppointment(id:Long){
-
-        appointments.updateStatusById(id, "", "accepted")
+        appointments.getById(id).orElseThrow(){NotFoundException("There is no Appointment with Id $id")}
+        appointments.updateStatusById(id, "", AppointmentStatus.ACCEPTED)
 
     }
 
-    fun getPendingAppointments(id: Long): List<AppointmentDAO>{
+    fun completeAppointment(id:Long){
+        appointments.getById(id).orElseThrow(){NotFoundException("There is no Appointment with Id $id")}
+        appointments.updateStatusById(id, "", AppointmentStatus.COMPLETED)
 
-        return appointments.findAllByIdAndStatus(id, "pending")
+    }
+
+    fun getPendingAppointments(id: Long): List<AppointmentDAO> {
+        val vet  = vets.findById(id).orElseThrow { NotFoundException("There is no Vet with Id $id") }
+        return appointments.getPendingByVetId(id);
     }
 
     fun setSchedule(vetId: Long, adminId: Long, shifts: List<Pair<Date, Date>>) {

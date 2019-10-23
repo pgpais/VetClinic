@@ -39,7 +39,7 @@ class PetService(val pets: PetRepository, val appointments: AppointmentRepositor
         return pet.appointments
     }
 
-    fun newAppointment(id: Long, apt: AppointmentDAO) {
+    fun newAppointment(apt: AppointmentDAO) {
         // defensive programming
         if (apt.id != 0L)
             throw PreconditionFailedException("Id must be 0 in insertion")

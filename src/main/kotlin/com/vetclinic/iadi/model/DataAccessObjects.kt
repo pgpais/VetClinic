@@ -7,19 +7,21 @@ import javax.persistence.*
 
 @Entity
 data class PetDAO(
-        @Id @GeneratedValue val id:Long,
+        @Id @GeneratedValue val id: Long,
         var name: String,
         var species: String,
         var photo:String,
         @ManyToOne(fetch = FetchType.LAZY)
         var owner:ClientDAO,
         @OneToMany(mappedBy = "pet")
-        var appointments:List<AppointmentDAO>
-
+        var appointments: List<AppointmentDAO>,
+        val chip: UUID = UUID.randomUUID(), //TODO: is this called on every constructor? can it be overwritten?
+        var physDesc: String,
+        var healthDesc: String
 ) {
-    constructor() : this(0,"","" , "", ClientDAO(),emptyList())
-
-    constructor(pet: PetDTO, owner: ClientDAO, apts:List<AppointmentDAO>) : this(pet.id,pet.name,pet.species, pet.photo, owner, apts)
+    constructor(pet: PetDTO, owner: ClientDAO, apts:List<AppointmentDAO>) : this(pet.id,pet.name,pet.species, pet.photo, owner, apts, pet.chip, "", "")
+    constructor(id: Long, name: String, species: String, photo: String, owner: ClientDAO, appointments: List<AppointmentDAO>) :
+            this(id, name, species, photo, owner, appointments, physDesc = "", healthDesc = "")
 
     fun update(other: PetDAO) {
         this.name = other.name
@@ -28,26 +30,28 @@ data class PetDAO(
     }
 }
 
+enum class AppointmentStatus(val status: Int) {
+    PENDING(0),
+    ACCEPTED(1),
+    REJECTED(2),
+    COMPLETED(3)
+}
+
 @Entity
 data class AppointmentDAO(
         @Id @GeneratedValue val id:Long,
         var date: Date,
         var desc:String,
-
-        var status:String,
+        var status: AppointmentStatus,
         var reason:String,
-
         @ManyToOne(fetch = FetchType.LAZY)
         var pet: PetDAO,
-
         @ManyToOne(fetch = FetchType.LAZY)
-        var client:ClientDAO,
-
+        var client:RegisteredUserDAO,
         @ManyToOne(fetch=FetchType.LAZY)
         var vet: VeterinarianDAO
 ) {
-    constructor() : this(0, Date(), "", "pending", "",PetDAO(), ClientDAO(), VeterinarianDAO())
-    constructor(apt: AppointmentDTO, pet: PetDAO, vet: VeterinarianDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, pet, pet.owner, vet)
+    constructor(apt: AppointmentDTO, pet: PetDAO, user: RegisteredUserDAO, vet: VeterinarianDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, pet, user, vet)
 
     fun update(other: AppointmentDAO) {
         this.date = other.date
@@ -83,21 +87,24 @@ data class VeterinarianDAO(
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 abstract class RegisteredUsersDAO {
 
-    abstract val id: Long
+    abstract val id: Long //TODO: change to username
     abstract var name: String
     abstract var pass: String
 }
 
 @Entity
-data class ClientDAO (
+data class ClientDAO(
         @Id @GeneratedValue override val id:Long,
         override var name:String,
         override var pass:String,
         @OneToMany(mappedBy = "owner")
-        var pets:List<PetDAO>) : RegisteredUsersDAO() {
+        var pets:List<PetDAO>,
+        @OneToMany(mappedBy = "client")
+        var appointments: List<AppointmentDAO>) : RegisteredUsersDAO() {
 
-    constructor(): this(0, "", "", emptyList())
-    constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.username, client.password, pets)
+    constructor(): this(0, "", "", emptyList(), emptyList())
+    constructor(client: ClientDTO): this(client.id, client.name, client.password, emptyList(), emptyList())
+    constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.name, client.password, pets, emptyList())
 }
 
 @Entity

@@ -3,10 +3,6 @@ package com.vetclinic.iadi
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.vetclinic.iadi.api.PetDTO
-import com.vetclinic.iadi.model.ClientDAO
-import com.vetclinic.iadi.model.PetDAO
-import com.vetclinic.iadi.services.PetService
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.Matchers.hasSize
 import org.junit.Assert.assertThat
@@ -17,12 +13,21 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.http.MediaType
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import java.net.URL
+import com.vetclinic.iadi.api.AppointmentDTO
+import com.vetclinic.iadi.api.ClientDTO
+import com.vetclinic.iadi.api.PetAptsDTO
+import com.vetclinic.iadi.api.PetDTO
+import com.vetclinic.iadi.model.*
+import com.vetclinic.iadi.services.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 @RunWith(SpringRunner::class)
@@ -34,7 +39,18 @@ class PetControllerTester {
     lateinit var mvc:MockMvc
 
     @MockBean
-    lateinit var pets: PetService
+    lateinit var pets:PetService
+
+    @MockBean
+    lateinit var clientRepo: ClientRepository
+
+    @MockBean
+    lateinit var clients:ClientService
+
+    @MockBean
+    lateinit var vets:VetService
+
+
 
     companion object {
         // To avoid all annotations JsonProperties in data classes
@@ -42,15 +58,20 @@ class PetControllerTester {
         // see: https://discuss.kotlinlang.org/t/data-class-and-jackson-annotation-conflict/397/6
         val mapper = ObjectMapper().registerModule(KotlinModule())
 
-        val user = ClientDAO(4L, "manel", "123", emptyList())
+        val user = ClientDAO(4L, "manel", "123", emptyList(), emptyList())
+
+        val vet = VeterinarianDAO(5L, "Joaquina", "123", "www.google.com", emptyList(), emptyList())
 
         val pantufas = PetDAO(1L, "pantufas", "Dog", "www.google.com", user, emptyList())
-        val bigodes = PetDAO(2L, "bigodes", "Cat","www.google.com",user, emptyList())
+        val bigodes = PetDAO(2L, "bigodes", "Cat", "www.google.com", user, emptyList())
         val petsDAO = ArrayList(listOf(pantufas, bigodes))
 
-        val petsDTO = petsDAO.map { PetDTO(it.id, it.name, it.species, it.photo, it.owner.id) }
+        val petsAptsDTO =
+                petsDAO.map { PetAptsDTO(PetDTO(it),
+                        it.appointments.map { AppointmentDTO(it) }) }
 
         val petsURL = "/pets"
+        val usersURL= ""
     }
 
     @Test
@@ -59,14 +80,14 @@ class PetControllerTester {
 
         val result = mvc.perform(get(petsURL))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize<Any>(petsDTO.size)))
+                .andExpect(jsonPath("$", hasSize<Any>(petsAptsDTO.size)))
                 .andReturn()
 
         val responseString = result.response.contentAsString
-        val responseDTO = mapper.readValue<List<PetDTO>>(responseString)
-        assertThat(responseDTO, equalTo(petsDTO))
+        val responseDTO = mapper.readValue<List<PetAptsDTO>>(responseString)
+        assertThat(responseDTO, equalTo(petsAptsDTO))
     }
-/*
+
     @Test
     fun `Test Get One Pet`() {
         Mockito.`when`(pets.getPetByID(1)).thenReturn(pantufas)
@@ -76,8 +97,8 @@ class PetControllerTester {
                 .andReturn()
 
         val responseString = result.response.contentAsString
-        val responseDTO = mapper.readValue<PetDTO>(responseString)
-        assertThat(responseDTO, equalTo(petsDTO[0]))
+        val responseDTO = mapper.readValue<PetAptsDTO>(responseString)
+        assertThat(responseDTO, equalTo(petsAptsDTO[0]))
     }
 
     @Test
@@ -90,16 +111,21 @@ class PetControllerTester {
 
     fun <T>nonNullAny(t:Class<T>):T = Mockito.any(t)
 
-    /*
     @Test
     fun `Test POST One Pet`() {
-        val louro = PetDTO(0, "louro", "Papagaio")
-        val louroDAO = PetDAO(louro.id, louro.name, louro.species, emptyList())
+        val louroDAO = PetDAO(0L, "louro", "Papagaio", "www.google.com", user, emptyList())
+        val louro = PetDTO(louroDAO)
 
+        val userDTO = ClientDTO(user.id, user.name, user.pass)
+
+        val userJSON = mapper.writeValueAsString(userDTO)
         val louroJSON = mapper.writeValueAsString(louro)
 
-        Mockito.`when`(pets.addNewPet(nonNullAny(PetDAO::class.java)))
-                .then { assertThat(it.getArgument(0), equalTo(louroDAO)) }
+        Mockito.`when`(clients.getClientById(nonNullAny(Long::class.java)))
+                .thenReturn(user);
+
+        Mockito.`when`(pets.addNew(nonNullAny(PetDAO::class.java)))
+                .then { assertThat(it.getArgument(0), equalTo(louroDAO)); it.getArgument(0) }
 
         mvc.perform(post(petsURL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -107,7 +133,74 @@ class PetControllerTester {
                 .andExpect(status().isOk)
     }
 
-     */
+    @Test
+    fun `Test checking appointments`() {
+        val louro = PetDAO(0, "louro", "Papagaio","www.google.com", user, emptyList())
+        val apt = AppointmentDAO(2, Date(),"consulta","","", louro, user, vet)
+        louro.appointments = listOf(apt)
 
- */
+        Mockito.`when`(pets.getAppointments(1)).thenReturn(listOf(apt))
+
+        //val result =
+        mvc.perform(get("$petsURL/1/appointments"))
+                .andExpect(status().isOk)
+                .andReturn()
+
+        /* TODO: need to compare with result
+        val responseString = result.response.contentAsString
+        val responseDTO = mapper.readValue<List<PetAptsDTO>>(responseString)
+        assertThat(responseDTO, equalTo(petsAptsDTO))
+        */
+    }
+
+    @Test
+    fun `Test checking appointments of non pet`() {
+        Mockito.`when`(pets.getAppointments(1))
+                .thenThrow(NotFoundException("not found"))
+
+        mvc.perform(get("$petsURL/1/appointments"))
+                .andExpect(status().is4xxClientError)
+    }
+
+    @Test
+    fun `Test adding an appointment to a pet`() {
+        val louro = PetDAO(0, "louro", "Papagaio","www.google.com", user, emptyList())
+        val apt = AppointmentDTO(0, Date(), "consulta", "", "", user.id, vet.id)
+        val aptDAO = AppointmentDAO(apt,louro, vet)
+        louro.appointments = listOf(aptDAO)
+
+        val aptJSON = mapper.writeValueAsString(apt)
+
+        Mockito.`when`(pets.newAppointment(nonNullAny(AppointmentDAO::class.java)))
+                .then { assertThat( it.getArgument(0), equalTo(aptDAO)); it.getArgument(0) }
+
+        Mockito.`when`(pets.getPetByID(1)).thenReturn(louro)
+        Mockito.`when`(vets.getVetbyId(vet.id)).thenReturn(vet)
+
+        mvc.perform(post("$petsURL/appointments/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(aptJSON))
+                .andExpect(status().isOk)
+    }
+
+    @Test
+    fun `Bad request on id not 0`() {
+        val louro = PetDAO(1, "louro", "Papagaio","www.google.com", user, emptyList())
+        val apt = AppointmentDTO(2, Date(), "consulta", "", "", user.id, vet.id)
+        val aptDAO = AppointmentDAO(apt,louro, vet)
+        louro.appointments = listOf(aptDAO)
+
+        val aptJSON = mapper.writeValueAsString(apt)
+
+        Mockito.`when`(pets.newAppointment(nonNullAny(AppointmentDAO::class.java)))
+                .thenThrow( PreconditionFailedException("id 0"))
+
+        Mockito.`when`(pets.getPetByID(1)).thenReturn(louro)
+
+        mvc.perform(post("$petsURL/1/appointments")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(aptJSON))
+                .andExpect(status().is4xxClientError)
+
+    }
 }

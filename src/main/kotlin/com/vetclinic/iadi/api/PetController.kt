@@ -9,7 +9,6 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.web.bind.annotation.*
-import pt.unl.fct.di.iadi.vetclinic.api.handle4xx
 
 
 @Api(value = "VetClinic Management System - Pet API",
@@ -27,7 +26,7 @@ class PetController(val pets: PetService, val clientService: ClientService, val 
     ])
     @GetMapping("")
     fun getAllPets() : List<PetAptsDTO> =
-            pets.getAllPets().map { PetAptsDTO(it.id,
+            pets.getAllPets().map { PetAptsDTO(PetDTO(it),
                     it.appointments.map { AppointmentDTO(it) }) }
 
     @ApiOperation(value = "Add a new pet", response = Unit::class)
@@ -36,10 +35,10 @@ class PetController(val pets: PetService, val clientService: ClientService, val 
         ApiResponse(code = 401, message = "You are not authorized to use this resource"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
     ])
-    @PostMapping("/{userId}")
-    fun addNewPet(@RequestBody pet: PetDTO, @PathVariable userId:Long) =
+    @PostMapping("")
+    fun addNewPet(@RequestBody pet: PetDTO) =
 
-        handle4xx { pets.addNew(PetDAO(pet, clientService.getClientById(userId), emptyList())) }
+        handle4xx { pets.addNew(PetDAO(pet, clientService.getClientById(pet.ownerId), emptyList())) }
 
 
 
@@ -52,7 +51,7 @@ class PetController(val pets: PetService, val clientService: ClientService, val 
     ])
     @GetMapping("/{id}")
     fun getOnePet(@PathVariable id:Long) : PetAptsDTO =
-            handle4xx { pets.getPetByID(id).let { PetAptsDTO(PetDTO(it).id, it.appointments.map { AppointmentDTO(it) }) } }
+            handle4xx { pets.getPetByID(id).let { PetAptsDTO(PetDTO(it), it.appointments.map { AppointmentDTO(it) }) } }
 
     @ApiOperation(value = "Update a pet", response = Unit::class)
     @ApiResponses(value = [
@@ -81,13 +80,12 @@ class PetController(val pets: PetService, val clientService: ClientService, val 
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     ])
-    @PostMapping("/appointments/{id}/{vetId}")
+    @PostMapping("/appointments/{id}")
     fun newAppointment(@PathVariable id:Long,
-                       @RequestBody apt:AppointmentDTO,
-                       @PathVariable vetId:Long
+                       @RequestBody apt:AppointmentDTO
                        ) =
             handle4xx {
-                pets.newAppointment(id, AppointmentDAO(apt, pets.getPetByID(id), vets.getVetbyId(vetId)))
+                pets.newAppointment(AppointmentDAO(apt, pets.getPetByID(id), vets.getVetbyId(apt.vetId)))
             }
 
     @ApiOperation(value = "Get a list of a pet's appointments", response = List::class)

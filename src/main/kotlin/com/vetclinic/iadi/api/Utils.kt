@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-package pt.unl.fct.di.iadi.vetclinic.api
+package com.vetclinic.iadi.api
 import com.vetclinic.iadi.services.NotFoundException
 import com.vetclinic.iadi.services.PreconditionFailedException
 

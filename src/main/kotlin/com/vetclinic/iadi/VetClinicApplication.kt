@@ -1,10 +1,12 @@
 package com.vetclinic.iadi
 
+import com.vetclinic.iadi.api.PetDTO
 import com.vetclinic.iadi.model.*
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Profile
 import java.net.URL
 import java.time.Instant
 import java.time.LocalDate
@@ -14,6 +16,7 @@ import java.util.*
 class VetClinicApplication {
 
     @Bean
+    @Profile("runtime")
     fun init(
             pets: PetRepository,
             apts: AppointmentRepository,
@@ -23,7 +26,7 @@ class VetClinicApplication {
             vets: VeterinaryRepository
     ) = CommandLineRunner {
 
-        val user = ClientDAO(1,"","", emptyList())
+        val user = ClientDAO(1,"","", emptyList(), emptyList())
         users.save(user)
 
         val pantufas = PetDAO(2L, "pantufas", "Dog", "", user, emptyList())

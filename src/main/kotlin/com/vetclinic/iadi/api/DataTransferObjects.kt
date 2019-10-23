@@ -5,13 +5,12 @@ import java.net.URL
 import java.util.*
 
 //TODO: add the other two parameters here
-data class PetDTO(val id:Long, val name: String, val species: String, val photo: String, val ownerId:Long
+data class PetDTO(val id:Long, val name: String, val species: String, val photo: String, val ownerId:Long, val chip: UUID
 ) {
-
-    constructor(pet: PetDAO) : this(pet.id, pet.name, pet.species, pet.photo, pet.owner.id)
+    constructor(pet: PetDAO) : this(pet.id, pet.name, pet.species, pet.photo, pet.owner.id, pet.chip)
 }
 
-data class PetAptsDTO(val petId:Long, val apts:List<AppointmentDTO>) {
+data class PetAptsDTO(val pet:PetDTO, val apts:List<AppointmentDTO>) {
 }
 
 data class AppointmentDTO(val id:Long, val date: Date, val desc: String, var status:String,
@@ -22,7 +21,7 @@ data class AppointmentDTO(val id:Long, val date: Date, val desc: String, var sta
 
 data class UserDTO(val username:String, val password: String) // TODO: check if password makes sense
 
-data class ClientDTO(val id:Long, val username:String, val password:String)
+data class ClientDTO(val id:Long, val name:String, val password:String)
 
 data class ClientPetDTO(val clientID:Long, val petDTO: List<PetDTO>)
 

@@ -9,7 +9,6 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.web.bind.annotation.*
-import pt.unl.fct.di.iadi.vetclinic.api.handle4xx
 
 @Api(value = "VetClinic Management System - Appointment API",
         description = "Management operations of Appointments in the IADI 2019 Pet Clinic")
