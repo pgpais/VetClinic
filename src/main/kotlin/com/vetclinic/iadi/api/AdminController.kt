@@ -1,5 +1,8 @@
 package com.vetclinic.iadi.api
 
+import com.vetclinic.iadi.model.AdminDAO
+import com.vetclinic.iadi.model.ShiftsDAO
+import com.vetclinic.iadi.model.VeterinarianDAO
 import com.vetclinic.iadi.services.AdminService
 import com.vetclinic.iadi.services.VetService
 import io.swagger.annotations.Api
@@ -25,7 +28,7 @@ class AdminController(val admins: AdminService, val vets: VetService) {
     ])
     @PostMapping("/createAdmin")
     fun createAdmin(@RequestBody adminDTO:AdminDTO) {
-        handle4xx { admins.createAdmin(adminDTO) }
+        handle4xx { admins.createAdmin(AdminDAO(adminDTO.id, adminDTO.name, adminDTO.password)) }
     }
 
     @ApiOperation(value="Delete an admin")
@@ -49,7 +52,7 @@ class AdminController(val admins: AdminService, val vets: VetService) {
     ])
     @PostMapping("/createVet")
     fun createVet(@RequestBody vetDTO:VeterinarianDTO) {
-        handle4xx { admins.createVet(vetDTO) }
+        handle4xx { admins.createVet(VeterinarianDAO(vetDTO)) }
     }
 
     @ApiOperation(value="Set a schedule for a veterinarian")
@@ -60,7 +63,7 @@ class AdminController(val admins: AdminService, val vets: VetService) {
         ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
     ])
     @PostMapping("/setSchedule/{vetId}")
-    fun setSchedule(@PathVariable vetId: Long, @RequestBody adminId: Long, @RequestBody shifts:List<Pair<Date, Date>>){
+    fun setSchedule(@PathVariable vetId: Long, @RequestBody adminId: Long, @RequestBody shifts:List<ShiftsDAO>){
         vets.setSchedule(vetId, adminId, shifts)
     }
 }

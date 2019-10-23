@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.net.URL
 import java.time.Instant
 import java.time.LocalDate
@@ -26,7 +27,7 @@ class VetClinicApplication {
             vets: VeterinaryRepository
     ) = CommandLineRunner {
 
-        val user = ClientDAO(1,"","", emptyList(), emptyList())
+        val user = ClientDAO(1,"", BCryptPasswordEncoder().encode("batatas"), emptyList(), emptyList())
         users.save(user)
 
         val pantufas = PetDAO(2L, "pantufas", "Dog", "", user, emptyList())
@@ -52,6 +53,8 @@ class VetClinicApplication {
         apts.updateStatusById(1,"i'm sick",AppointmentStatus.REJECTED)
 
         apts.updateStatusById(1,"",AppointmentStatus.ACCEPTED)
+
+
 
         /*
 

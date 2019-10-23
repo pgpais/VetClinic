@@ -1,9 +1,6 @@
 package com.vetclinic.iadi.services
 
-import com.vetclinic.iadi.model.AppointmentDAO
-import com.vetclinic.iadi.model.AppointmentRepository
-import com.vetclinic.iadi.model.AppointmentStatus
-import com.vetclinic.iadi.model.VeterinaryRepository
+import com.vetclinic.iadi.model.*
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -48,7 +45,7 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
         return appointments.getPendingByVetId(id);
     }
 
-    fun setSchedule(vetId: Long, adminId: Long, shifts: List<Pair<Date, Date>>) {
+    fun setSchedule(vetId: Long, adminId: Long, shifts: List<ShiftsDAO>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

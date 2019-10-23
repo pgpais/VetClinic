@@ -2,9 +2,12 @@ package com.vetclinic.iadi.services
 
 import com.vetclinic.iadi.api.ClientDTO
 import com.vetclinic.iadi.model.AppointmentDAO
+import com.vetclinic.iadi.model.ClientDAO
 import com.vetclinic.iadi.model.ClientRepository
 import com.vetclinic.iadi.model.PetDAO
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class ClientService(val clientRepository: ClientRepository) {
@@ -12,11 +15,21 @@ class ClientService(val clientRepository: ClientRepository) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    fun register(client: ClientDTO) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+    fun addClient(user: ClientDAO): Optional<ClientDAO> {
+        val aUser = clientRepository.findById(user.id)
+
+        return if (aUser.isPresent)
+            Optional.empty()
+        else {
+            user.pass = BCryptPasswordEncoder().encode(user.pass)
+            Optional.of(clientRepository.save(user))
+        }
     }
 
     fun getClientById(id:Long) = clientRepository.findById(id).orElseThrow{NotFoundException("Couldn't find client with id $id")}
+
+    fun getClientByName(username:String)  :Optional<ClientDAO> = clientRepository.findByName(username)
 
     fun getAppointments(userId: Long) : List<AppointmentDAO>{
         val client = clientRepository.findByIdWithAppointment(userId)
