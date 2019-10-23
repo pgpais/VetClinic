@@ -1,10 +1,9 @@
 package com.vetclinic.iadi.api
 
-import com.vetclinic.iadi.model.AppointmentDAO
-import com.vetclinic.iadi.model.PetDAO
-import com.vetclinic.iadi.model.RegisteredUserDAO
-import com.vetclinic.iadi.model.VeterinarianDAO
+import com.vetclinic.iadi.model.*
+import com.vetclinic.iadi.services.ClientService
 import com.vetclinic.iadi.services.PetService
+import com.vetclinic.iadi.services.VetService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -18,7 +17,7 @@ import pt.unl.fct.di.iadi.vetclinic.api.handle4xx
 
 @RestController
 @RequestMapping("/pets")
-class PetController(val pets: PetService) {
+class PetController(val pets: PetService, val clientService: ClientService, val vets:VetService) {
 
     @ApiOperation(value = "View a list of registered pets", response = List::class)
     @ApiResponses(value = [
@@ -28,7 +27,7 @@ class PetController(val pets: PetService) {
     ])
     @GetMapping("")
     fun getAllPets() : List<PetAptsDTO> =
-            pets.getAllPets().map { PetAptsDTO(PetDTO(it),
+            pets.getAllPets().map { PetAptsDTO(it.id,
                     it.appointments.map { AppointmentDTO(it) }) }
 
     @ApiOperation(value = "Add a new pet", response = Unit::class)
@@ -37,9 +36,12 @@ class PetController(val pets: PetService) {
         ApiResponse(code = 401, message = "You are not authorized to use this resource"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
     ])
-    @PostMapping("")
-    fun addNewPet(@RequestBody pet: PetDTO, @RequestBody user: RegisteredUserDAO, @RequestBody apt: List<AppointmentDAO> ) =
-            pets.addNew(PetDAO(pet, user, apt))
+    @PostMapping("/{userId}")
+    fun addNewPet(@RequestBody pet: PetDTO, @PathVariable userId:Long) =
+
+        handle4xx { pets.addNew(PetDAO(pet, clientService.getClientById(userId), emptyList())) }
+
+
 
     @ApiOperation(value = "Get the details of a single pet by id", response = PetDTO::class)
     @ApiResponses(value = [
@@ -50,7 +52,7 @@ class PetController(val pets: PetService) {
     ])
     @GetMapping("/{id}")
     fun getOnePet(@PathVariable id:Long) : PetAptsDTO =
-            handle4xx { pets.getPetByID(id).let { PetAptsDTO(PetDTO(it), it.appointments.map { AppointmentDTO(it) }) } }
+            handle4xx { pets.getPetByID(id).let { PetAptsDTO(PetDTO(it).id, it.appointments.map { AppointmentDTO(it) }) } }
 
     @ApiOperation(value = "Update a pet", response = Unit::class)
     @ApiResponses(value = [
@@ -59,8 +61,8 @@ class PetController(val pets: PetService) {
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
     ])
     @PutMapping("/{id}")
-    fun updatePet(@RequestBody pet: PetDTO, @RequestBody user: RegisteredUserDAO, @RequestBody apt:List<AppointmentDAO>, @PathVariable id: Long) =
-            handle4xx { pets.update(PetDAO(pet, user, apt), id) }
+    fun updatePet(@RequestBody pet: PetDTO, @PathVariable id: Long) =
+            handle4xx { pets.update(PetDAO(pet, clientService.getClientById(pet.ownerId),pets.getAppointments(id)), id) }
 
     @ApiOperation(value = "Delete a pet", response = Unit::class)
     @ApiResponses(value = [
@@ -79,14 +81,13 @@ class PetController(val pets: PetService) {
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     ])
-    @PostMapping("/{id}/appointments")
+    @PostMapping("/appointments/{id}/{vetId}")
     fun newAppointment(@PathVariable id:Long,
                        @RequestBody apt:AppointmentDTO,
-                       @RequestBody user: RegisteredUserDAO,
-                       @RequestBody vet: VeterinarianDAO) =
+                       @PathVariable vetId:Long
+                       ) =
             handle4xx {
-                val pet = pets.getPetByID(id)
-                pets.newAppointment(id, AppointmentDAO(apt, pet,user,vet))
+                pets.newAppointment(id, AppointmentDAO(apt, pets.getPetByID(id), vets.getVetbyId(vetId)))
             }
 
     @ApiOperation(value = "Get a list of a pet's appointments", response = List::class)

@@ -6,9 +6,6 @@ import com.vetclinic.iadi.model.PetDAO
 import com.vetclinic.iadi.model.PetRepository
 import org.springframework.stereotype.Service
 
-import org.springframework.web.client.HttpClientErrorException
-import java.util.*
-
 @Service
 class PetService(val pets: PetRepository, val appointments: AppointmentRepository) {
     //var pet:PetDTO;
@@ -53,7 +50,7 @@ class PetService(val pets: PetRepository, val appointments: AppointmentRepositor
     fun update(pet: PetDAO, id: Long) {
 
         val oldPet = getPetByID(id)
-        val newPet = PetDAO(oldPet.id, pet.name, pet.species, pet.owner, pet.appointments)
+        val newPet = PetDAO(oldPet.id, pet.name, pet.species, pet.photo, pet.owner, pet.appointments)
 
         pets.delete(oldPet)
         pets.save(newPet)
