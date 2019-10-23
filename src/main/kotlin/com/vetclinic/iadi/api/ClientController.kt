@@ -1,14 +1,11 @@
 package com.vetclinic.iadi.api
 
-import com.vetclinic.iadi.model.AppointmentDAO
 import com.vetclinic.iadi.services.ClientService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.web.bind.annotation.*
-import pt.unl.fct.di.iadi.vetclinic.api.handle4xx
-import javax.persistence.Entity
 
 @Api(value="VetClinic Management System - Client API",
         description = "Management operations of Client in the IADI 2019 Pet Clinic")
@@ -28,6 +25,10 @@ class ClientController(val client:ClientService){
         handle4xx { client.getAppointments(userId).map{AppointmentDTO(it)} }
 
 
+    @ApiOperation(value = "Book appointment for this user")
+    @ApiResponses(
+            ApiResponse(code = 200, message = "Successfully booked appointment")
+    )
     @PostMapping("/apts/{userId}")
     fun bookAppointment(@PathVariable userId:Long, @RequestBody apt:AppointmentDTO){
         //TODO: the client needs to choose a pet (which is chosen on appointment?)

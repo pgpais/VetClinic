@@ -23,7 +23,7 @@ class VetClinicApplication {
             vets: VeterinaryRepository
     ) = CommandLineRunner {
 
-        val user = ClientDAO(1,"","", emptyList())
+        val user = ClientDAO(1,"","", emptyList(), emptyList())
         users.save(user)
 
         val pantufas = PetDAO(2L, "pantufas", "Dog", "", user, emptyList())

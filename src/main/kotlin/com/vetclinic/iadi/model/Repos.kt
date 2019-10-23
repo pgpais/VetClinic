@@ -56,7 +56,7 @@ interface ClientRepository : JpaRepository<ClientDAO, Long> {
     fun findByIdWithAppointment(id:Long) : Optional<ClientDAO>
 
     @Query("select c from ClientDAO c inner join fetch c.pets where c.id = :id")
-    fun findByIdWithPets(userId: Long): Optional<ClientDAO>
+    fun findByIdWithPets(id: Long): Optional<ClientDAO>
 
 
 }

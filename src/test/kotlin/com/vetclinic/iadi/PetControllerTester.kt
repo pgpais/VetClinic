@@ -48,7 +48,7 @@ class PetControllerTester {
         // see: https://discuss.kotlinlang.org/t/data-class-and-jackson-annotation-conflict/397/6
         val mapper = ObjectMapper().registerModule(KotlinModule())
 
-        val user = ClientDAO(4L, "manel", "123", emptyList())
+        val user = ClientDAO(4L, "manel", "123", emptyList(), emptyList())
 
         val vet = VeterinarianDAO(5L, "Joaquina", "123", "www.google.com", emptyList(), emptyList())
 
@@ -102,13 +102,13 @@ class PetControllerTester {
 
     @Test
     fun `Test POST One Pet`() {
-        val louro = PetDTO(0, "louro", "Papagaio", "www.google.com", 5L)
+        val louro = PetDTO(0, "louro", "Papagaio", "www.google.com", 4L)
         val louroDAO = PetDAO(louro.id, louro.name, louro.species,"www.google.com", user, emptyList())
 
         val louroJSON = mapper.writeValueAsString(louro)
 
         Mockito.`when`(pets.addNew(nonNullAny(PetDAO::class.java)))
-                .then { assertThat(it.getArgument(0), equalTo(louroDAO)); it.getArgument(0) }
+                .then { assertThat(it.getArgument(0), equalTo(louroDAO)); assertThat(it.getArgument(4), equalTo(user)); it.getArgument(0) }
 
         mvc.perform(post(petsURL)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -159,7 +159,7 @@ class PetControllerTester {
 
         Mockito.`when`(pets.getPetByID(1)).thenReturn(louro)
 
-        mvc.perform(post("$petsURL/1/appointments")
+        mvc.perform(post("$petsURL/appointments/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(aptJSON))
                 .andExpect(status().isOk)

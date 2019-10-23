@@ -7,7 +7,6 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.web.bind.annotation.*
-import pt.unl.fct.di.iadi.vetclinic.api.handle4xx
 import java.util.*
 
 @Api(value="VetClinic Management System - Admin API",
