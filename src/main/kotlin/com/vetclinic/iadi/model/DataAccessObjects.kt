@@ -91,6 +91,7 @@ abstract class RegisteredUsersDAO {
     abstract val id: Long //TODO: change to username
     abstract var name: String
     abstract var pass: String
+    //TODO: add rest of info
 }
 
 @Entity
