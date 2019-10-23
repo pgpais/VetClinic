@@ -7,15 +7,17 @@ import javax.persistence.*
 
 @Entity
 data class PetDAO(
-        @Id @GeneratedValue val id:Long,
+        @Id @GeneratedValue val id: Long,
         var name: String,
         var species: String,
         var photo:String,
         @ManyToOne(fetch = FetchType.LAZY)
         var owner:ClientDAO,
         @OneToMany(mappedBy = "pet")
-        var appointments:List<AppointmentDAO>
-
+        var appointments: List<AppointmentDAO>,
+        val chip: UUID = UUID.randomUUID(), //TODO: is this called on every constructor? can it be overwritten?
+        var physDesc: String = "",
+        var healthDesc: String = ""
 ) {
     constructor() : this(0,"","" , "", ClientDAO(),emptyList())
 
@@ -89,15 +91,17 @@ abstract class RegisteredUsersDAO {
 }
 
 @Entity
-data class ClientDAO (
+data class ClientDAO(
         @Id @GeneratedValue override val id:Long,
         override var name:String,
         override var pass:String,
         @OneToMany(mappedBy = "owner")
-        var pets:List<PetDAO>) : RegisteredUsersDAO() {
+        var pets:List<PetDAO>,
+        @OneToMany(mappedBy = "client")
+        var appointments: List<AppointmentDAO>) : RegisteredUsersDAO() {
 
-    constructor(): this(0, "", "", emptyList())
-    constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.username, client.password, pets)
+    constructor(): this(0, "", "", emptyList(), emptyList())
+    constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.username, client.password, pets, emptyList())
 }
 
 @Entity
