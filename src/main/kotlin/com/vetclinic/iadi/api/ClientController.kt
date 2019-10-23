@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.*
 class ClientController(val client:ClientService){
 
 
+    @GetMapping("/{id}")
+    fun getOneClient(@PathVariable id:Long) : ClientDTO =
+            handle4xx { client.getClientById(id).let{ ClientDTO(it.id, it.name, it.pass) } }
+
     @ApiOperation(value="Get appointments of this user")
     @ApiResponses(
             ApiResponse(code = 200, message = "Successfully retrieve client's appointments"),
@@ -41,7 +45,7 @@ class ClientController(val client:ClientService){
 
     @PostMapping("/pets/{userId}")
     fun addPet(@PathVariable userId: Long, @RequestBody pet:PetDTO){
-
+        // TODO:
     }
 
     @DeleteMapping("/pets/{userId}/{petId}")
