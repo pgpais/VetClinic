@@ -35,7 +35,7 @@ class VetController (val vets:VetService) {
         ApiResponse(code = 401, message = "You're not allowed to access this resource")
 
     ])
-    @GetMapping("/appointments/{id}")
+    @GetMapping("/appointments/{id}") //can be used for Vet and Client (?)
     fun getAppointments(@PathVariable id:Long):List<AppointmentDTO> =
             handle4xx {
                 vets.getAppointments(id).map{AppointmentDTO(it)}

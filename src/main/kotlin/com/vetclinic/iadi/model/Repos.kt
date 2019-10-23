@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
+import javax.annotation.PostConstruct
 
 interface PetRepository : JpaRepository<PetDAO, Long> {
 
@@ -53,6 +54,11 @@ interface ShiftsRepository: JpaRepository<ShiftsDAO, Long>{
 
 interface AdminRepository: JpaRepository<AdminDAO, Long>{
 
+    @PostConstruct //TODO: this might no be right
+    fun saveAdmin (){
+        val admin:AdminDAO = AdminDAO(1, "Admin", "secret")
+        this.save(admin)
+    }
 
 
 }

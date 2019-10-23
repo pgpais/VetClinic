@@ -5,10 +5,7 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @Api(value = "VetClinic Management System - Access API",
         description = "Management access operations in the IADI 2019 Pet Clinic")
@@ -39,7 +36,9 @@ class RegisteredUserController (val regUserService: RegisteredUserService){
     @GetMapping("/pets")
     fun getAllPets(@PathVariable username:String){}
 
+    @ApiOperation(value = "Update user info")
+    @PutMapping("")
+    fun updateInfo(@PathVariable username: String, @RequestBody newUser:UserDTO){
 
-
-
+    }
 }
