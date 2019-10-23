@@ -29,23 +29,23 @@ interface AppointmentRepository: JpaRepository<AppointmentDAO, Long>{
     @Query("update AppointmentDAO apt set apt.status = :status, apt.reason = :reason where apt.id = :id")
     fun updateStatusById(id: Long, reason:String, status:AppointmentStatus)
 
-    @Query("select a from AppointmentDAO a where a.vet.vetId = :id and a.status = 0 ")
+    @Query("select a from AppointmentDAO a where a.vet.id = :id and a.status = 0 ")
     fun getPendingByVetId(id:Long) : List<AppointmentDAO>
 
-    @Query("select a from AppointmentDAO a where a.id = :id")
-    fun getById(id:Long) : Optional <AppointmentDAO>
+    fun getById(id:Long)
 }
 
 
 interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long>{
 
-    @Query("select v from VeterinarianDAO v inner join fetch v.appointments where v.vetId = :id")
+    @Query("select v from VeterinarianDAO v inner join fetch v.appointments where v.id = :id")
     fun findByIdWithAppointment(id:Long) : Optional<VeterinarianDAO>
 
-    @Query("select v from VeterinarianDAO v inner join fetch v.appointments a where v.vetId = :id and a.desc = '' ")
+    @Query("select v from VeterinarianDAO v inner join fetch v.appointments a where v.id = :id and a.desc = '' ")
     fun findByIdWithAppointmentPending(id:Long) : Optional<VeterinarianDAO>
 
 }
+
 interface ShiftsRepository: JpaRepository<ShiftsDAO, Long>{
 
 }
