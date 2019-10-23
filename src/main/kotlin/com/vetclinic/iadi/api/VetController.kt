@@ -24,7 +24,7 @@ class VetController (val vets:VetService) {
     ])
     @GetMapping("/appointments/pending/{id}")
     fun getPendingAppointments(@PathVariable id:Long):List<AppointmentDTO> =
-        handle4xx {
+        handle404 {
             vets.getPendingAppointments(id).map{AppointmentDTO(it)}
         }
 
@@ -37,7 +37,7 @@ class VetController (val vets:VetService) {
     ])
     @GetMapping("/appointments/{id}")
     fun getAppointments(@PathVariable id:Long):List<AppointmentDTO> =
-            handle4xx {
+            handle404 {
                 vets.getAppointments(id).map{AppointmentDTO(it)}
             }
 
@@ -50,10 +50,10 @@ class VetController (val vets:VetService) {
     ])
     @PostMapping("/appointments/accept/{aptId}")
     fun acceptAppointment(@PathVariable aptId:Long){ //TODO: add token to request
+        handle404 {
+            vets.acceptAppointment(aptId)}
+        }
 
-        vets.acceptAppointment(aptId)
-
-    }
 
     @ApiOperation(value = "Reject a pending appointment")
     @ApiResponses(value = [
@@ -65,8 +65,8 @@ class VetController (val vets:VetService) {
     ])
     @PostMapping("/appointments/reject/{aptId}")
     fun rejectAppointment(@PathVariable aptId:Long, @RequestBody reason:String){ //TODO: add token to request
-
-        vets.rejectAppointment(aptId, reason)
+        handle404 {
+            vets.rejectAppointment(aptId,reason)}
     }
 
     @ApiOperation(value = "Complete an appointment")
@@ -77,7 +77,9 @@ class VetController (val vets:VetService) {
 
     ])
     @PostMapping("/appointments/complete/{aptId}")
-    fun completeAppointment(@PathVariable aptId:Long, @RequestBody vetId:Long){ //TODO: add token to request
+    fun completeAppointment(@PathVariable aptId:Long){ //TODO: add token to request
+        handle404 {
+            vets.completeAppointment(aptId)}
 
     }
 
