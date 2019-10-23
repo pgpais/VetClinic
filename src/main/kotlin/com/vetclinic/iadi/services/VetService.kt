@@ -2,6 +2,7 @@ package com.vetclinic.iadi.services
 
 import com.vetclinic.iadi.model.AppointmentDAO
 import com.vetclinic.iadi.model.AppointmentRepository
+import com.vetclinic.iadi.model.AppointmentStatus
 import com.vetclinic.iadi.model.VeterinaryRepository
 import org.springframework.stereotype.Service
 import java.util.*
@@ -17,19 +18,28 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
         return vet.appointments
     }
     fun rejectAppointment(id:Long, reason:String){
-        appointments.getById(id).orElseThrow(){NotFoundException("There is no Appointment with Id $id")}
+        val app = appointments.findById(id).orElseThrow(){NotFoundException("There is no Appointment with Id $id")}
+        if(app.status == AppointmentStatus.PENDING)
         appointments.updateStatusById(id, reason, AppointmentStatus.REJECTED)
+            else
+        throw PreconditionFailedException("The Appointment cannot be completed because it's Status is ${app.status}")
     }
 
     fun acceptAppointment(id:Long){
-        appointments.getById(id).orElseThrow(){NotFoundException("There is no Appointment with Id $id")}
+        val app = appointments.findById(id).orElseThrow(){NotFoundException("There is no Appointment with Id $id")}
+        if(app.status == AppointmentStatus.PENDING)
         appointments.updateStatusById(id, "", AppointmentStatus.ACCEPTED)
+        else
+        throw PreconditionFailedException("The Appointment cannot be completed because it's Status is ${app.status}")
 
     }
 
     fun completeAppointment(id:Long){
-        appointments.getById(id).orElseThrow(){NotFoundException("There is no Appointment with Id $id")}
-        appointments.updateStatusById(id, "", AppointmentStatus.COMPLETED)
+        val app = appointments.findById(id).orElseThrow(){NotFoundException("There is no Appointment with Id $id")}
+        if(app.status == AppointmentStatus.ACCEPTED)
+            appointments.updateStatusById(id, "", AppointmentStatus.COMPLETED)
+        else
+            throw PreconditionFailedException("The Appointment cannot be completed because it's Status is ${app.status}")
 
     }
 

@@ -19,6 +19,7 @@ data class AppointmentDTO(val id:Long, val date: Date, val desc: String, var sta
     constructor(apt: AppointmentDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, apt.pet.id, apt.client.id, apt.vet.id)
 }
 
+
 data class UserDTO(val username:String, val password: String) // TODO: check if password makes sense
 
 data class ClientDTO(val id:Long, val name:String, val password:String)
@@ -42,4 +43,3 @@ data class VetShiftDTO(val vetId: Long, val shiftsDTO: List<ShiftsDTO>)
 data class VetAptsDTO(val vetId: Long, val apts: List<AppointmentDTO>)
 
 data class AdminDTO(val name:String, val password:String)
-
