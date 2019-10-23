@@ -91,15 +91,17 @@ abstract class RegisteredUsersDAO {
 }
 
 @Entity
-data class ClientDAO (
+data class ClientDAO(
         @Id @GeneratedValue override val id:Long,
         override var name:String,
         override var pass:String,
         @OneToMany(mappedBy = "owner")
-        var pets:List<PetDAO>) : RegisteredUsersDAO() {
+        var pets:List<PetDAO>,
+        @OneToMany(mappedBy = "client")
+        var appointments: List<AppointmentDAO>) : RegisteredUsersDAO() {
 
-    constructor(): this(0, "", "", emptyList())
-    constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.username, client.password, pets)
+    constructor(): this(0, "", "", emptyList(), emptyList())
+    constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.username, client.password, pets, emptyList())
 }
 
 @Entity

@@ -1,11 +1,13 @@
 package com.vetclinic.iadi.api
 
+import com.vetclinic.iadi.model.AppointmentDAO
 import com.vetclinic.iadi.services.ClientService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.web.bind.annotation.*
+import pt.unl.fct.di.iadi.vetclinic.api.handle4xx
 import javax.persistence.Entity
 
 @Api(value="VetClinic Management System - Client API",
@@ -13,7 +15,7 @@ import javax.persistence.Entity
 
 @RestController
 @RequestMapping("/client")
-class ClientController(client:ClientService){
+class ClientController(val client:ClientService){
 
 
     @ApiOperation(value="Get appointments of this user")
@@ -22,9 +24,9 @@ class ClientController(client:ClientService){
             ApiResponse(code = 404, message = "User does not exist")
     )
     @GetMapping("/apts/{userId}")
-    fun getAppointments(@PathVariable userId:Long): List<AppointmentDTO>{
+    fun getAppointments(@PathVariable userId:Long): List<AppointmentDTO> =
+        handle4xx { client.getAppointments(userId).map{AppointmentDTO(it)} }
 
-    }
 
     @PostMapping("/apts/{userId}")
     fun bookAppointment(@PathVariable userId:Long, @RequestBody apt:AppointmentDTO){
@@ -32,9 +34,9 @@ class ClientController(client:ClientService){
     }
 
     @GetMapping("/pets/{userId}")
-    fun getPets(@PathVariable userId: Long): PetDTO{
+    fun getPets(@PathVariable userId: Long): List<PetDTO> =
+        handle4xx { client.getPets(userId).map{PetDTO(it)} }
 
-    }
 
     @PostMapping("/pets/{userId}")
     fun addPet(@PathVariable userId: Long, @RequestBody pet:PetDTO){
