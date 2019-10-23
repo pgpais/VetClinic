@@ -53,12 +53,6 @@ interface ShiftsRepository: JpaRepository<ShiftsDAO, Long>{
 
 interface AdminRepository: JpaRepository<AdminDAO, Long>{
 
-    @PostConstruct //TODO: this might no be right
-    fun saveAdmin (){
-        val admin:AdminDAO = AdminDAO(1, "Admin", "secret")
-        this.save(admin)
-    }
-
 
 }
 
@@ -68,6 +62,4 @@ interface ClientRepository : JpaRepository<ClientDAO, Long> {
 
     @Query("select c from ClientDAO c inner join fetch c.pets where c.id = :id")
     fun findByIdWithPets(id: Long): Optional<ClientDAO>
-
-
 }

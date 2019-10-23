@@ -1,5 +1,6 @@
 package com.vetclinic.iadi.api
 
+import com.vetclinic.iadi.model.AdminDAO
 import com.vetclinic.iadi.services.AdminService
 import com.vetclinic.iadi.services.VetService
 import io.swagger.annotations.Api
@@ -15,6 +16,10 @@ import java.util.*
 @RestController
 @RequestMapping("/admin")
 class AdminController(val admins: AdminService, val vets: VetService) {
+
+    @GetMapping("/{id}")
+    fun getAdmin(@PathVariable id:Long) : AdminDAO =
+        handle4xx { admins.getAdminById(id) }
 
     @ApiOperation(value="Create a new admin")
     @ApiResponses(value = [

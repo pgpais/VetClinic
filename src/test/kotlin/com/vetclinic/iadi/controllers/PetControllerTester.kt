@@ -79,7 +79,7 @@ class PetControllerTester {
         Mockito.`when`(pets.getAllPets()).thenReturn(petsDAO)
 
         val result = mvc.perform(get(petsURL))
-                .andExpect(status().isOk())
+                .andExpect(status().isOk)
                 .andExpect(jsonPath("$", hasSize<Any>(petsAptsDTO.size)))
                 .andReturn()
 

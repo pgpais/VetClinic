@@ -42,4 +42,4 @@ data class VetShiftDTO(val vetId: Long, val shiftsDTO: List<ShiftsDTO>)
 
 data class VetAptsDTO(val vetId: Long, val apts: List<AppointmentDTO>)
 
-data class AdminDTO(val name:String, val password:String)
+data class AdminDTO(val id: Long, val name:String, val pass:String)

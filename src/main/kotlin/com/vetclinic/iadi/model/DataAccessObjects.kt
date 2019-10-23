@@ -1,7 +1,6 @@
 package com.vetclinic.iadi.model
 
 import com.vetclinic.iadi.api.*
-import java.net.URL
 import java.util.*
 import javax.persistence.*
 
@@ -112,7 +111,9 @@ data class ClientDAO(
 data class AdminDAO(
         @Id @GeneratedValue override val id:Long,
         override  var name: String,
-        override  var pass: String) : RegisteredUsersDAO()
+        override  var pass: String) : RegisteredUsersDAO() {
+    constructor(admin: AdminDTO) : this(admin.id, admin.name, admin.pass)
+}
 
 @Entity
 data class ShiftsDAO(
