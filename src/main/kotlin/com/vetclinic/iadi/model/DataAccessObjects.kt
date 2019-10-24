@@ -1,7 +1,6 @@
 package com.vetclinic.iadi.model
 
 import com.vetclinic.iadi.api.*
-import java.net.URL
 import java.util.*
 import javax.persistence.*
 
@@ -68,7 +67,7 @@ data class AppointmentDAO(
 @Entity
 data class VeterinarianDAO(
         @Id @GeneratedValue override val id: Long,
-        override var name: String,
+        override var username: String,
         override var pass:String,
         var photo: String,
         @OneToMany(mappedBy = "vet")
@@ -81,7 +80,7 @@ data class VeterinarianDAO(
     constructor(vet: VeterinarianDTO):this(vet.vetId, vet.name, vet.password, vet.photo, vet.schedule, emptyList())
 
     fun update(other: VeterinarianDAO) {
-        this.name = other.name
+        this.username = other.username
         this.appointments = other.appointments
     }
 }
@@ -89,14 +88,14 @@ data class VeterinarianDAO(
 abstract class RegisteredUsersDAO {
 
     abstract val id: Long //TODO: change to username
-    abstract var name: String
+    abstract var username: String
     abstract var pass: String
 }
 
 @Entity
 data class ClientDAO(
         @Id @GeneratedValue override val id:Long,
-        override var name:String,
+        override var username:String,
         override var pass:String,
         @OneToMany(mappedBy = "owner")
         var pets:List<PetDAO>,
@@ -110,7 +109,7 @@ data class ClientDAO(
 @Entity
 data class AdminDAO(
         @Id @GeneratedValue override val id:Long,
-        override  var name: String,
+        override  var username: String,
         override  var pass: String) : RegisteredUsersDAO()
 
 @Entity

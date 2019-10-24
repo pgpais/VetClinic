@@ -116,7 +116,7 @@ class PetControllerTester {
         val louroDAO = PetDAO(0L, "louro", "Papagaio", "www.google.com", user, emptyList())
         val louro = PetDTO(louroDAO)
 
-        val userDTO = ClientDTO(user.id, user.name, user.pass)
+        val userDTO = ClientDTO(user.id, user.username, user.pass)
 
         val userJSON = mapper.writeValueAsString(userDTO)
         val louroJSON = mapper.writeValueAsString(louro)

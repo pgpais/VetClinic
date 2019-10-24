@@ -1,7 +1,6 @@
 package com.vetclinic.iadi.api
 
 import com.vetclinic.iadi.model.*
-import java.net.URL
 import java.util.*
 
 //TODO: add the other two parameters here
@@ -30,7 +29,7 @@ data class ClientPetDTO(val clientID:Long, val petDTO: List<PetDTO>)
 data class VeterinarianDTO(val vetId:Long, val name:String, val password: String, val photo: String, val schedule: List<ShiftsDAO>){
 
 
-    constructor(vetDAO: VeterinarianDAO) : this(vetDAO.id,  vetDAO.name, vetDAO.pass, vetDAO.photo, vetDAO.schedule)
+    constructor(vetDAO: VeterinarianDAO) : this(vetDAO.id,  vetDAO.username, vetDAO.pass, vetDAO.photo, vetDAO.schedule)
 }
 
 data class ShiftsDTO(val id: Long, val start:Date, val end:Date, val vetId: Long){

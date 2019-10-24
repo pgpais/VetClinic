@@ -57,7 +57,7 @@ class UserPasswordAuthenticationFilterToJWT (
         val user = ObjectMapper().readValue(request!!.inputStream, ClientDAO::class.java)
 
         // perform the "normal" authentication
-        val auth = anAuthenticationManager.authenticate(UsernamePasswordAuthenticationToken(user.name, user.pass))
+        val auth = anAuthenticationManager.authenticate(UsernamePasswordAuthenticationToken(user.username, user.pass))
 
         return if (auth.isAuthenticated) {
             // Proceed with an authenticated user
@@ -161,7 +161,7 @@ class UserPasswordSignUpFilterToJWT (
                 .addClient(user)
                 .orElse( null )
                 .let {
-                    val auth = UserAuthToken(user.name)
+                    val auth = UserAuthToken(user.username)
                     SecurityContextHolder.getContext().authentication = auth
                     auth
                 }

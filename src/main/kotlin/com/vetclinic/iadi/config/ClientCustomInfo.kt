@@ -37,7 +37,7 @@ class CustomClientInfoService(
         username?.let {
             val clientDAO = clientService.getClientByName(it)
             if( clientDAO.isPresent) {
-                return ClientCustomInfo(clientDAO.get().name, clientDAO.get().pass, mutableListOf())
+                return ClientCustomInfo(clientDAO.get().username, clientDAO.get().pass, mutableListOf())
             } else
                 throw UsernameNotFoundException(username)
         }

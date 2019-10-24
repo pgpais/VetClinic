@@ -22,7 +22,7 @@ class ClientController(val client:ClientService, val apts:AppointmentService, va
 
     @GetMapping("/{id}")
     fun getOneClient(@PathVariable id:Long) : ClientDTO =
-            handle4xx { client.getClientById(id).let{ ClientDTO(it.id, it.name, it.pass) } }
+            handle4xx { client.getClientById(id).let{ ClientDTO(it.id, it.username, it.pass) } }
 
     @ApiOperation(value="Get appointments of this user")
     @ApiResponses(
