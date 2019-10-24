@@ -3,6 +3,7 @@ package com.vetclinic.iadi.services
 import com.vetclinic.iadi.api.AdminDTO
 import com.vetclinic.iadi.api.VeterinarianDTO
 import com.vetclinic.iadi.model.AdminDAO
+import com.vetclinic.iadi.model.AdminRepository
 import com.vetclinic.iadi.model.VeterinarianDAO
 import com.vetclinic.iadi.model.VeterinaryRepository
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -10,7 +11,11 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class AdminService(val vets: VeterinaryRepository) {
+class AdminService(val vets: VeterinaryRepository, val admins: AdminRepository) {
+
+    fun getAdminByUsername(username:String)  :Optional<AdminDAO> = admins.findByUsername(username)
+
+
     fun createAdmin(adminDTO: AdminDAO) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

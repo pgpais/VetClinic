@@ -44,6 +44,9 @@ interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long>{
     @Query("select v from VeterinarianDAO v inner join fetch v.appointments a where v.id = :id and a.desc = '' ")
     fun findByIdWithAppointmentPending(id:Long) : Optional<VeterinarianDAO>
 
+    fun findByUsername(username:String) : Optional<VeterinarianDAO>
+
+
 }
 
 interface ShiftsRepository: JpaRepository<ShiftsDAO, Long>{
@@ -53,6 +56,7 @@ interface ShiftsRepository: JpaRepository<ShiftsDAO, Long>{
 
 interface AdminRepository: JpaRepository<AdminDAO, Long>{
 
+    fun findByUsername(username:String) : Optional<AdminDAO>
 
 
 }
@@ -61,7 +65,7 @@ interface ClientRepository : JpaRepository<ClientDAO, Long> {
     @Query("select c from ClientDAO c inner join fetch c.appointments where c.id = :id")
     fun findByIdWithAppointment(id:Long) : Optional<ClientDAO>
 
-    fun findByName(username:String) : Optional<ClientDAO>
+    fun findByUsername(username:String) : Optional<ClientDAO>
 
     @Query("select c from ClientDAO c inner join fetch c.pets where c.id = :id")
     fun findByIdWithPets(id: Long): Optional<ClientDAO>

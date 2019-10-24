@@ -27,7 +27,7 @@ class VetClinicApplication {
             vets: VeterinaryRepository
     ) = CommandLineRunner {
 
-        val user = ClientDAO(1,"", BCryptPasswordEncoder().encode("batatas"), emptyList(), emptyList())
+        val user = ClientDAO(1,"bla", BCryptPasswordEncoder().encode("batatas"), emptyList(), emptyList())
         users.save(user)
 
         val pantufas = PetDAO(2L, "pantufas", "Dog", "", user, emptyList())
@@ -50,10 +50,13 @@ class VetClinicApplication {
 
         apts.save(apt)
 
+        apts.findById(1)
+
         apts.updateStatusById(1,"i'm sick",AppointmentStatus.REJECTED)
 
         apts.updateStatusById(1,"",AppointmentStatus.ACCEPTED)
 
+        apts.delete(apt)
 
 
         /*

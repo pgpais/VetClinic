@@ -12,7 +12,7 @@ import java.util.*
 @Service
 class ClientService(val clientRepository: ClientRepository) {
     fun login(client: ClientDTO) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
 
@@ -29,7 +29,7 @@ class ClientService(val clientRepository: ClientRepository) {
 
     fun getClientById(id:Long) = clientRepository.findById(id).orElseThrow{NotFoundException("Couldn't find client with id $id")}
 
-    fun getClientByName(username:String)  :Optional<ClientDAO> = clientRepository.findByName(username)
+    fun getClientByUsername(username:String)  :Optional<ClientDAO> = clientRepository.findByUsername(username)
 
     fun getAppointments(userId: Long) : List<AppointmentDAO>{
         val client = clientRepository.findByIdWithAppointment(userId)

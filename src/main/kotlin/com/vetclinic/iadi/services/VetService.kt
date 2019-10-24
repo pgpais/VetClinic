@@ -49,5 +49,9 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    fun getVetByUsername(username:String)  :Optional<VeterinarianDAO> = vets.findByUsername(username)
+
+
+
 }
 

@@ -2,7 +2,9 @@ package com.vetclinic.iadi.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.vetclinic.iadi.model.ClientDAO
+import com.vetclinic.iadi.model.RegisteredUsersDAO
 import com.vetclinic.iadi.services.ClientService
+import com.vetclinic.iadi.services.RegisteredUserService
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.security.authentication.AuthenticationManager
@@ -147,7 +149,7 @@ class JWTAuthenticationFilter: GenericFilterBean() {
  *
  */
 
-class UserPasswordSignUpFilterToJWT (
+class ClientPasswordSignUpFilterToJWT (
         defaultFilterProcessesUrl: String?,
         private val users: ClientService
 ) : AbstractAuthenticationProcessingFilter(defaultFilterProcessesUrl) {
@@ -175,3 +177,4 @@ class UserPasswordSignUpFilterToJWT (
         addResponseToken(auth, response)
     }
 }
+
