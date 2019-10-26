@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
         description = "Management access operations in the IADI 2019 Pet Clinic")
 
 @RestController
-@RequestMapping("/{username}")
+@RequestMapping("/home/{username}")
 class RegisteredUserController (val regUserService: RegisteredUserService){
 
 

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*
         description = "Management access operations in the IADI 2019 Pet Clinic")
 
 @RestController
-@RequestMapping("")
+@RequestMapping("/home")
 class UnRegUserController (val clientService: ClientService, val vets: VetService) { //TODO: add service (call it something related with accounts?)
 
     @ApiOperation(value = "Login with given user") // TODO: should probably return a token
