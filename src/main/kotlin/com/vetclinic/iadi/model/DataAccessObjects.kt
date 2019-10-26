@@ -74,7 +74,7 @@ data class VeterinarianDAO(
         var schedule:List<ShiftsDAO>,
         @OneToMany(mappedBy = "vet")
         var appointments: List<AppointmentDAO>
-):RegisteredUsersDAO() {
+):RegisteredUsersDAO(id) {
 
     constructor(vet: VeterinarianDTO, schedule: List<ShiftsDAO>, apt: List<AppointmentDAO>) : this(vet.vetId, vet.name, vet.password, vet.photo, schedule, apt)
 
@@ -84,10 +84,10 @@ data class VeterinarianDAO(
     }
 }
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-abstract class RegisteredUsersDAO {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+abstract class RegisteredUsersDAO (//TODO: change to username
+        @Id open val id: Long) {
 
-    abstract val id: Long //TODO: change to username
     abstract var name: String
     abstract var pass: String
     //TODO: add rest of info
@@ -101,9 +101,9 @@ data class ClientDAO(
         @OneToMany(mappedBy = "owner")
         var pets:List<PetDAO>,
         @OneToMany(mappedBy = "client")
-        var appointments: List<AppointmentDAO>) : RegisteredUsersDAO() {
+        var appointments: List<AppointmentDAO>) : RegisteredUsersDAO(id) {
 
-    constructor(client: ClientDTO): this(client.id, client.name, client.password, emptyList(), emptyList())
+    constructor(client:ClientDTO): this(client.id, client.name, client.password, emptyList(), emptyList())
     constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.name, client.password, pets, emptyList())
 }
 
@@ -111,7 +111,7 @@ data class ClientDAO(
 data class AdminDAO(
         @Id @GeneratedValue override val id:Long,
         override  var name: String,
-        override  var pass: String) : RegisteredUsersDAO() {
+        override  var pass: String) : RegisteredUsersDAO(id) {
     constructor(admin: AdminDTO) : this(admin.id, admin.name, admin.pass)
 }
 

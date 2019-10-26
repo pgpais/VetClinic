@@ -22,7 +22,7 @@ class AdminController(val admins: AdminService, val vets: VetService) {
     fun getAdmin(@PathVariable id:Long) : AdminDTO =
         handle4xx { AdminDTO(admins.getAdminById(id)) }
 
-    @GetMapping("/{id}")
+    @GetMapping("/user/{id}")
     fun getUser(@PathVariable id:Long) : UserDTO =
         handle4xx { UserDTO(admins.getUserById(id)) }
 

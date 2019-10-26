@@ -13,7 +13,6 @@ import java.util.*
 class VetClinicApplication {
 
     @Bean
-    @Profile("runtime")
     fun init(
             pets: PetRepository,
             apts: AppointmentRepository,
@@ -38,7 +37,8 @@ class VetClinicApplication {
 
         vets.save(manel)
 
-        val admin = AdminDAO(1, "Admin", "secret")
+
+        val admin = AdminDAO(3, "Admin", "secret")
 
         admins.save(admin)
 
