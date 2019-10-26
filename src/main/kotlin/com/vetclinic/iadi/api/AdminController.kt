@@ -18,6 +18,7 @@ import java.util.*
 
 
 @RestController
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequestMapping("/admin")
 class AdminController(val admins: AdminService, val vets: VetService) {
 

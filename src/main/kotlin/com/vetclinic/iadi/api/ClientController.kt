@@ -10,6 +10,7 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*
         description = "Management operations of Client in the IADI 2019 Pet Clinic")
 
 @RestController
+@PreAuthorize("hasRole('ROLE_CLIENT')")
 @RequestMapping("/client")
 class ClientController(val client:ClientService, val apts:AppointmentService, val pets:PetService, val vets:VetService){ //TODO: so many services up here....
 
