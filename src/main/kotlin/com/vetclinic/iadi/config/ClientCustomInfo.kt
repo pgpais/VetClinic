@@ -43,7 +43,7 @@ class CustomClientInfoService(
             val clientDAO = clientService.getClientByUsername(it)
             val adminDAO = adminService.getAdminByUsername(it)
             val veterinarianDAO = vetService.getVetByUsername(it)
-                        
+
 
             if( clientDAO.isPresent) {
                 return ClientCustomInfo(clientDAO.get().username, clientDAO.get().pass, mutableListOf(SimpleGrantedAuthority("ROLE_CLIENT")))

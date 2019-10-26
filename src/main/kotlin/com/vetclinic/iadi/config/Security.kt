@@ -30,7 +30,7 @@ class Security(val customClientinfo:CustomClientInfoService,
                 .addFilterBefore(ClientPasswordSignUpFilterToJWT ("/register", clients),
                         BasicAuthenticationFilter::class.java)
                 .addFilterBefore(JWTAuthenticationFilter(),
-                        BasicAuthenticationFilter::class.java).formLogin()
+                        BasicAuthenticationFilter::class.java)
     }
 
     override fun configure(auth: AuthenticationManagerBuilder) {

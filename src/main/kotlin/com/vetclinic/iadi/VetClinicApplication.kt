@@ -17,7 +17,6 @@ import java.util.*
 class VetClinicApplication {
 
     @Bean
-    @Profile("runtime")
     fun init(
             pets: PetRepository,
             apts: AppointmentRepository,
@@ -41,6 +40,9 @@ class VetClinicApplication {
         pets.save(bigodes)
 
         vets.save(manel)
+
+        val joao = AdminDAO(70L, "joao", BCryptPasswordEncoder().encode("hi"))
+        admins.save(joao)
 
         val turnodas8 = ShiftsDAO(4L, Date.from(Instant.now()),Date.from(Instant.now()),manel)
 
