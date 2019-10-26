@@ -2,10 +2,12 @@ package com.vetclinic.iadi.services
 
 import com.vetclinic.iadi.model.*
 import org.springframework.stereotype.Service
+import java.lang.Exception
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 @Service
-class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRepository) {
+class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRepository, val shiftRep: ShiftsRepository) {
 
     fun getVetbyId(id:Long) = vets.findById(id).orElseThrow{NotFoundException("There is no Veterinarian with Id $id")}
 
@@ -49,9 +51,80 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
         return appointments.getPendingByVetId(id);
     }
 
-    fun setSchedule(vetId: Long, adminId: Long, shifts: List<Pair<Date, Date>>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    fun setSchedule(vetId: Long, newShift:ShiftsDAO) {
 
+        val shifts = getVetbyId(vetId).schedule
+
+        val duration = ChronoUnit.HOURS.between(newShift.start, newShift.end)
+
+        //can't have shifts more than 12h
+        if (duration > 12) {
+
+            throw Exception("More than 12h")
+            //fail
+        }
+
+        if (shifts.isEmpty()) {
+            shiftRep.save(newShift)
+
+        } else {
+            var weekcounter = duration
+            var monthcounter = duration
+
+            shifts.forEach {
+
+                //can't begin a shift in the middle of a shift and can't end a shift in the middle of a shift
+                if (
+                        (newShift.start.isBefore(it.end) and newShift.end.isAfter(it.end) or
+                                (newShift.start.isBefore(it.start) and newShift.end.isBefore(it.end)))) {
+
+                    throw Exception("Middle of shift" + it.start + it.end + newShift.start + newShift.end)
+
+
+                }
+
+                //can't have a shift that engulfs another shift
+                else if (
+                        (newShift.start.isBefore(it.start) and newShift.end.isAfter(it.end))
+                ) {
+                    throw Exception("Engulf shift")
+                    //fail
+                }
+
+                //can't work if he had a shift longer than 6h and the difference between his new shift start and old end is lass than 8h
+                else if (
+                        (
+                                (ChronoUnit.HOURS.between(it.start, it.end) >= 6) and
+                                        (ChronoUnit.HOURS.between(newShift.start, it.end) < 8)
+                                )
+                ) {
+                    throw Exception("No rest")
+
+                }
+
+                if (ChronoUnit.MONTHS.between(it.start, newShift.start) < 1) {
+                    monthcounter += ChronoUnit.HOURS.between(it.start, it.end)
+
+                }
+                if (ChronoUnit.WEEKS.between(it.start, newShift.start) < 1) {
+                    weekcounter += ChronoUnit.HOURS.between(it.start, it.end)
+
+                }
+
+
+            }
+            if (monthcounter < 160) {
+                //not enough h
+            }
+
+            if (weekcounter > 40) {
+                //too many h
+            }
+
+
+        }
+    }
 }
+
+
 

@@ -2,6 +2,7 @@ package com.vetclinic.iadi.api
 
 import com.vetclinic.iadi.model.*
 import java.net.URL
+import java.time.LocalDateTime
 import java.util.*
 
 //TODO: add the other two parameters here
@@ -35,7 +36,7 @@ data class VeterinarianDTO(val vetId:Long, val name:String, val pass: String, va
     constructor(vetDAO: VeterinarianDAO) : this(vetDAO.id,  vetDAO.name, vetDAO.pass, vetDAO.photo)
 }
 
-data class ShiftsDTO(val id: Long, val start:Date, val end:Date, val vetId: Long){
+data class ShiftsDTO(val id: Long, val start: LocalDateTime, val end:LocalDateTime, val vetId: Long){
 
     constructor(shiftsDAO: ShiftsDAO) : this(shiftsDAO.id, shiftsDAO.start, shiftsDAO.end, shiftsDAO.vet.id)
 }

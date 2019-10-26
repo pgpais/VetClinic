@@ -1,6 +1,7 @@
 package com.vetclinic.iadi.api
 
 import com.vetclinic.iadi.model.AdminDAO
+import com.vetclinic.iadi.model.ShiftsDAO
 import com.vetclinic.iadi.model.VeterinarianDAO
 import com.vetclinic.iadi.services.AdminService
 import com.vetclinic.iadi.services.VetService
@@ -70,8 +71,8 @@ class AdminController(val admins: AdminService, val vets: VetService) {
         ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
     ])
     @PostMapping("/setSchedule/{vetId}")
-    fun setSchedule(@PathVariable vetId: Long, @RequestBody adminId: Long, @RequestBody shifts:List<Pair<Date, Date>>){
-        vets.setSchedule(vetId, adminId, shifts)
+    fun setSchedule(@PathVariable vetId: Long, @RequestBody shifts:ShiftsDTO){
+        vets.setSchedule(vetId, ShiftsDAO( shifts, vets.getVetbyId(vetId)))
     }
 
     @ApiOperation(value = "Check a Vet's appointments")

@@ -1,6 +1,7 @@
 package com.vetclinic.iadi.model
 
 import com.vetclinic.iadi.api.*
+import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
 
@@ -70,7 +71,7 @@ data class VeterinarianDAO(
         override var name: String,
         override var pass:String,
         var photo: String,
-        @OneToMany(mappedBy = "vet")
+        @OneToMany(mappedBy = "vet", fetch = FetchType.EAGER)
         var schedule:List<ShiftsDAO>,
         @OneToMany(mappedBy = "vet")
         var appointments: List<AppointmentDAO>
@@ -118,7 +119,7 @@ data class AdminDAO(
 @Entity
 data class ShiftsDAO(
         @Id @GeneratedValue val id:Long,
-        var start:Date, var end:Date,
+        var start:LocalDateTime, var end:LocalDateTime,
         @ManyToOne var vet: VeterinarianDAO){
     constructor(schedule:ShiftsDTO, vet: VeterinarianDAO): this(schedule.id, schedule.start, schedule.end, vet)
 }

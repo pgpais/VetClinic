@@ -44,6 +44,11 @@ interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long>{
     @Query("select v from VeterinarianDAO v inner join fetch v.appointments a where v.id = :id and a.desc = '' ")
     fun findByIdWithAppointmentPending(id:Long) : Optional<VeterinarianDAO>
 
+    @Modifying
+    @Transactional
+    @Query("update VeterinarianDAO v set v.schedule = :plus  where v.id = :vetId")
+    fun updateShifts(vetId: Long, plus: List<ShiftsDAO>)
+
 }
 
 interface ShiftsRepository: JpaRepository<ShiftsDAO, Long>{
