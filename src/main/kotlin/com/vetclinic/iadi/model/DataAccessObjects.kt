@@ -76,8 +76,7 @@ data class VeterinarianDAO(
         var appointments: List<AppointmentDAO>
 ):RegisteredUsersDAO() {
 
-    constructor(vet: VeterinarianDTO, apt: List<AppointmentDAO>) : this(vet.vetId, vet.name, vet.password, vet.photo, vet.schedule, apt)
-    constructor(vet: VeterinarianDTO):this(vet.vetId, vet.name, vet.password, vet.photo, vet.schedule, emptyList())
+    constructor(vet: VeterinarianDTO, schedule: List<ShiftsDAO>, apt: List<AppointmentDAO>) : this(vet.vetId, vet.name, vet.password, vet.photo, schedule, apt)
 
     fun update(other: VeterinarianDAO) {
         this.name = other.name

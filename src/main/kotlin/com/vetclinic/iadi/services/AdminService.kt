@@ -2,25 +2,27 @@ package com.vetclinic.iadi.services
 
 import com.vetclinic.iadi.api.AdminDTO
 import com.vetclinic.iadi.api.VeterinarianDTO
+import com.vetclinic.iadi.model.AdminDAO
 import com.vetclinic.iadi.model.AdminRepository
 import com.vetclinic.iadi.model.VeterinarianDAO
 import com.vetclinic.iadi.model.VeterinaryRepository
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class AdminService(val vets: VeterinaryRepository, val admins:AdminRepository) {
-    fun createAdmin(adminDTO: AdminDTO) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun createAdmin(admin: AdminDAO) {
+        admins.save(admin)
     }
 
-    fun createVet(vet: VeterinarianDTO) {
+    fun createVet(vet: VeterinarianDAO) {
 
-        val newVet = VeterinarianDAO(vet)
-        vets.save(newVet)
+        vets.save(vet)
     }
 
     fun deleteAdmin(id: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val admin = admins.findById(id).orElseThrow { NotFoundException("Couldn't find admin") }
+        admins.delete(admin)
     }
 
     fun deleteVet(id: Long) {

@@ -27,10 +27,10 @@ data class ClientDTO(val id:Long, val name:String, val password:String)
 data class ClientPetDTO(val client:ClientDTO, val petDTO: List<PetDTO>)
 
 
-data class VeterinarianDTO(val vetId:Long, val name:String, val password: String, val photo: String, val schedule: List<ShiftsDAO>){
+data class VeterinarianDTO(val vetId:Long, val name:String, val password: String, val photo: String){
 
 
-    constructor(vetDAO: VeterinarianDAO) : this(vetDAO.id,  vetDAO.name, vetDAO.pass, vetDAO.photo, vetDAO.schedule)
+    constructor(vetDAO: VeterinarianDAO) : this(vetDAO.id,  vetDAO.name, vetDAO.pass, vetDAO.photo)
 }
 
 data class ShiftsDTO(val id: Long, val start:Date, val end:Date, val vetId: Long){
