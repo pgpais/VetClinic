@@ -83,7 +83,8 @@ data class VeterinarianDAO(
         this.appointments = other.appointments
     }
 }
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 abstract class RegisteredUsersDAO {
 
     abstract val id: Long //TODO: change to username

@@ -50,6 +50,9 @@ interface ShiftsRepository: JpaRepository<ShiftsDAO, Long>{
 
 }
 
+interface UserRepository: JpaRepository<RegisteredUsersDAO, Long>{
+
+}
 
 interface AdminRepository: JpaRepository<AdminDAO, Long>{
 

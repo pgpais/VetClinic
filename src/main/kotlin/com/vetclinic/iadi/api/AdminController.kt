@@ -19,8 +19,12 @@ import java.util.*
 class AdminController(val admins: AdminService, val vets: VetService) {
 
     @GetMapping("/{id}")
-    fun getAdmin(@PathVariable id:Long) : AdminDAO =
-        handle4xx { admins.getAdminById(id) }
+    fun getAdmin(@PathVariable id:Long) : AdminDTO =
+        handle4xx { AdminDTO(admins.getAdminById(id)) }
+
+    @GetMapping("/{id}")
+    fun getUser(@PathVariable id:Long) : UserDTO =
+        handle4xx { UserDTO(admins.getUserById(id)) }
 
     @ApiOperation(value="Create a new admin")
     @ApiResponses(value = [

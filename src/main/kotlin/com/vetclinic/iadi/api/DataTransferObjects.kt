@@ -20,7 +20,9 @@ data class AppointmentDTO(val id:Long, val date: Date, val desc: String, var sta
 }
 
 
-data class UserDTO(val username:String, val password: String) // TODO: check if password makes sense
+data class UserDTO(val id: Long, val name:String){ // TODO: check if password makes sense
+    constructor(user: RegisteredUsersDAO) : this(user.id, user.name)
+}
 
 data class ClientDTO(val id:Long, val name:String, val password:String)
 
@@ -42,4 +44,7 @@ data class VetShiftDTO(val vet:VeterinarianDTO, val shiftsDTO: List<ShiftsDTO>)
 
 data class VetAptsDTO(val vet:VeterinarianDTO, val apts: List<AppointmentDTO>)
 
-data class AdminDTO(val id: Long, val name:String, val pass:String)
+data class AdminDTO(val id: Long, val name:String, val pass:String){
+
+    constructor(admin: AdminDAO) : this(admin.id, admin.name, admin.pass)
+}

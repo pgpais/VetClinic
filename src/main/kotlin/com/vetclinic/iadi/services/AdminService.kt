@@ -4,13 +4,14 @@ import com.vetclinic.iadi.api.AdminDTO
 import com.vetclinic.iadi.api.VeterinarianDTO
 import com.vetclinic.iadi.model.AdminDAO
 import com.vetclinic.iadi.model.AdminRepository
+import com.vetclinic.iadi.model.UserRepository
 import com.vetclinic.iadi.model.VeterinarianDAO
 import com.vetclinic.iadi.model.VeterinaryRepository
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class AdminService(val vets: VeterinaryRepository, val admins:AdminRepository) {
+class AdminService(val vets: VeterinaryRepository, val admins:AdminRepository, val users:UserRepository) {
     fun createAdmin(admin: AdminDAO) {
         admins.save(admin)
     }
@@ -32,5 +33,8 @@ class AdminService(val vets: VeterinaryRepository, val admins:AdminRepository) {
 
     fun getAdminById(id: Long) =
             admins.findById(id).orElseThrow{ NotFoundException("Couldn't find user with id $id") }
+
+    fun getUserById(id: Long) =
+            users.findById(id).orElseThrow { NotFoundException("Couldn't find user with id $id") }
 
 }
