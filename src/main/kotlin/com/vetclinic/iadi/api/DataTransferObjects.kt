@@ -40,6 +40,6 @@ data class ShiftsDTO(val id: Long, val start:Date, val end:Date, val vetId: Long
 
 data class VetShiftDTO(val vetId: Long, val shiftsDTO: List<ShiftsDTO>)
 
-data class VetAptsDTO(val vetId: Long, val apts: List<AppointmentDTO>)
+data class VetAptsDTO(val vet:VeterinarianDTO, val apts: List<AppointmentDTO>)
 
 data class AdminDTO(val id: Long, val name:String, val pass:String)

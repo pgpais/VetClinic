@@ -1,6 +1,8 @@
 package com.vetclinic.iadi.api
 
+import com.vetclinic.iadi.model.VeterinarianDAO
 import com.vetclinic.iadi.services.ClientService
+import com.vetclinic.iadi.services.VetService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("")
-class UnRegUserController (val clientService: ClientService) { //TODO: add service (call it something related with accounts?)
+class UnRegUserController (val clientService: ClientService, val vets: VetService) { //TODO: add service (call it something related with accounts?)
 
     @ApiOperation(value = "Login with given user") // TODO: should probably return a token
     @ApiResponses(value = [
@@ -42,7 +44,7 @@ class UnRegUserController (val clientService: ClientService) { //TODO: add servi
         ApiResponse(code = 404, message = "There are no Employees registered")
     ])
     @GetMapping("/listVets")
-    fun listVets():List<VeterinarianDTO>  {
-        return emptyList() // TODO: request to vetService?
-    }
+    fun listVets():List<VetAptsDTO> = vets.getAllVets().map { VetAptsDTO(VeterinarianDTO(it),it.appointments.map { AppointmentDTO(it) }) }
+
+
 }
