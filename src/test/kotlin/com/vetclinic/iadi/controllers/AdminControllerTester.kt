@@ -46,7 +46,7 @@ class AdminControllerTester {
 
         Mockito.`when`(admins.getUserById(2)).thenReturn(adminDAO)
 
-        val result = mvc.perform(get("$adminsURL/2"))
+        val result = mvc.perform(get("$adminsURL/user/2"))
                 .andExpect(status().isOk)
                 .andReturn()
 

@@ -76,7 +76,7 @@ data class VeterinarianDAO(
         var appointments: List<AppointmentDAO>
 ):RegisteredUsersDAO(id) {
 
-    constructor(vet: VeterinarianDTO, schedule: List<ShiftsDAO>, apt: List<AppointmentDAO>) : this(vet.vetId, vet.name, vet.password, vet.photo, schedule, apt)
+    constructor(vet: VeterinarianDTO, schedule: List<ShiftsDAO>, apt: List<AppointmentDAO>) : this(vet.vetId, vet.name, vet.pass, vet.photo, schedule, apt)
 
     fun update(other: VeterinarianDAO) {
         this.name = other.name
@@ -103,8 +103,8 @@ data class ClientDAO(
         @OneToMany(mappedBy = "client")
         var appointments: List<AppointmentDAO>) : RegisteredUsersDAO(id) {
 
-    constructor(client:ClientDTO): this(client.id, client.name, client.password, emptyList(), emptyList())
-    constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.name, client.password, pets, emptyList())
+    constructor(client:ClientDTO): this(client.id, client.name, client.pass, emptyList(), emptyList())
+    constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.name, client.pass, pets, emptyList())
 }
 
 @Entity

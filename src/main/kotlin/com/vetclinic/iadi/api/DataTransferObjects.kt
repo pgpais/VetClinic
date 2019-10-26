@@ -20,16 +20,16 @@ data class AppointmentDTO(val id:Long, val date: Date, val desc: String, var sta
 }
 
 
-data class UserDTO(val id: Long, val name:String){ // TODO: check if password makes sense
-    constructor(user: RegisteredUsersDAO) : this(user.id, user.name)
+data class UserDTO(val id: Long, val name:String, val pass:String){ // TODO: check if password makes sense
+    constructor(user: RegisteredUsersDAO) : this(user.id, user.name, user.pass)
 }
 
-data class ClientDTO(val id:Long, val name:String, val password:String)
+data class ClientDTO(val id:Long, val name:String, val pass:String)
 
 data class ClientPetDTO(val client:ClientDTO, val petDTO: List<PetDTO>)
 
 
-data class VeterinarianDTO(val vetId:Long, val name:String, val password: String, val photo: String){
+data class VeterinarianDTO(val vetId:Long, val name:String, val pass: String, val photo: String){
 
 
     constructor(vetDAO: VeterinarianDAO) : this(vetDAO.id,  vetDAO.name, vetDAO.pass, vetDAO.photo)
