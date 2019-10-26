@@ -24,7 +24,7 @@ data class UserDTO(val username:String, val password: String) // TODO: check if 
 
 data class ClientDTO(val id:Long, val name:String, val password:String)
 
-data class ClientPetDTO(val clientID:Long, val petDTO: List<PetDTO>)
+data class ClientPetDTO(val client:ClientDTO, val petDTO: List<PetDTO>)
 
 
 data class VeterinarianDTO(val vetId:Long, val name:String, val password: String, val photo: String, val schedule: List<ShiftsDAO>){
@@ -38,7 +38,7 @@ data class ShiftsDTO(val id: Long, val start:Date, val end:Date, val vetId: Long
     constructor(shiftsDAO: ShiftsDAO) : this(shiftsDAO.id, shiftsDAO.start, shiftsDAO.end, shiftsDAO.vet.id)
 }
 
-data class VetShiftDTO(val vetId: Long, val shiftsDTO: List<ShiftsDTO>)
+data class VetShiftDTO(val vet:VeterinarianDTO, val shiftsDTO: List<ShiftsDTO>)
 
 data class VetAptsDTO(val vet:VeterinarianDTO, val apts: List<AppointmentDTO>)
 

@@ -1,9 +1,6 @@
 package com.vetclinic.iadi.services
 
-import com.vetclinic.iadi.model.AppointmentDAO
-import com.vetclinic.iadi.model.AppointmentRepository
-import com.vetclinic.iadi.model.AppointmentStatus
-import com.vetclinic.iadi.model.VeterinaryRepository
+import com.vetclinic.iadi.model.*
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -12,30 +9,34 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
 
     fun getVetbyId(id:Long) = vets.findById(id).orElseThrow{NotFoundException("There is no Veterinarian with Id $id")}
 
+    fun getAllVets():Iterable<VeterinarianDAO> = vets.findAll()
+
     fun getAppointments(id:Long): List<AppointmentDAO> {
 
         val vet  = vets.findByIdWithAppointment(id).orElseThrow { NotFoundException("There is no Vet with Id $id") }
         return vet.appointments
     }
     fun rejectAppointment(id:Long, reason:String){
-        val app = appointments.findById(id).orElseThrow(){NotFoundException("There is no Appointment with Id $id")}
+        val app = appointments.findById(id).orElseThrow{NotFoundException("There is no Appointment with Id $id")}
+
         if(app.status == AppointmentStatus.PENDING)
-        appointments.updateStatusById(id, reason, AppointmentStatus.REJECTED)
-            else
-        throw PreconditionFailedException("The Appointment cannot be completed because it's Status is ${app.status}")
+            appointments.updateStatusById(id, reason, AppointmentStatus.REJECTED)
+        else
+            throw PreconditionFailedException("The Appointment cannot be completed because it's Status is ${app.status}")
     }
 
     fun acceptAppointment(id:Long){
-        val app = appointments.findById(id).orElseThrow(){NotFoundException("There is no Appointment with Id $id")}
+        val app = appointments.findById(id).orElseThrow{NotFoundException("There is no Appointment with Id $id")}
+
         if(app.status == AppointmentStatus.PENDING)
-        appointments.updateStatusById(id, "", AppointmentStatus.ACCEPTED)
+            appointments.updateStatusById(id, "", AppointmentStatus.ACCEPTED)
         else
-        throw PreconditionFailedException("The Appointment cannot be completed because it's Status is ${app.status}")
+            throw PreconditionFailedException("The Appointment cannot be completed because it's Status is ${app.status}")
 
     }
 
     fun completeAppointment(id:Long){
-        val app = appointments.findById(id).orElseThrow(){NotFoundException("There is no Appointment with Id $id")}
+        val app = appointments.findById(id).orElseThrow{NotFoundException("There is no Appointment with Id $id")}
         if(app.status == AppointmentStatus.ACCEPTED)
             appointments.updateStatusById(id, "", AppointmentStatus.COMPLETED)
         else
