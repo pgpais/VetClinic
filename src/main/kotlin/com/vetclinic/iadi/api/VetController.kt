@@ -15,20 +15,20 @@ import org.springframework.web.bind.annotation.*
 class VetController (val vets:VetService) {
     //TODO: "Veterinarians can also check the information of their clients, appointments, and of all pets"
 
-    @ApiOperation(value = "Get a list of Pending appointments", response = List::class)
+    @ApiOperation(value = "Get a list of the a Veterinarian's pending appointments", response = List::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully retrieved list of pending appointments"),
         ApiResponse(code = 404, message = "Provided Veterinarian not found"),
         ApiResponse(code = 401, message = "You're not allowed to access this resource")
 
     ])
-    @GetMapping("/appointments/pending/{id}")
+    @GetMapping("/appointments/pending")
     fun getPendingAppointments(@PathVariable id:Long):List<AppointmentDTO> =
         handle4xx {
             vets.getPendingAppointments(id).map{AppointmentDTO(it)}
         }
 
-    @ApiOperation(value = "Get a list of all appointments by Id", response = List::class)
+    @ApiOperation(value = "Get a list of all appointments of a vet", response = List::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully retrieved list of all appointments"),
         ApiResponse(code = 404, message = "Provided Veterinarian not found"),
