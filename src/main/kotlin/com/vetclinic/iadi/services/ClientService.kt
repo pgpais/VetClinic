@@ -6,6 +6,7 @@ import com.vetclinic.iadi.api.PetDTO
 import com.vetclinic.iadi.api.handle4xx
 import com.vetclinic.iadi.model.*
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class ClientService(val clientRepository: ClientRepository, val apts: AppointmentRepository, val vets:VeterinaryRepository, val clients: ClientRepository, val pets:PetRepository) {
@@ -16,6 +17,9 @@ class ClientService(val clientRepository: ClientRepository, val apts: Appointmen
     fun register(client: ClientDTO) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+    fun getClientByUsername(username:String)  : Optional<ClientDAO> = clientRepository.findByUsername(username)
+
 
     fun getClientById(id:Long) = clientRepository.findById(id).orElseThrow{NotFoundException("Couldn't find client with id $id")}
 
