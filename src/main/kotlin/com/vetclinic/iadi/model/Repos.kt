@@ -55,6 +55,10 @@ interface AppointmentRepository: JpaRepository<AppointmentDAO, Long>{
 
 interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long> {
 
+
+    fun findByUsername(username:String) : Optional<VeterinarianDAO>
+
+
     @Query("select v from VeterinarianDAO v inner join fetch v.appointments where v.id = :id and v.frozen = false")
     fun findByIdWithAppointment(id: Long): Optional<VeterinarianDAO>
 
@@ -100,6 +104,7 @@ interface UserRepository: JpaRepository<RegisteredUsersDAO, Long>{
 
 interface AdminRepository: JpaRepository<AdminDAO, Long>{
 
+    fun findByUsername(username:String) : Optional<AdminDAO>
 
 }
 
@@ -109,4 +114,7 @@ interface ClientRepository : JpaRepository<ClientDAO, Long> {
 
     @Query("select c from ClientDAO c inner join fetch c.pets where c.id = :id")
     fun findByIdWithPets(id: Long): Optional<ClientDAO>
+
+    fun findByUsername(username:String) : Optional<ClientDAO>
+
 }

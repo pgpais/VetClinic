@@ -13,6 +13,9 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
 
     fun getAllVets():Iterable<VeterinarianDAO> = vets.findAll()
 
+    fun getVetByUsername(username:String)  : Optional<VeterinarianDAO> = vets.findByUsername(username)
+
+
     fun getAppointments(id:Long): List<AppointmentDAO> {
 
         val vet  = vets.findByIdWithAppointment(id).orElseThrow { NotFoundException("There is no Vet with Id $id") }

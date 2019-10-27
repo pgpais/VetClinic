@@ -7,6 +7,7 @@ import com.vetclinic.iadi.api.handle4xx
 import com.vetclinic.iadi.model.*
 import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class AdminService(val vets: VeterinaryRepository, val admins: AdminRepository, val users: UserRepository, val clients: ClientRepository, val pets: PetRepository) {
@@ -62,6 +63,8 @@ class AdminService(val vets: VeterinaryRepository, val admins: AdminRepository, 
     fun getVetAppointments(vetId: Long) =
         vets.findByIdWithAppointment(vetId).orElseThrow{ NotFoundException("Couldn't find user with id $vetId") }.appointments
 
+
+    fun getAdminByUsername(username:String)  : Optional<AdminDAO> = admins.findByUsername(username)
 
 
 
