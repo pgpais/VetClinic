@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/pets")
-class PetController(val pets: PetService) {
+class PetController(val pets: PetService, val clientService: ClientService, val vets:VetService) {
 
     @ApiOperation(value = "View a list of registered pets", response = List::class)
     @ApiResponses(value = [
@@ -35,12 +35,10 @@ class PetController(val pets: PetService) {
         ApiResponse(code = 401, message = "You are not authorized to use this resource"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
     ])
-    @PostMapping("/{id}")
-    fun addNewPet(@PathVariable id: Long, @RequestBody pet: PetDTO) =
+    @PostMapping("")
+    fun addNewPet(@RequestBody pet: PetDTO) =
 
-            handle4xx {
-                pets.addNew(pet, id)
-            }
+            handle4xx { pets.addNew(PetDAO(pet, clientService.getClientById(pet.ownerId), emptyList())) }
 
 
 
@@ -53,7 +51,7 @@ class PetController(val pets: PetService) {
     ])
     @GetMapping("/{id}")
     fun getOnePet(@PathVariable id:Long) : PetAptsDTO =
-            handle4xx { pets.getPetById(id).let { PetAptsDTO(PetDTO(it), it.appointments.map { AppointmentDTO(it) }) } }
+            handle4xx { pets.getPetByID(id).let { PetAptsDTO(PetDTO(it), it.appointments.map { AppointmentDTO(it) }) } }
 
     @ApiOperation(value = "Update a pet", response = Unit::class)
     @ApiResponses(value = [
@@ -63,7 +61,7 @@ class PetController(val pets: PetService) {
     ])
     @PutMapping("/{id}")
     fun updatePet(@RequestBody pet: PetDTO, @PathVariable id: Long) =
-            handle4xx { pets.update(pet, id) }
+            handle4xx { pets.update(PetDAO(pet, clientService.getClientById(pet.ownerId),pets.getAppointments(id)), id) }
 
     @ApiOperation(value = "Delete a pet", response = Unit::class)
     @ApiResponses(value = [
@@ -73,7 +71,7 @@ class PetController(val pets: PetService) {
     ])
     @DeleteMapping("/{id}")
     fun deletePet(@PathVariable id: Long) =
-            handle4xx { pets.delete(id) } // TODO: don't delete entirely
+            handle4xx { pets.delete(id) }
 
     @ApiOperation(value = "Add a new appointment to a pet", response = Unit::class)
     @ApiResponses(value = [
@@ -87,7 +85,7 @@ class PetController(val pets: PetService) {
                        @RequestBody apt:AppointmentDTO
     ) =
             handle4xx {
-                pets.newAppointment(id, apt)
+                pets.newAppointment(AppointmentDAO(apt, pets.getPetByID(id), clientService.getClientById(apt.clientId),vets.getVetbyId(apt.vetId)))
             }
 
     @ApiOperation(value = "Get a list of a pet's appointments", response = List::class)

@@ -1,6 +1,9 @@
 package com.vetclinic.iadi.api
 
 import com.vetclinic.iadi.model.AppointmentDAO
+import com.vetclinic.iadi.model.ClientDAO
+import com.vetclinic.iadi.model.PetDAO
+import com.vetclinic.iadi.model.VeterinarianDAO
 import com.vetclinic.iadi.services.AppointmentService
 import com.vetclinic.iadi.services.ClientService
 import com.vetclinic.iadi.services.PetService
@@ -50,7 +53,7 @@ class AppointmentController(val apts: AppointmentService, val petService: PetSer
     @PostMapping("")
     fun newAppointment(@RequestBody apt: AppointmentDTO) =
             handle4xx {
-                apts.newAppointment(AppointmentDAO(apt, petService.getPetById(apt.petId), clientService.getClientById(apt.clientId), vetService.getVetbyId(apt.vetId)))
+                apts.newAppointment(AppointmentDAO(apt, petService.getPetByID(apt.petId), clientService.getClientById(apt.clientId), vetService.getVetbyId(apt.vetId)))
             }
 
     @ApiOperation(value = "Delete an appointment", response = Unit::class)

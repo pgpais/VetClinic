@@ -4,6 +4,7 @@ import com.vetclinic.iadi.model.AdminDAO
 import com.vetclinic.iadi.model.ShiftsDAO
 import com.vetclinic.iadi.model.VeterinarianDAO
 import com.vetclinic.iadi.services.AdminService
+import com.vetclinic.iadi.services.VetService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -19,23 +20,8 @@ import java.util.*
 @RestController
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 @RequestMapping("/admin")
-class AdminController(val admins: AdminService) {
+class AdminController(val admins: AdminService, val vets: VetService) {
 
-    @GetMapping("/pet/{id}")
-    fun getPet(@PathVariable id:Long) : PetDTO =
-            handle4xx { PetDTO(admins.getPetById(id)) }
-
-    @GetMapping("/client/{id}")
-    fun getClient(@PathVariable id:Long) : ClientDTO =
-            handle4xx { ClientDTO(admins.getClientById(id)) }
-
-    @GetMapping("/user/{id}")
-    fun getUser(@PathVariable id:Long) : UserDTO =
-        handle4xx { UserDTO(admins.getUserById(id)) }
-
-    @GetMapping("/{id}")
-    fun getAdmin(@PathVariable id:Long) : AdminDTO =
-            handle4xx { AdminDTO(admins.getAdminById(id)) }
 
     @ApiOperation(value="Create a new admin")
     @ApiResponses(value = [
@@ -44,7 +30,8 @@ class AdminController(val admins: AdminService) {
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
     ])
-    @PostMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/createAdmin")
     fun createAdmin(@RequestBody adminDTO:AdminDTO) {
         handle4xx { admins.createAdmin(AdminDAO(adminDTO.id, adminDTO.name, adminDTO.password)) }
     }
@@ -57,7 +44,8 @@ class AdminController(val admins: AdminService) {
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
     ])
-    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @DeleteMapping("/deleteAdmin/{id}")
     fun deleteAdmin(@PathVariable id:Long) {
         handle4xx { admins.deleteAdmin(id) }
     }
@@ -70,41 +58,23 @@ class AdminController(val admins: AdminService) {
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
     ])
-    @PostMapping("/vets")
-    fun createVet(@RequestBody vet:VeterinarianDTO) {
-        handle4xx { admins.createVet(vet) }
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/createVet")
+    fun createVet(@RequestBody vetDTO:VeterinarianDTO) {
+        handle4xx { admins.createVet(VeterinarianDAO(vetDTO)) }
     }
 
-    @PostMapping("/vets/{id}")
-    fun deleteVet(@PathVariable id:Long){
-        handle4xx { admins.deleteVet(id) }
-    }
-
-    @GetMapping("/vets/{id}")
-    fun getVet(@PathVariable id:Long) : VeterinarianDTO =
-            handle4xx { VeterinarianDTO(admins.getVetbyId(id)) }
-
-    @ApiOperation(value="Add a shift to a Veterinarian's schedule")
+    @ApiOperation(value="Set a schedule for a veterinarian")
     @ApiResponses(value = [
         ApiResponse(code = 201, message = "Successfully created schedule"),
         ApiResponse(code = 401, message = "You are not logged in as admin"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
     ])
-    @PostMapping("/vets/shifts/{id}")
-    fun setSchedule(@PathVariable id: Long, @RequestBody shifts:List<ShiftsDTO>){
-        admins.addShift(id, shifts)
-    }
 
-    @ApiOperation(value = "Check a Vet's appointments")
-    @ApiResponses(value = [
-        ApiResponse(code = 200, message = "Successfully retrieved vet's schedule"),
-        ApiResponse(code = 401, message = "You are not logged in as admin"),
-        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-        ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
-    ])
-    @GetMapping("/vets/appointments/{vetId}")
-    fun checkAppointments(@PathVariable vetId: Long){
-        admins.getVetAppointments(vetId)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/setSchedule/{vetId}")
+    fun setSchedule(@PathVariable vetId: Long, @RequestBody adminId: Long, @RequestBody shifts:List<ShiftsDAO>){
+        vets.setSchedule(vetId, adminId, shifts)
     }
 }

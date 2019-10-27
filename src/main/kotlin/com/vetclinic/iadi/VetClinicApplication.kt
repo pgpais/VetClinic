@@ -1,15 +1,16 @@
 package com.vetclinic.iadi
 
+import com.vetclinic.iadi.api.PetDTO
 import com.vetclinic.iadi.model.*
-import com.vetclinic.iadi.services.VetService
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import java.net.URL
 import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.*
 
 @SpringBootApplication
@@ -19,38 +20,35 @@ class VetClinicApplication {
     fun init(
             pets: PetRepository,
             apts: AppointmentRepository,
-            clients: ClientRepository,
+            users: ClientRepository,
             admins: AdminRepository,
             shifts: ShiftsRepository,
-            vets: VeterinaryRepository,
-            vetService: VetService
+            vets: VeterinaryRepository
     ) = CommandLineRunner {
 
-        val user = ClientDAO(1,"pedro123","123","pedro","","",34,"", emptyList(), emptyList())
-        clients.save(user)
+        val user = ClientDAO(1,"bla", BCryptPasswordEncoder().encode("batatas"), emptyList(), emptyList())
+        users.save(user)
 
-        val pantufas = PetDAO(2L, "pantufas", "Dog", "", user, emptyList(), false)
+        val pantufas = PetDAO(2L, "pantufas", "Dog", "", user, emptyList())
 
-        val manel =  VeterinarianDAO(4L, "manel123","123","manel","","",54,"",emptyList(), emptyList())
+        val manel =  VeterinarianDAO(4L, "manel","","" ,emptyList(), emptyList())
 
         pets.save(pantufas)
 
-        val bigodes = PetDAO(3L, "bigodes", "Cat","",user, emptyList(), false)
+        val bigodes = PetDAO(3L, "bigodes", "Cat","",user, emptyList())
 
         pets.save(bigodes)
 
         vets.save(manel)
 
+        val joao = AdminDAO(70L, "joao", BCryptPasswordEncoder().encode("hi"))
+        admins.save(joao)
 
-        val admin = AdminDAO(3, "francisco123", "secret", "manel","","",6,"")
-
-        admins.save(admin)
-
-        val turnodas8 = ShiftsDAO(4L, LocalDateTime.now().plusDays(3), LocalDateTime.now().plusDays(4),manel)
+        val turnodas8 = ShiftsDAO(4L, Date.from(Instant.now()),Date.from(Instant.now()),manel)
 
         shifts.save(turnodas8)
 
-        val apt = AppointmentDAO(1L, LocalDateTime.now(), "consulta", AppointmentStatus.PENDING," ", pantufas, user, manel)
+        val apt = AppointmentDAO(1L, Date(), "consulta", AppointmentStatus.PENDING," ", pantufas, user, manel)
 
         apts.save(apt)
 
@@ -60,9 +58,8 @@ class VetClinicApplication {
 
         apts.updateStatusById(1,"",AppointmentStatus.ACCEPTED)
 
+        apts.delete(apt)
 
-
-       //vetService.addShift(manel.id, turnodas8)
 
         /*
 

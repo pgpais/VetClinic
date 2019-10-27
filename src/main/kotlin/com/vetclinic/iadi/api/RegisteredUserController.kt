@@ -5,17 +5,20 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @Api(value = "VetClinic Management System - Access API",
         description = "Management access operations in the IADI 2019 Pet Clinic")
 
 @RestController
-@RequestMapping("/home/{username}")
+@RequestMapping("/{username}")
 class RegisteredUserController (val regUserService: RegisteredUserService){
 
 
-    /*@ApiOperation(value = "Get the details of your pet by Id", response = PetDTO::class)
+    @ApiOperation(value = "Get the details of your pet by Id", response = PetDTO::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully retrieved pet details"),
         ApiResponse(code = 401, message = "You are not authorized to view the resource"),
@@ -35,14 +38,9 @@ class RegisteredUserController (val regUserService: RegisteredUserService){
         ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     ])
     @GetMapping("/pets")
-    fun getAllPets(@PathVariable username:String){}*/// This should not be here
+    fun getAllPets(@PathVariable username:String){}
 
-    @ApiOperation(value = "Update user info")
-    @PutMapping("")
-    fun updateInfo(@PathVariable username: String, @RequestBody newUser:UserDTO){
-        regUserService.updateInfo(username, newUser)
 
-    }
 
-    //TODO: log out?
+
 }

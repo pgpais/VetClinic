@@ -1,8 +1,5 @@
 package com.vetclinic.iadi.api
 
-import com.vetclinic.iadi.model.VeterinarianDAO
-import com.vetclinic.iadi.services.ClientService
-import com.vetclinic.iadi.services.VetService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -15,8 +12,8 @@ import org.springframework.web.bind.annotation.*
 
 
 @RestController
-@RequestMapping("/home")
-class UnRegUserController (val clientService: ClientService, val vets: VetService) { //TODO: add service (call it something related with accounts?)
+@RequestMapping("")
+class UnRegUserController { //TODO: add service (call it something related with accounts?)
 
     @ApiOperation(value = "Login with given user") // TODO: should probably return a token
     @ApiResponses(value = [
@@ -37,7 +34,9 @@ class UnRegUserController (val clientService: ClientService, val vets: VetServic
         ApiResponse(code = 403, message = "You cannot access this resource (maybe already logged in?)")
     ])
     @PostMapping("/register")
-    fun register(@RequestBody user:ClientDTO) = clientService.register(user)
+    fun register(@RequestBody user:ClientDTO) = {
+            // TODO: create new ClientDAO and save it in database?
+    }
 
     @ApiOperation(value = "Get the list of Employees", response = List::class)
     @ApiResponses(value = [
@@ -45,7 +44,7 @@ class UnRegUserController (val clientService: ClientService, val vets: VetServic
         ApiResponse(code = 404, message = "There are no Employees registered")
     ])
     @GetMapping("/listVets")
-    fun listVets():List<VetAptsDTO> = vets.getAllVets().map { VetAptsDTO(VeterinarianDTO(it),it.appointments.map { AppointmentDTO(it) }) }
-
-
+    fun listVets():List<VeterinarianDTO>  {
+        return emptyList()
+    }
 }

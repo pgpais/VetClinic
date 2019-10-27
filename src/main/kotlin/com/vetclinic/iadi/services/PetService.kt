@@ -1,12 +1,13 @@
 package com.vetclinic.iadi.services
 
-import com.vetclinic.iadi.api.AppointmentDTO
-import com.vetclinic.iadi.api.PetDTO
-import com.vetclinic.iadi.model.*
+import com.vetclinic.iadi.model.AppointmentDAO
+import com.vetclinic.iadi.model.AppointmentRepository
+import com.vetclinic.iadi.model.PetDAO
+import com.vetclinic.iadi.model.PetRepository
 import org.springframework.stereotype.Service
 
 @Service
-class PetService(val pets: PetRepository, val appointments: AppointmentRepository, val vets:VeterinaryRepository, val clients:ClientRepository) {
+class PetService(val pets: PetRepository, val appointments: AppointmentRepository) {
     //var pet:PetDTO;
 
     /*fun getPetByID(id:Long):PetDAO =
@@ -15,21 +16,18 @@ class PetService(val pets: PetRepository, val appointments: AppointmentRepositor
             else
                 throw NotFoundException("Pet $id not found")
 */
-    fun getPetById(id:Long) = pets.findByIdAndRemovedIsFalse(id).orElseThrow{NotFoundException("There is no Pet with Id $id")}
+    fun getPetByID(id:Long) = pets.findById(id).orElseThrow{NotFoundException("There is no Pet with Id $id")}
 
-    fun getAllPets():Iterable<PetDAO> = pets.findAllByRemovedFalse()
+    fun getAllPets():List<PetDAO> = pets.findAll().toList()
 
-    fun addNew(pet: PetDTO, ownerId:Long) {
-
-        val owner = clients.findById(ownerId).orElseThrow { NotFoundException("There is no Client with Id $ownerId") }
-        val petDAO = PetDAO(pet, owner)
+    fun addNew(pet: PetDAO) {
 
         //if it exists
-        if(petDAO.id != 0L){
+        if(pet.id != 0L){
             throw PreconditionFailedException("Id must be 0 on insertion")
         }
         else{
-            pets.save(petDAO)
+            pets.save(pet)
         }
     }
 
@@ -41,24 +39,29 @@ class PetService(val pets: PetRepository, val appointments: AppointmentRepositor
         return pet.appointments
     }
 
-    fun newAppointment(id:Long, apt: AppointmentDTO) {
-        val pet = getPetById(id)
-        val vet = vets.findById(apt.vetId).orElseThrow{ NotFoundException("There is no Veterinarian with Id ${apt.vetId}")}
-        val aptDAO = AppointmentDAO(apt, pet, pet.owner, vet)
+    fun newAppointment(apt: AppointmentDAO) {
         // defensive programming
-        if (aptDAO.id != 0L)
+        if (apt.id != 0L)
             throw PreconditionFailedException("Id must be 0 in insertion")
         else
-            appointments.save(aptDAO)
+            appointments.save(apt)
     }
 
-    fun update(pet: PetDTO, id: Long) {
-        getPetById(id).let { it.update(PetDAO(pet, it.owner)); pets.save(it) }
+    fun update(pet: PetDAO, id: Long) {
+
+        val oldPet = getPetByID(id)
+        val newPet = PetDAO(oldPet.id, pet.name, pet.species, pet.photo, pet.owner, pet.appointments)
+
+        pets.delete(oldPet)
+        pets.save(newPet)
+
+
     }
 
     fun delete(id: Long) {
 
-        pets.removeById(id)
+        val pet = getPetByID(id)
+        pets.delete(pet)
     }
 
 

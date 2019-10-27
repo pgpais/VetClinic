@@ -3,11 +3,8 @@ package com.vetclinic.iadi.model
 import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.vetclinic.iadi.api.*
-import org.hibernate.validator.constraints.UniqueElements
-import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
-import javax.validation.constraints.NotBlank
 
 @Entity
 data class PetDAO(
@@ -23,13 +20,12 @@ data class PetDAO(
 
         val chip: UUID = UUID.randomUUID(), //TODO: is this called on every constructor? can it be overwritten?
         var physDesc: String,
-        var healthDesc: String,
-        var removed:Boolean = false
+        var healthDesc: String
 ) {
-    constructor(pet: PetDTO, owner: ClientDAO) : this(pet.id,pet.name,pet.species, pet.photo, owner, emptyList(), pet.chip, "", "", pet.deleted)
-    constructor(pet: PetDTO, owner: ClientDAO, apts:List<AppointmentDAO>) : this(pet.id,pet.name,pet.species, pet.photo, owner, apts, pet.chip, "", "", pet.deleted)
-    constructor(id: Long, name: String, species: String, photo: String, owner: ClientDAO, appointments: List<AppointmentDAO>, deleted: Boolean) :
-            this(id, name, species, photo, owner, appointments, physDesc = "", healthDesc = "",removed = false)
+    constructor(pet: PetDTO, owner: ClientDAO) : this(pet.id,pet.name,pet.species, pet.photo, owner, emptyList(), pet.chip, "", "")
+    constructor(pet: PetDTO, owner: ClientDAO, apts:List<AppointmentDAO>) : this(pet.id,pet.name,pet.species, pet.photo, owner, apts, pet.chip, "", "")
+    constructor(id: Long, name: String, species: String, photo: String, owner: ClientDAO, appointments: List<AppointmentDAO>) :
+            this(id, name, species, photo, owner, appointments, physDesc = "", healthDesc = "")
 
 
     fun update(other: PetDAO) {
@@ -49,7 +45,7 @@ enum class AppointmentStatus(val status: Int) {
 @Entity
 data class AppointmentDAO(
         @Id @GeneratedValue val id:Long,
-        var date: LocalDateTime,
+        var date: Date,
         var desc:String,
         var status: AppointmentStatus,
         var reason:String,
@@ -78,98 +74,60 @@ data class AppointmentDAO(
 @Entity
 data class VeterinarianDAO(
         @Id @GeneratedValue override val id: Long,
-        @UniqueElements
         override var username: String,
         override var pass:String,
+        var photo: String,
 
-        override  var name: String,
-
-        @NotBlank
-        override var photo: String,
-        override var email:String,
-        override var phone:Number,
-        override var address:String,
-
-
-        @OneToMany(mappedBy = "vet", fetch = FetchType.EAGER)
+        @OneToMany(mappedBy = "vet")
         var schedule:List<ShiftsDAO>,
 
         @OneToMany(mappedBy = "vet")
-        var appointments: List<AppointmentDAO>,
+        var appointments: List<AppointmentDAO>
 
-        var frozen:Boolean = false
-):RegisteredUsersDAO(id) {
+):RegisteredUsersDAO() {
 
-    constructor(vet: VeterinarianDTO, schedule: List<ShiftsDAO>, apt: List<AppointmentDAO>) : this(vet.vetId,vet.username, vet.pass, vet.name, vet.photo, vet.email, vet.phone, vet.address ,schedule, apt)
+    constructor(vet: VeterinarianDTO, apt: List<AppointmentDAO>) : this(vet.vetId, vet.name, vet.password, vet.photo, vet.schedule, apt)
+    constructor(vet: VeterinarianDTO):this(vet.vetId, vet.name, vet.password, vet.photo, vet.schedule, emptyList())
 
     fun update(other: VeterinarianDAO) {
         this.username = other.username
         this.appointments = other.appointments
     }
 }
-@Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-abstract class RegisteredUsersDAO (//TODO: change to username
-        @Id @GeneratedValue open val id: Long) {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+abstract class RegisteredUsersDAO {
 
-    abstract var name:String
+    abstract val id: Long //TODO: change to username
     abstract var username: String
     abstract var pass: String
-    abstract var photo:String
-    abstract var email:String
-    abstract var phone:Number
-    abstract var address:String
-
-
-    //TODO: add rest of info
 }
 
 @Entity
 data class ClientDAO(
         @Id @GeneratedValue override val id:Long,
-
-        @UniqueElements
         override var username:String,
         override var pass:String,
-
-        override var name:String,
-        override var photo: String,
-        override var email:String,
-        override var phone:Number,
-        override var address:String,
 
         @OneToMany(mappedBy = "owner")
         var pets:List<PetDAO>,
 
         @OneToMany(mappedBy = "client")
-        var appointments: List<AppointmentDAO>) : RegisteredUsersDAO(id) {
+        var appointments: List<AppointmentDAO>) : RegisteredUsersDAO() {
 
-    constructor(client:ClientDTO): this(client.id, client.username, client.pass,client.name, client.photo, client.email, client.phone,client.address,emptyList(), emptyList())
-    constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.username, client.pass,client.name,client.photo, client.email,client.phone,client.address,pets, emptyList())
+    constructor(client: ClientDTO): this(client.id, client.name, client.password, emptyList(), emptyList())
+    constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.name, client.password, pets, emptyList())
 }
 
 @Entity
 data class AdminDAO(
         @Id @GeneratedValue override val id:Long,
-        @UniqueElements
-        override var username: String,
-        override  var pass: String,
-
-        override  var name: String,
-        @NotBlank
-        override var photo: String,
-        override var email:String,
-        override var phone:Number,
-        override var address:String
-
-) : RegisteredUsersDAO(id) {
-    constructor(admin: AdminDTO) : this(admin.id, admin.username, admin.pass, admin.name,admin.photo,admin.email,admin.phone,admin.address)
-}
+        override  var username: String,
+        override  var pass: String) : RegisteredUsersDAO()
 
 @Entity
 data class ShiftsDAO(
         @Id @GeneratedValue val id:Long,
-        var start:LocalDateTime, var end:LocalDateTime,
+        var start:Date, var end:Date,
         @ManyToOne var vet: VeterinarianDAO){
     constructor(schedule:ShiftsDTO, vet: VeterinarianDAO): this(schedule.id, schedule.start, schedule.end, vet)
 }

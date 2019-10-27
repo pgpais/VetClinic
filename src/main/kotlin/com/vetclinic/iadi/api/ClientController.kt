@@ -1,7 +1,11 @@
 package com.vetclinic.iadi.api
 
-
+import com.vetclinic.iadi.model.AppointmentDAO
+import com.vetclinic.iadi.model.PetDAO
+import com.vetclinic.iadi.services.AppointmentService
 import com.vetclinic.iadi.services.ClientService
+import com.vetclinic.iadi.services.PetService
+import com.vetclinic.iadi.services.VetService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -16,11 +20,12 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @PreAuthorize("hasRole('ROLE_CLIENT')")
 @RequestMapping("/client")
-class ClientController(val client:ClientService){
+class ClientController(val client:ClientService, val apts:AppointmentService, val pets:PetService, val vets:VetService){ //TODO: so many services up here....
+
 
     @GetMapping("/{id}")
     fun getOneClient(@PathVariable id:Long) : ClientDTO =
-            handle4xx { client.getClientById(id).let{ ClientDTO(it.id, it.name, it.username, it.pass, it.photo, it.email, it.phone, it.address) } }
+            handle4xx { client.getClientById(id).let{ ClientDTO(it.id, it.username, it.pass) } }
 
     @ApiOperation(value="Get appointments of this user")
     @ApiResponses(
@@ -36,22 +41,26 @@ class ClientController(val client:ClientService){
     @ApiResponses(
             ApiResponse(code = 200, message = "Successfully booked appointment")
     )
-    @PostMapping("/apts")
-    fun bookAppointment(@RequestBody apt:AppointmentDTO){
-        client.bookAppointment(apt)
+    @PostMapping("/apts/{userId}")
+    fun bookAppointment(@PathVariable userId:Long, @RequestBody apt:AppointmentDTO){
+        //TODO: the client needs to choose a pet (which is chosen on appointment?)
+        apts.newAppointment(AppointmentDAO(apt, pets.getPetByID(apt.petId), client.getClientById(apt.clientId), vets.getVetbyId(apt.vetId))) //TODO: check this, so many arguments
     }
 
     @GetMapping("/pets/{userId}")
     fun getPets(@PathVariable userId: Long): List<PetDTO> =
-            handle4xx { client.getPets(userId).map{PetDTO(it)}
-            }
+            handle4xx { client.getPets(userId).map{PetDTO(it)} }
+
 
     @PostMapping("/pets/{userId}")
-    fun createPet(@PathVariable userId: Long, pet:PetDTO) =
-            handle4xx { client.createPet(userId, pet) }
+    fun addPet(@PathVariable userId: Long, @RequestBody pet:PetDTO){
+        // TODO:
+        pets.addNew(PetDAO(pet, client.getClientById(userId)))
+    }
 
     @DeleteMapping("/pets/{userId}/{petId}")
     fun deletePet(@PathVariable userId: Long, @PathVariable petId: Long){
-        client.deleteClientsPet(userId, petId)
+        // TODO: remove pet without removing it
+        // remove the ownerId?
     }
 }
