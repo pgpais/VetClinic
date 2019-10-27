@@ -2,6 +2,7 @@ package com.vetclinic.iadi.services
 
 import com.vetclinic.iadi.api.AppointmentDTO
 import com.vetclinic.iadi.api.ClientDTO
+import com.vetclinic.iadi.api.PetDTO
 import com.vetclinic.iadi.api.handle4xx
 import com.vetclinic.iadi.model.*
 import org.springframework.stereotype.Service
@@ -52,7 +53,16 @@ class ClientService(val clientRepository: ClientRepository, val apts: Appointmen
 
     fun deleteClientsPet(userId: Long, petId: Long) {
 
-        val owner = clients.findById(userId).orElseThrow { NotFoundException("not found user") }
+        val owner = getClientById(userId)
         pets.removeByIdAndUserId(owner, petId)
+    }
+
+    fun createPet(userId: Long, pet: PetDTO) {
+        val owner = getClientById(userId)
+        val petDAO = PetDAO(pet, owner)
+        if(petDAO.id != 0L)
+            throw PreconditionFailedException("id must be 0 on insert")
+        else
+            pets.save(petDAO)
     }
 }

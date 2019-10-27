@@ -43,6 +43,10 @@ class ClientController(val client:ClientService){
             handle4xx { client.getPets(userId).map{PetDTO(it)}
             }
 
+    @PostMapping("/pets/{userId}")
+    fun createPet(@PathVariable userId: Long, pet:PetDTO) =
+            handle4xx { client.createPet(userId, pet) }
+
     @DeleteMapping("/pets/{userId}/{petId}")
     fun deletePet(@PathVariable userId: Long, @PathVariable petId: Long){
         client.deleteClientsPet(userId, petId)
