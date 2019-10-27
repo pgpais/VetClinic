@@ -126,7 +126,6 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
                 shiftRep.save(newShift)
 
 
-
         }
     }
 }

@@ -61,12 +61,20 @@ interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long> {
     @Query("update VeterinarianDAO v set v.schedule = :plus  where v.id = :vetId")
     fun updateShifts(vetId: Long, plus: List<ShiftsDAO>)
 
+    @Modifying
+    @Transactional
     @Query("update VeterinarianDAO v set v.frozen = true where v.id =:vetId")
-    fun freezeVet(vetId: Long)
+    override fun deleteById(vetId: Long)
+
+    @Modifying
+    @Transactional
+    @Query("update VeterinarianDAO v set v.frozen = true")
+    override fun deleteAll()
 
     fun findByIdAndFrozenIsFalse(id: Long): Optional<VeterinarianDAO>
 
     fun findAllByFrozenIsFalse(): List<VeterinarianDAO>
+
 }
 
 interface ShiftsRepository: JpaRepository<ShiftsDAO, Long>{

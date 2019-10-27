@@ -36,7 +36,6 @@ class UsersRepoTester {
 
     @Test
     fun `delete all`(){
-        clients.deleteAll()
         admins.deleteAll()
         vets.deleteAll()
     }
