@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct
 
 interface PetRepository : JpaRepository<PetDAO, Long> {
 
-    fun findAllByDeletedFalse():List<PetDAO>
+    fun findAllByRemovedFalse():List<PetDAO>
 
     fun findByName(name:String): MutableIterable<PetDAO>
 
@@ -25,8 +25,8 @@ interface PetRepository : JpaRepository<PetDAO, Long> {
 
     @Modifying
     @Transactional
-    @Query("update PetDAO p set p.deleted= false where p.id =: id")
-    fun updateDeleted(id: Long)
+    @Query("update PetDAO p set p.removed= true where p.id =: id")
+    fun updateRemoved(id: Long)
 
 
 
