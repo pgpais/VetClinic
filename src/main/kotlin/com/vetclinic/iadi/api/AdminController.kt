@@ -59,20 +59,20 @@ class AdminController(val admins: AdminService, val vets: VetService) {
         ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
     ])
     @PostMapping("/createVet")
-    fun createVet(@RequestBody vetDTO:VeterinarianDTO) {
-        handle4xx { admins.createVet(VeterinarianDAO(vetDTO, emptyList(), emptyList())) }
+    fun createVet(@RequestBody vetDTO:VetShiftDTO) {
+        handle4xx { admins.createVet(VeterinarianDAO(vetDTO.vet,vetDTO.shiftsDTO.map { ShiftsDAO(it.id, it.start, it.end, vets.getVetbyId(it.vetId))}, emptyList())) }
     }
 
-    @ApiOperation(value="Set a schedule for a veterinarian")
+    @ApiOperation(value="Add a shift to a Veterinarian's schedule")
     @ApiResponses(value = [
         ApiResponse(code = 201, message = "Successfully created schedule"),
         ApiResponse(code = 401, message = "You are not logged in as admin"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
     ])
-    @PostMapping("/setSchedule/{vetId}")
+    @PostMapping("/addShift/{vetId}")
     fun setSchedule(@PathVariable vetId: Long, @RequestBody shifts:ShiftsDTO){
-        vets.setSchedule(vetId, ShiftsDAO( shifts, vets.getVetbyId(vetId)))
+        vets.addShift(vetId, ShiftsDAO( shifts, vets.getVetbyId(vetId)))
     }
 
     @ApiOperation(value = "Check a Vet's appointments")

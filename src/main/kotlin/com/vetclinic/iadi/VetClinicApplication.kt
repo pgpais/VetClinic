@@ -46,7 +46,7 @@ class VetClinicApplication {
 
         admins.save(admin)
 
-        val turnodas8 = ShiftsDAO(4L, LocalDateTime.now(), LocalDateTime.now(),manel)
+        val turnodas8 = ShiftsDAO(4L, LocalDateTime.now().plusDays(3), LocalDateTime.now().plusDays(3),manel)
 
         shifts.save(turnodas8)
 
@@ -58,8 +58,8 @@ class VetClinicApplication {
 
         apts.updateStatusById(1,"",AppointmentStatus.ACCEPTED)
 
-        //
-        //vetService.setSchedule(manel.id, turnodas8)
+
+        vetService.addShift(manel.id, turnodas8)
 
         /*
 
