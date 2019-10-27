@@ -9,7 +9,7 @@ import java.util.*
 @Service
 class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRepository, val shiftRep: ShiftsRepository) {
 
-    fun getVetbyId(id:Long) = vets.findById(id).orElseThrow{NotFoundException("There is no Veterinarian with Id $id")}
+    fun getVetbyId(id:Long) = vets.findByIdAndFrozenIsFalse(id).orElseThrow{NotFoundException("There is no Veterinarian with Id $id")}
 
     fun getAllVets():Iterable<VeterinarianDAO> = vets.findAll()
 
@@ -47,7 +47,7 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
     }
 
     fun getPendingAppointments(id: Long): List<AppointmentDAO> {
-        val vet  = vets.findById(id).orElseThrow { NotFoundException("There is no Vet with Id $id") }
+        vets.findByIdAndFrozenIsFalse(id).orElseThrow { NotFoundException("There is no Vet with Id $id") }
         return appointments.getPendingByVetId(id);
     }
 

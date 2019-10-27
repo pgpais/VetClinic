@@ -29,16 +29,16 @@ class UsersRepoTester {
     lateinit var users: UserRepository
 
     companion object {
-        var admin: AdminDAO = AdminDAO(1L,"José", "Admin123", "123")
-        var vet: VeterinarianDAO = VeterinarianDAO(2L, "Maria", "Vet123", "123", "", emptyList(), emptyList())
-        var client: ClientDAO = ClientDAO(3L, "Luis","Client123", "123", emptyList(), emptyList())
+        var admin: AdminDAO = AdminDAO(1L, "Admin123", "123","José","","",5,"")
+        var vet: VeterinarianDAO = VeterinarianDAO(2L, "Vet123", "123","Maria", "","",6,"" ,emptyList(), emptyList())
+        var client: ClientDAO = ClientDAO(3L,"Client123", "123", "Luis","","",5,"",emptyList(), emptyList())
     }
 
     @Test
     fun `delete all`(){
+        clients.deleteAll()
         admins.deleteAll()
         vets.deleteAll()
-        clients.deleteAll()
     }
 
     @Test

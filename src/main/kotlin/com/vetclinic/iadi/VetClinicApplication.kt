@@ -26,12 +26,12 @@ class VetClinicApplication {
             vetService: VetService
     ) = CommandLineRunner {
 
-        val user = ClientDAO(1,"pedro","client","", emptyList(), emptyList())
+        val user = ClientDAO(1,"pedro123","123","pedro","","",34,"", emptyList(), emptyList())
         clients.save(user)
 
         val pantufas = PetDAO(2L, "pantufas", "Dog", "", user, emptyList(), false)
 
-        val manel =  VeterinarianDAO(4L, "manel","doctor123","","",emptyList(), emptyList())
+        val manel =  VeterinarianDAO(4L, "manel123","123","manel","","",54,"",emptyList(), emptyList())
 
         pets.save(pantufas)
 
@@ -42,7 +42,7 @@ class VetClinicApplication {
         vets.save(manel)
 
 
-        val admin = AdminDAO(3, "francisco", "Admin", "secret")
+        val admin = AdminDAO(3, "francisco123", "secret", "manel","","",6,"")
 
         admins.save(admin)
 

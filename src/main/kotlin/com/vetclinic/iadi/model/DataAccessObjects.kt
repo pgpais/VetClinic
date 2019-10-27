@@ -1,9 +1,11 @@
 package com.vetclinic.iadi.model
 
 import com.vetclinic.iadi.api.*
+import org.hibernate.validator.constraints.UniqueElements
 import java.time.LocalDateTime
 import java.util.*
 import javax.persistence.*
+import javax.validation.constraints.NotBlank
 
 @Entity
 data class PetDAO(
@@ -69,17 +71,28 @@ data class AppointmentDAO(
 @Entity
 data class VeterinarianDAO(
         @Id @GeneratedValue override val id: Long,
-        override var name: String,
+        @UniqueElements
         override var username: String,
         override var pass:String,
-        var photo: String,
+
+        override  var name: String,
+
+        @NotBlank
+        override var photo: String,
+        override var email:String,
+        override var phone:Number,
+        override var address:String,
+
+
         @OneToMany(mappedBy = "vet", fetch = FetchType.EAGER)
         var schedule:List<ShiftsDAO>,
         @OneToMany(mappedBy = "vet")
-        var appointments: List<AppointmentDAO>
+        var appointments: List<AppointmentDAO>,
+
+        var frozen:Boolean = false
 ):RegisteredUsersDAO(id) {
 
-    constructor(vet: VeterinarianDTO, schedule: List<ShiftsDAO>, apt: List<AppointmentDAO>) : this(vet.vetId, vet.name,vet.username, vet.pass, vet.photo, schedule, apt)
+    constructor(vet: VeterinarianDTO, schedule: List<ShiftsDAO>, apt: List<AppointmentDAO>) : this(vet.vetId,vet.username, vet.pass, vet.name, vet.photo, vet.email, vet.phone, vet.address ,schedule, apt)
 
     fun update(other: VeterinarianDAO) {
         this.name = other.name
@@ -94,31 +107,54 @@ abstract class RegisteredUsersDAO (//TODO: change to username
     abstract var name:String
     abstract var username: String
     abstract var pass: String
+    abstract var photo:String
+    abstract var email:String
+    abstract var phone:Number
+    abstract var address:String
+
+
     //TODO: add rest of info
 }
 
 @Entity
 data class ClientDAO(
         @Id @GeneratedValue override val id:Long,
-        override var name:String,
+
+        @UniqueElements
         override var username:String,
         override var pass:String,
+
+        override var name:String,
+        override var photo: String,
+        override var email:String,
+        override var phone:Number,
+        override var address:String,
+
         @OneToMany(mappedBy = "owner")
         var pets:List<PetDAO>,
         @OneToMany(mappedBy = "client")
         var appointments: List<AppointmentDAO>) : RegisteredUsersDAO(id) {
 
-    constructor(client:ClientDTO): this(client.id, client.name, client.username, client.pass, emptyList(), emptyList())
-    constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.name, client.username, client.pass, pets, emptyList())
+    constructor(client:ClientDTO): this(client.id, client.username, client.pass,client.name, client.photo, client.email, client.phone,client.address,emptyList(), emptyList())
+    constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.username, client.pass,client.name,client.photo, client.email,client.phone,client.address,pets, emptyList())
 }
 
 @Entity
 data class AdminDAO(
         @Id @GeneratedValue override val id:Long,
-        override  var name: String,
+        @UniqueElements
         override var username: String,
-        override  var pass: String) : RegisteredUsersDAO(id) {
-    constructor(admin: AdminDTO) : this(admin.id, admin.name, admin.username, admin.pass)
+        override  var pass: String,
+
+        override  var name: String,
+        @NotBlank
+        override var photo: String,
+        override var email:String,
+        override var phone:Number,
+        override var address:String
+
+) : RegisteredUsersDAO(id) {
+    constructor(admin: AdminDTO) : this(admin.id, admin.username, admin.pass, admin.name,admin.photo,admin.email,admin.phone,admin.address)
 }
 
 @Entity

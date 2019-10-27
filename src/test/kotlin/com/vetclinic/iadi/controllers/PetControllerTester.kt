@@ -59,9 +59,9 @@ class PetControllerTester {
         // see: https://discuss.kotlinlang.org/t/data-class-and-jackson-annotation-conflict/397/6
         val mapper = ObjectMapper().registerModule(KotlinModule())
 
-        val user = ClientDAO(4L, "manel","Client123", "123", emptyList(), emptyList())
+        val user = ClientDAO(4L,"Client123", "123", "manel","","",6,"",emptyList(), emptyList())
 
-        val vet = VeterinarianDAO(5L, "Joaquina","VET123", "123", "www.google.com", emptyList(), emptyList())
+        val vet = VeterinarianDAO(5L,"VET123", "123","Joaquina" ,"www.google.com", "",7,"",emptyList(), emptyList())
 
         val pantufas = PetDAO(1L, "pantufas", "Dog", "www.google.com", user, emptyList(),false)
         val bigodes = PetDAO(2L, "bigodes", "Cat", "www.google.com", user, emptyList(),false)
@@ -117,7 +117,7 @@ class PetControllerTester {
         val louroDAO = PetDAO(0L, "louro", "Papagaio", "www.google.com", user, emptyList(),false)
         val louro = PetDTO(louroDAO)
 
-        val userDTO = ClientDTO(user.id, user.name, user.username, user.pass)
+        val userDTO = ClientDTO(user.id, user.name, user.username, user.pass,user.photo,user.email,user.phone,user.address)
 
         val userJSON = mapper.writeValueAsString(userDTO)
         val louroJSON = mapper.writeValueAsString(louro)
