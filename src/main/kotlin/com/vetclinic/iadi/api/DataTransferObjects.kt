@@ -25,8 +25,9 @@ data class UserDTO(val id: Long, val username:String, val pass:String, val name:
     constructor(user: RegisteredUsersDAO) : this(user.id, user.username, user.pass, user.name, user.photo, user.email, user.phone, user.address)
 }
 
-
-data class ClientDTO(val id:Long, val username: String, val pass:String, val name:String, val photo: String, val email: String, val phone: Number, val address: String)
+data class ClientDTO(val id:Long, val name:String, val username: String, val pass:String, val photo: String, val email: String, val phone: Number, val address: String){
+    constructor(client: ClientDAO) : this(client.id, client.name, client.username, client.pass, client.photo, client.email, client.phone, client.address)
+}
 
 data class ClientPetDTO(val client:ClientDTO, val petDTO: List<PetDTO>)
 
