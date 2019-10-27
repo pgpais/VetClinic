@@ -53,7 +53,7 @@ class PetService(val pets: PetRepository, val appointments: AppointmentRepositor
 
     fun delete(id: Long) {
 
-        pets.updateRemoved(id)
+        pets.removeById(id)
     }
 
 

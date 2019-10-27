@@ -49,4 +49,10 @@ class ClientService(val clientRepository: ClientRepository, val apts: Appointmen
         apts.save(apt)
         }
     }
+
+    fun deleteClientsPet(userId: Long, petId: Long) {
+
+        val owner = clients.findById(userId).orElseThrow { NotFoundException("not found user") }
+        pets.removeByIdAndUserId(owner, petId)
+    }
 }

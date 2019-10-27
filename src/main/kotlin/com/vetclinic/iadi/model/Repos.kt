@@ -27,8 +27,13 @@ interface PetRepository : JpaRepository<PetDAO, Long> {
 
     @Modifying
     @Transactional
-    @Query("update PetDAO p set p.removed= true where p.id =: id")
-    fun updateRemoved(id: Long)
+    @Query("update PetDAO p set p.removed=true where p.id =:id")
+    fun removeById(id: Long)
+
+    @Modifying
+    @Transactional
+    @Query("update PetDAO p set p.removed=true where p.id =:id and p.owner =:owner")
+    fun removeByIdAndUserId(owner: ClientDAO, id: Long)
 
 
 
@@ -83,11 +88,11 @@ interface ShiftsRepository: JpaRepository<ShiftsDAO, Long>{
 
 interface UserRepository: JpaRepository<RegisteredUsersDAO, Long>{
 
-    //fun findByUsername(username:String) : Optional<RegisteredUsersDAO>
-/*
+   /* fun findByUsername(username:String) : Optional<RegisteredUsersDAO>
+
     @Modifying
     @Transactional
-    @Query("update RegisteredUsersDAO u set u.id =: id, u.name =:name,u.username =:username, u.pass =:pass where u.id =: id")
+    @Query("update RegisteredUsersDAO u set u.id =:id, u.name =:name, u.username =:username, u.pass =:pass where u.id =:id")
     fun updateUser(id:Long, name: String, username: String, pass:String)
 */
 }

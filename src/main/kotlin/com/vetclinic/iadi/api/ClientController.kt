@@ -34,7 +34,7 @@ class ClientController(val client:ClientService){
             ApiResponse(code = 200, message = "Successfully booked appointment")
     )
     @PostMapping("/apts")
-    fun bookAppointment(@RequestBody apt:AppointmentDTO){ //TODO: maybe only needs @RequestBody (appointmentDTO has everything)
+    fun bookAppointment(@RequestBody apt:AppointmentDTO){
         client.bookAppointment(apt)
     }
 
@@ -45,7 +45,6 @@ class ClientController(val client:ClientService){
 
     @DeleteMapping("/pets/{userId}/{petId}")
     fun deletePet(@PathVariable userId: Long, @PathVariable petId: Long){
-        // TODO: remove pet without removing it
-        // remove the ownerId?
+        client.deleteClientsPet(userId, petId)
     }
 }
