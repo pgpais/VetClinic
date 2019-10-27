@@ -1,5 +1,7 @@
 package com.vetclinic.iadi.model
 
+import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.vetclinic.iadi.api.*
 import java.util.*
 import javax.persistence.*
@@ -10,10 +12,12 @@ data class PetDAO(
         var name: String,
         var species: String,
         var photo:String,
+
         @ManyToOne(fetch = FetchType.LAZY)
         var owner:ClientDAO,
         @OneToMany(mappedBy = "pet")
         var appointments: List<AppointmentDAO>,
+
         val chip: UUID = UUID.randomUUID(), //TODO: is this called on every constructor? can it be overwritten?
         var physDesc: String,
         var healthDesc: String
@@ -45,10 +49,13 @@ data class AppointmentDAO(
         var desc:String,
         var status: AppointmentStatus,
         var reason:String,
+
         @ManyToOne(fetch = FetchType.LAZY)
         var pet: PetDAO,
+
         @ManyToOne(fetch = FetchType.LAZY)
         var client:ClientDAO,
+
         @ManyToOne(fetch=FetchType.LAZY)
         var vet: VeterinarianDAO
 ) {
@@ -70,10 +77,13 @@ data class VeterinarianDAO(
         override var username: String,
         override var pass:String,
         var photo: String,
+
         @OneToMany(mappedBy = "vet")
         var schedule:List<ShiftsDAO>,
+
         @OneToMany(mappedBy = "vet")
         var appointments: List<AppointmentDAO>
+
 ):RegisteredUsersDAO() {
 
     constructor(vet: VeterinarianDTO, apt: List<AppointmentDAO>) : this(vet.vetId, vet.name, vet.password, vet.photo, vet.schedule, apt)
@@ -97,8 +107,10 @@ data class ClientDAO(
         @Id @GeneratedValue override val id:Long,
         override var username:String,
         override var pass:String,
+
         @OneToMany(mappedBy = "owner")
         var pets:List<PetDAO>,
+
         @OneToMany(mappedBy = "client")
         var appointments: List<AppointmentDAO>) : RegisteredUsersDAO() {
 

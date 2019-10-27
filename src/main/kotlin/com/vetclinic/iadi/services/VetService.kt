@@ -2,6 +2,7 @@ package com.vetclinic.iadi.services
 
 import com.vetclinic.iadi.model.*
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
@@ -49,6 +50,7 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    @Transactional
     fun getVetByUsername(username:String)  :Optional<VeterinarianDAO> = vets.findByUsername(username)
 
 

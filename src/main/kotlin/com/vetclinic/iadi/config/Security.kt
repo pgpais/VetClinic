@@ -2,9 +2,11 @@ package com.vetclinic.iadi.config
 
 import com.vetclinic.iadi.services.ClientService
 import com.vetclinic.iadi.services.RegisteredUserService
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -28,6 +30,7 @@ class Security(val customClientinfo:CustomClientInfoService,
                 .antMatchers("/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/v2/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers(HttpMethod.POST,"/register").permitAll()
+                .antMatchers("/home").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(UserPasswordAuthenticationFilterToJWT ("/login", super.authenticationManagerBean()),
@@ -39,16 +42,7 @@ class Security(val customClientinfo:CustomClientInfoService,
     }
 
     override fun configure(auth: AuthenticationManagerBuilder) {
-        auth.inMemoryAuthentication()
-                .withUser("user")
-                .password(BCryptPasswordEncoder().encode("password"))
-                .authorities(emptyList())
-                .and()
-                .passwordEncoder(BCryptPasswordEncoder())
-                .and()
-                .userDetailsService(customClientinfo)
-                .passwordEncoder(BCryptPasswordEncoder())
-
+        auth.userDetailsService(customClientinfo).passwordEncoder(BCryptPasswordEncoder())
     }
 
 
