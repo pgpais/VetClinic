@@ -52,7 +52,7 @@ class CustomClientInfoService(
 
             } else if (adminDAO.isPresent) {
                return  ClientCustomInfo(adminDAO.get().username, adminDAO.get().pass,
-                        mutableListOf(SimpleGrantedAuthority("ROLE_ADMIN"), SimpleGrantedAuthority("ROLE_VETERINARIAN")))
+                        mutableListOf(SimpleGrantedAuthority("ROLE_ADMIN")))
 
             } else if (veterinarianDAO.isPresent){
                 return ClientCustomInfo(veterinarianDAO.get().username, veterinarianDAO.get().pass,
