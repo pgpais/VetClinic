@@ -34,11 +34,12 @@ class UsersRepoTester {
         var client: ClientDAO = ClientDAO(3L,"Client123", "123", "Luis","","",5,"",emptyList(), emptyList())
     }
 
-    @Test
+    /*@Test
     fun `delete all`(){
         admins.deleteAll()
         vets.deleteAll()
-    }
+        clients.deleteAll()
+    }*/
 
     @Test
     fun `find all admins`(){
