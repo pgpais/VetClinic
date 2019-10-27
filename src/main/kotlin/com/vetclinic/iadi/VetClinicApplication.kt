@@ -50,7 +50,7 @@ class VetClinicApplication {
 
         shifts.save(turnodas8)
 
-        val apt = AppointmentDAO(1L, Date(), "consulta", AppointmentStatus.PENDING," ", pantufas, user, manel)
+        val apt = AppointmentDAO(1L, LocalDateTime.now(), "consulta", AppointmentStatus.PENDING," ", pantufas, user, manel)
 
         apts.save(apt)
 
