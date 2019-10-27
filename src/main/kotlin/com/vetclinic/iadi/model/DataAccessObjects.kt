@@ -17,7 +17,8 @@ data class PetDAO(
         var appointments: List<AppointmentDAO>,
         val chip: UUID = UUID.randomUUID(), //TODO: is this called on every constructor? can it be overwritten?
         var physDesc: String,
-        var healthDesc: String
+        var healthDesc: String,
+        var removed:Boolean = false
 ) {
     constructor(pet: PetDTO, owner: ClientDAO) : this(pet.id,pet.name,pet.species, pet.photo, owner, emptyList(), pet.chip, "", "")
     constructor(pet: PetDTO, owner: ClientDAO, apts:List<AppointmentDAO>) : this(pet.id,pet.name,pet.species, pet.photo, owner, apts, pet.chip, "", "")
@@ -87,7 +88,7 @@ data class VeterinarianDAO(
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 abstract class RegisteredUsersDAO (//TODO: change to username
-        @Id open val id: Long) {
+        @Id @GeneratedValue open val id: Long) {
 
     abstract var name: String
     abstract var pass: String

@@ -90,7 +90,7 @@ class PetControllerTester {
 
     @Test
     fun `Test Get One Pet`() {
-        Mockito.`when`(pets.getPetByID(1)).thenReturn(pantufas)
+        Mockito.`when`(pets.getPetById(1)).thenReturn(pantufas)
 
         val result = mvc.perform(get("$petsURL/1"))
                 .andExpect(status().isOk)
@@ -103,7 +103,7 @@ class PetControllerTester {
 
     @Test
     fun `Test GET One Pet (Not Found)`() {
-        Mockito.`when`(pets.getPetByID(2)).thenThrow(NotFoundException("not found"))
+        Mockito.`when`(pets.getPetById(2)).thenThrow(NotFoundException("not found"))
 
         mvc.perform(get("$petsURL/2"))
                 .andExpect(status().is4xxClientError)
@@ -174,7 +174,7 @@ class PetControllerTester {
         Mockito.`when`(pets.newAppointment(nonNullAny(AppointmentDAO::class.java)))
                 .then { assertThat( it.getArgument(0), equalTo(aptDAO)); it.getArgument(0) }
 
-        Mockito.`when`(pets.getPetByID(1)).thenReturn(louro)
+        Mockito.`when`(pets.getPetById(1)).thenReturn(louro)
         Mockito.`when`(vets.getVetbyId(vet.id)).thenReturn(vet)
 
         mvc.perform(post("$petsURL/appointments/1")
@@ -195,7 +195,7 @@ class PetControllerTester {
         Mockito.`when`(pets.newAppointment(nonNullAny(AppointmentDAO::class.java)))
                 .thenThrow( PreconditionFailedException("id 0"))
 
-        Mockito.`when`(pets.getPetByID(1)).thenReturn(louro)
+        Mockito.`when`(pets.getPetById(1)).thenReturn(louro)
 
         mvc.perform(post("$petsURL/1/appointments")
                 .contentType(MediaType.APPLICATION_JSON)

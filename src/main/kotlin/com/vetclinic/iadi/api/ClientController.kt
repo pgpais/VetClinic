@@ -39,9 +39,8 @@ class ClientController(val client:ClientService, val apts:AppointmentService, va
             ApiResponse(code = 200, message = "Successfully booked appointment")
     )
     @PostMapping("/apts/{userId}")
-    fun bookAppointment(@PathVariable userId:Long, @RequestBody apt:AppointmentDTO){
-        //TODO: the client needs to choose a pet (which is chosen on appointment?)
-        apts.newAppointment(AppointmentDAO(apt, pets.getPetByID(apt.petId), client.getClientById(apt.clientId), vets.getVetbyId(apt.vetId))) //TODO: check this, so many arguments
+    fun bookAppointment(@PathVariable userId:Long, @RequestBody apt:AppointmentDTO){ //TODO: maybe only needs @RequestBody (appointmentDTO has everything)
+        apts.newAppointment(AppointmentDAO(apt, pets.getPetById(apt.petId), client.getClientById(userId), vets.getVetbyId(apt.vetId)))
     }
 
     @GetMapping("/pets/{userId}")
@@ -50,8 +49,7 @@ class ClientController(val client:ClientService, val apts:AppointmentService, va
 
 
     @PostMapping("/pets/{userId}")
-    fun addPet(@PathVariable userId: Long, @RequestBody pet:PetDTO){
-        // TODO:
+    fun addPet(@PathVariable userId: Long, @RequestBody pet:PetDTO){ //TODO: not needed. Clients use /pets URL
         pets.addNew(PetDAO(pet, client.getClientById(userId)))
     }
 
