@@ -33,7 +33,7 @@ class ClientControllerTester {
 
         val mapper = ObjectMapper().registerModule(KotlinModule())
 
-        val client = ClientDAO(1L, "Client", "123", emptyList(), emptyList())
+        val client = ClientDAO(1L, "Client","Client123", "123", emptyList(), emptyList())
 
         val usersURL = ""
         val clientsURL= "/client"

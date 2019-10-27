@@ -20,10 +20,10 @@ data class PetDAO(
         var healthDesc: String,
         var removed:Boolean = false
 ) {
-    constructor(pet: PetDTO, owner: ClientDAO) : this(pet.id,pet.name,pet.species, pet.photo, owner, emptyList(), pet.chip, "", "")
-    constructor(pet: PetDTO, owner: ClientDAO, apts:List<AppointmentDAO>) : this(pet.id,pet.name,pet.species, pet.photo, owner, apts, pet.chip, "", "")
-    constructor(id: Long, name: String, species: String, photo: String, owner: ClientDAO, appointments: List<AppointmentDAO>) :
-            this(id, name, species, photo, owner, appointments, physDesc = "", healthDesc = "")
+    constructor(pet: PetDTO, owner: ClientDAO) : this(pet.id,pet.name,pet.species, pet.photo, owner, emptyList(), pet.chip, "", "", pet.deleted)
+    constructor(pet: PetDTO, owner: ClientDAO, apts:List<AppointmentDAO>) : this(pet.id,pet.name,pet.species, pet.photo, owner, apts, pet.chip, "", "", pet.deleted)
+    constructor(id: Long, name: String, species: String, photo: String, owner: ClientDAO, appointments: List<AppointmentDAO>, deleted: Boolean) :
+            this(id, name, species, photo, owner, appointments, physDesc = "", healthDesc = "",deleted = false)
 
 
     fun update(other: PetDAO) {
@@ -70,6 +70,7 @@ data class AppointmentDAO(
 data class VeterinarianDAO(
         @Id @GeneratedValue override val id: Long,
         override var name: String,
+        override var username: String,
         override var pass:String,
         var photo: String,
         @OneToMany(mappedBy = "vet", fetch = FetchType.EAGER)
@@ -78,7 +79,7 @@ data class VeterinarianDAO(
         var appointments: List<AppointmentDAO>
 ):RegisteredUsersDAO(id) {
 
-    constructor(vet: VeterinarianDTO, schedule: List<ShiftsDAO>, apt: List<AppointmentDAO>) : this(vet.vetId, vet.name, vet.pass, vet.photo, schedule, apt)
+    constructor(vet: VeterinarianDTO, schedule: List<ShiftsDAO>, apt: List<AppointmentDAO>) : this(vet.vetId, vet.name,vet.username, vet.pass, vet.photo, schedule, apt)
 
     fun update(other: VeterinarianDAO) {
         this.name = other.name
@@ -90,7 +91,8 @@ data class VeterinarianDAO(
 abstract class RegisteredUsersDAO (//TODO: change to username
         @Id @GeneratedValue open val id: Long) {
 
-    abstract var name: String
+    abstract var name:String
+    abstract var username: String
     abstract var pass: String
     //TODO: add rest of info
 }
@@ -99,22 +101,24 @@ abstract class RegisteredUsersDAO (//TODO: change to username
 data class ClientDAO(
         @Id @GeneratedValue override val id:Long,
         override var name:String,
+        override var username:String,
         override var pass:String,
         @OneToMany(mappedBy = "owner")
         var pets:List<PetDAO>,
         @OneToMany(mappedBy = "client")
         var appointments: List<AppointmentDAO>) : RegisteredUsersDAO(id) {
 
-    constructor(client:ClientDTO): this(client.id, client.name, client.pass, emptyList(), emptyList())
-    constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.name, client.pass, pets, emptyList())
+    constructor(client:ClientDTO): this(client.id, client.name, client.username, client.pass, emptyList(), emptyList())
+    constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.name, client.username, client.pass, pets, emptyList())
 }
 
 @Entity
 data class AdminDAO(
         @Id @GeneratedValue override val id:Long,
         override  var name: String,
+        override var username: String,
         override  var pass: String) : RegisteredUsersDAO(id) {
-    constructor(admin: AdminDTO) : this(admin.id, admin.name, admin.pass)
+    constructor(admin: AdminDTO) : this(admin.id, admin.name, admin.username, admin.pass)
 }
 
 @Entity

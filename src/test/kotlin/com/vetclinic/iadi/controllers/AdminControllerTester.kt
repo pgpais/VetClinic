@@ -35,7 +35,7 @@ class AdminControllerTester {
 
         val mapper = ObjectMapper().registerModule(KotlinModule())
 
-        val admin = AdminDTO(0L, "AdminExtra", "123")
+        val admin = AdminDTO(0L, "AdminExtra","Admin123", "123")
 
         val adminsURL = "/admin"
     }

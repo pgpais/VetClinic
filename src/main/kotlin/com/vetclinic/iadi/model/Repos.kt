@@ -10,6 +10,8 @@ import javax.annotation.PostConstruct
 
 interface PetRepository : JpaRepository<PetDAO, Long> {
 
+    fun findAllByDeletedFalse():List<PetDAO>
+
     fun findByName(name:String): MutableIterable<PetDAO>
 
     @Query("select p from PetDAO p inner join fetch p.appointments where p.id = :id")
@@ -20,6 +22,13 @@ interface PetRepository : JpaRepository<PetDAO, Long> {
 
     @Query("select p from PetDAO p where p.owner =:owner and p.id = :id")
     fun findPetByOwnerAndId(id:Long,owner:String)
+
+    @Modifying
+    @Transactional
+    @Query("update PetDAO p set p.deleted= false where p.id =: id")
+    fun updateDeleted(id: Long)
+
+
 
 }
 
@@ -56,6 +65,7 @@ interface ShiftsRepository: JpaRepository<ShiftsDAO, Long>{
 }
 
 interface UserRepository: JpaRepository<RegisteredUsersDAO, Long>{
+
 
 }
 

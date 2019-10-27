@@ -29,9 +29,9 @@ class UsersRepoTester {
     lateinit var users: UserRepository
 
     companion object {
-        var admin: AdminDAO = AdminDAO(-0L,"José", "123")
-        var vet: VeterinarianDAO = VeterinarianDAO(0L, "Maria", "123", "", emptyList(), emptyList())
-        var client: ClientDAO = ClientDAO(0L, "Luis", "123", emptyList(), emptyList())
+        var admin: AdminDAO = AdminDAO(1L,"José", "Admin123", "123")
+        var vet: VeterinarianDAO = VeterinarianDAO(2L, "Maria", "Vet123", "123", "", emptyList(), emptyList())
+        var client: ClientDAO = ClientDAO(3L, "Luis","Client123", "123", emptyList(), emptyList())
     }
 
     @Test

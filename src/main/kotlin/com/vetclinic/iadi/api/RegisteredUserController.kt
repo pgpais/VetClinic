@@ -39,6 +39,7 @@ class RegisteredUserController (val regUserService: RegisteredUserService){
     @ApiOperation(value = "Update user info")
     @PutMapping("")
     fun updateInfo(@PathVariable username: String, @RequestBody newUser:UserDTO){
+        regUserService.updateInfo(username, newUser)
 
     }
 

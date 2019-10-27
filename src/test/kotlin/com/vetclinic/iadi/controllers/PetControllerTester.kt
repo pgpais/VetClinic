@@ -58,12 +58,12 @@ class PetControllerTester {
         // see: https://discuss.kotlinlang.org/t/data-class-and-jackson-annotation-conflict/397/6
         val mapper = ObjectMapper().registerModule(KotlinModule())
 
-        val user = ClientDAO(4L, "manel", "123", emptyList(), emptyList())
+        val user = ClientDAO(4L, "manel","Client123", "123", emptyList(), emptyList())
 
-        val vet = VeterinarianDAO(5L, "Joaquina", "123", "www.google.com", emptyList(), emptyList())
+        val vet = VeterinarianDAO(5L, "Joaquina","VET123", "123", "www.google.com", emptyList(), emptyList())
 
-        val pantufas = PetDAO(1L, "pantufas", "Dog", "www.google.com", user, emptyList())
-        val bigodes = PetDAO(2L, "bigodes", "Cat", "www.google.com", user, emptyList())
+        val pantufas = PetDAO(1L, "pantufas", "Dog", "www.google.com", user, emptyList(),false)
+        val bigodes = PetDAO(2L, "bigodes", "Cat", "www.google.com", user, emptyList(),false)
         val petsDAO = ArrayList(listOf(pantufas, bigodes))
 
         val petsAptsDTO =
@@ -113,10 +113,10 @@ class PetControllerTester {
 
     @Test
     fun `Test POST One Pet`() {
-        val louroDAO = PetDAO(0L, "louro", "Papagaio", "www.google.com", user, emptyList())
+        val louroDAO = PetDAO(0L, "louro", "Papagaio", "www.google.com", user, emptyList(),false)
         val louro = PetDTO(louroDAO)
 
-        val userDTO = ClientDTO(user.id, user.name, user.pass)
+        val userDTO = ClientDTO(user.id, user.name, user.username, user.pass)
 
         val userJSON = mapper.writeValueAsString(userDTO)
         val louroJSON = mapper.writeValueAsString(louro)
@@ -135,7 +135,7 @@ class PetControllerTester {
 
     @Test
     fun `Test checking appointments`() {
-        val louro = PetDAO(0, "louro", "Papagaio","www.google.com", user, emptyList())
+        val louro = PetDAO(0, "louro", "Papagaio","www.google.com", user, emptyList(),false)
         val apt = AppointmentDAO(2, Date(),"consulta",AppointmentStatus.ACCEPTED,"", louro, user, vet)
         louro.appointments = listOf(apt)
 
@@ -164,7 +164,7 @@ class PetControllerTester {
 
     @Test
     fun `Test adding an appointment to a pet`() {
-        val louro = PetDAO(0, "louro", "Papagaio","www.google.com", user, emptyList())
+        val louro = PetDAO(0, "louro", "Papagaio","www.google.com", user, emptyList(),false)
         val apt = AppointmentDTO(0, Date(), "consulta", AppointmentStatus.ACCEPTED, "", louro.id, user.id, vet.id)
         val aptDAO = AppointmentDAO(apt,louro, user, vet)
         louro.appointments = listOf(aptDAO)
@@ -185,7 +185,7 @@ class PetControllerTester {
 
     @Test
     fun `Bad request on id not 0`() {
-        val louro = PetDAO(1, "louro", "Papagaio","www.google.com", user, emptyList())
+        val louro = PetDAO(1, "louro", "Papagaio","www.google.com", user, emptyList(),false)
         val apt = AppointmentDTO(2, Date(), "consulta", AppointmentStatus.ACCEPTED, "", louro.id, user.id, vet.id)
         val aptDAO = AppointmentDAO(apt,louro, user, vet)
         louro.appointments = listOf(aptDAO)

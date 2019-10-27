@@ -18,7 +18,7 @@ class PetService(val pets: PetRepository, val appointments: AppointmentRepositor
 */
     fun getPetById(id:Long) = pets.findById(id).orElseThrow{NotFoundException("There is no Pet with Id $id")}
 
-    fun getAllPets():Iterable<PetDAO> = pets.findAll()
+    fun getAllPets():Iterable<PetDAO> = pets.findAllByDeletedFalse()
 
     fun addNew(pet: PetDAO) {
 

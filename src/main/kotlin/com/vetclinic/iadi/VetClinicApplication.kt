@@ -26,27 +26,27 @@ class VetClinicApplication {
             vetService: VetService
     ) = CommandLineRunner {
 
-        val user = ClientDAO(1,"","", emptyList(), emptyList())
+        val user = ClientDAO(1,"pedro","client","", emptyList(), emptyList())
         clients.save(user)
 
-        val pantufas = PetDAO(2L, "pantufas", "Dog", "", user, emptyList())
+        val pantufas = PetDAO(2L, "pantufas", "Dog", "", user, emptyList(), false)
 
-        val manel =  VeterinarianDAO(4L, "manel","","" ,emptyList(), emptyList())
+        val manel =  VeterinarianDAO(4L, "manel","doctor123","","",emptyList(), emptyList())
 
         pets.save(pantufas)
 
-        val bigodes = PetDAO(3L, "bigodes", "Cat","",user, emptyList())
+        val bigodes = PetDAO(3L, "bigodes", "Cat","",user, emptyList(), false)
 
         pets.save(bigodes)
 
         vets.save(manel)
 
 
-        val admin = AdminDAO(3, "Admin", "secret")
+        val admin = AdminDAO(3, "francisco", "Admin", "secret")
 
         admins.save(admin)
 
-        val turnodas8 = ShiftsDAO(4L, LocalDateTime.now().plusDays(3), LocalDateTime.now().plusDays(3),manel)
+        val turnodas8 = ShiftsDAO(4L, LocalDateTime.now().plusDays(3), LocalDateTime.now().plusDays(4),manel)
 
         shifts.save(turnodas8)
 
@@ -59,7 +59,8 @@ class VetClinicApplication {
         apts.updateStatusById(1,"",AppointmentStatus.ACCEPTED)
 
 
-        vetService.addShift(manel.id, turnodas8)
+
+       //vetService.addShift(manel.id, turnodas8)
 
         /*
 
