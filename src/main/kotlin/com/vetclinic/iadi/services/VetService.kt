@@ -51,7 +51,7 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
         return appointments.getPendingByVetId(id);
     }
 
-    fun setSchedule(vetId: Long, newShift:ShiftsDAO) {
+    fun addShift(vetId: Long, newShift:ShiftsDAO) {
 
         val shifts = getVetbyId(vetId).schedule
 
@@ -78,7 +78,9 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
                         (newShift.start.isBefore(it.end) and newShift.end.isAfter(it.end) or
                                 (newShift.start.isBefore(it.start) and newShift.end.isBefore(it.end)))) {
 
-                    throw Exception("Middle of shift" + it.start + it.end + newShift.start + newShift.end)
+
+                    throw Exception("New Shift " + newShift.start + " to " +newShift.end + " Middle of shift " + it.start +" to "+ it.end)
+
 
 
                 }
@@ -87,7 +89,7 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
                 else if (
                         (newShift.start.isBefore(it.start) and newShift.end.isAfter(it.end))
                 ) {
-                    throw Exception("Engulf shift")
+                    throw Exception("New Shift " + newShift.start +" to " + newShift.end + " Engulfs shift " +  it.start+" to "  + it.end)
                     //fail
                 }
 
@@ -98,7 +100,7 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
                                         (ChronoUnit.HOURS.between(newShift.start, it.end) < 8)
                                 )
                 ) {
-                    throw Exception("No rest")
+                    throw Exception("Vet has to rest after 6h shifts")
 
                 }
 
@@ -114,12 +116,15 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
 
             }
             if (monthcounter < 160) {
-                //not enough h
+                throw Exception("Not enough hours for the month")
             }
 
-            if (weekcounter > 40) {
-                //too many h
+            else if (weekcounter > 40) {
+                throw Exception("Too many hours for the week")
             }
+            else
+                shiftRep.save(newShift)
+
 
 
         }
