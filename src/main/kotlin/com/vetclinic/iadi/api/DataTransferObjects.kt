@@ -21,7 +21,7 @@ data class AppointmentDTO(val id:Long, val date: Date, val desc: String, var sta
 }
 
 
-data class UserDTO(val id: Long, val name:String, val pass:String){ // TODO: check if password makes sense
+data class UserDTO(val id: Long, val username:String, val pass:String){ // TODO: check if password makes sense
     constructor(user: RegisteredUsersDAO) : this(user.id, user.name, user.pass)
 }
 
