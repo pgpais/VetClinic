@@ -10,16 +10,32 @@ import javax.annotation.PostConstruct
 
 interface PetRepository : JpaRepository<PetDAO, Long> {
 
+    fun findAllByRemovedFalse():List<PetDAO>
+
     fun findByName(name:String): MutableIterable<PetDAO>
 
-    @Query("select p from PetDAO p inner join fetch p.appointments where p.id = :id")
+    fun findByIdAndRemovedIsFalse(id:Long) : Optional<PetDAO>
+
+    @Query("select p from PetDAO p inner join fetch p.appointments where p.id = :id and p.removed = false")
     fun findByIdWithAppointment(id:Long) : Optional<PetDAO>
 
     @Query("select p from PetDAO p where p.owner =:owner")
     fun findAllByOwner(owner:String)
 
-    @Query("select p from PetDAO p where p.owner =:owner and p.id = :id")
+    @Query("select p from PetDAO p where p.owner =:owner and p.id = :id and p.removed = false")
     fun findPetByOwnerAndId(id:Long,owner:String)
+
+    @Modifying
+    @Transactional
+    @Query("update PetDAO p set p.removed=true where p.id =:id")
+    fun removeById(id: Long)
+
+    @Modifying
+    @Transactional
+    @Query("update PetDAO p set p.removed=true where p.id =:id and p.owner =:owner")
+    fun removeByIdAndUserId(owner: ClientDAO, id: Long)
+
+
 
 }
 
@@ -37,13 +53,33 @@ interface AppointmentRepository: JpaRepository<AppointmentDAO, Long>{
 }
 
 
-interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long>{
+interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long> {
 
-    @Query("select v from VeterinarianDAO v inner join fetch v.appointments where v.id = :id")
-    fun findByIdWithAppointment(id:Long) : Optional<VeterinarianDAO>
+    @Query("select v from VeterinarianDAO v inner join fetch v.appointments where v.id = :id and v.frozen = false")
+    fun findByIdWithAppointment(id: Long): Optional<VeterinarianDAO>
 
-    @Query("select v from VeterinarianDAO v inner join fetch v.appointments a where v.id = :id and a.desc = '' ")
-    fun findByIdWithAppointmentPending(id:Long) : Optional<VeterinarianDAO>
+    @Query("select v from VeterinarianDAO v inner join fetch v.appointments a where v.id = :id and a.desc = ''  and v.frozen = false")
+    fun findByIdWithAppointmentPending(id: Long): Optional<VeterinarianDAO>
+
+
+    @Modifying
+    @Transactional
+    @Query("update VeterinarianDAO v set v.schedule = :plus  where v.id = :vetId")
+    fun updateShifts(vetId: Long, plus: List<ShiftsDAO>)
+
+    @Modifying
+    @Transactional
+    @Query("update VeterinarianDAO v set v.frozen = true where v.id =:vetId")
+    override fun deleteById(vetId: Long)
+
+    @Modifying
+    @Transactional
+    @Query("update VeterinarianDAO v set v.frozen = true")
+    override fun deleteAll()
+
+    fun findByIdAndFrozenIsFalse(id: Long): Optional<VeterinarianDAO>
+
+    fun findAllByFrozenIsFalse(): List<VeterinarianDAO>
 
 }
 
@@ -51,14 +87,18 @@ interface ShiftsRepository: JpaRepository<ShiftsDAO, Long>{
 
 }
 
+interface UserRepository: JpaRepository<RegisteredUsersDAO, Long>{
+
+   /* fun findByUsername(username:String) : Optional<RegisteredUsersDAO>
+
+    @Modifying
+    @Transactional
+    @Query("update RegisteredUsersDAO u set u.id =:id, u.name =:name, u.username =:username, u.pass =:pass where u.id =:id")
+    fun updateUser(id:Long, name: String, username: String, pass:String)
+*/
+}
 
 interface AdminRepository: JpaRepository<AdminDAO, Long>{
-
-    @PostConstruct //TODO: this might no be right
-    fun saveAdmin (){
-        val admin:AdminDAO = AdminDAO(1, "Admin", "secret")
-        this.save(admin)
-    }
 
 
 }
@@ -69,6 +109,4 @@ interface ClientRepository : JpaRepository<ClientDAO, Long> {
 
     @Query("select c from ClientDAO c inner join fetch c.pets where c.id = :id")
     fun findByIdWithPets(id: Long): Optional<ClientDAO>
-
-
 }

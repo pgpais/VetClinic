@@ -1,7 +1,6 @@
 package com.vetclinic.iadi.api
 
 import com.vetclinic.iadi.services.AdminService
-import com.vetclinic.iadi.services.VetService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -14,7 +13,23 @@ import java.util.*
 
 @RestController
 @RequestMapping("/admin")
-class AdminController(val admins: AdminService, val vets: VetService) {
+class AdminController(val admins: AdminService) {
+
+    @GetMapping("/pet/{id}")
+    fun getPet(@PathVariable id:Long) : PetDTO =
+            handle4xx { PetDTO(admins.getPetById(id)) }
+
+    @GetMapping("/client/{id}")
+    fun getClient(@PathVariable id:Long) : ClientDTO =
+            handle4xx { ClientDTO(admins.getClientById(id)) }
+
+    @GetMapping("/user/{id}")
+    fun getUser(@PathVariable id:Long) : UserDTO =
+        handle4xx { UserDTO(admins.getUserById(id)) }
+
+    @GetMapping("/{id}")
+    fun getAdmin(@PathVariable id:Long) : AdminDTO =
+            handle4xx { AdminDTO(admins.getAdminById(id)) }
 
     @ApiOperation(value="Create a new admin")
     @ApiResponses(value = [
@@ -23,7 +38,7 @@ class AdminController(val admins: AdminService, val vets: VetService) {
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
     ])
-    @PostMapping("/createAdmin")
+    @PostMapping("")
     fun createAdmin(@RequestBody adminDTO:AdminDTO) {
         handle4xx { admins.createAdmin(adminDTO) }
     }
@@ -35,7 +50,7 @@ class AdminController(val admins: AdminService, val vets: VetService) {
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
     ])
-    @DeleteMapping("/deleteAdmin/{id}")
+    @DeleteMapping("/{id}")
     fun deleteAdmin(@PathVariable id:Long) {
         handle4xx { admins.deleteAdmin(id) }
     }
@@ -47,21 +62,30 @@ class AdminController(val admins: AdminService, val vets: VetService) {
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
     ])
-    @PostMapping("/createVet")
-    fun createVet(@RequestBody vetDTO:VeterinarianDTO) {
-        handle4xx { admins.createVet(vetDTO) }
+    @PostMapping("/vets")
+    fun createVet(@RequestBody vet:VeterinarianDTO) {
+        handle4xx { admins.createVet(vet) }
     }
 
-    @ApiOperation(value="Set a schedule for a veterinarian")
+    @PostMapping("/vets/{id}")
+    fun deleteVet(@PathVariable id:Long){
+        handle4xx { admins.deleteVet(id) }
+    }
+
+    @GetMapping("/vets/{id}")
+    fun getVet(@PathVariable id:Long) : VeterinarianDTO =
+            handle4xx { VeterinarianDTO(admins.getVetbyId(id)) }
+
+    @ApiOperation(value="Add a shift to a Veterinarian's schedule")
     @ApiResponses(value = [
         ApiResponse(code = 201, message = "Successfully created schedule"),
         ApiResponse(code = 401, message = "You are not logged in as admin"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
     ])
-    @PostMapping("/setSchedule/{vetId}")
-    fun setSchedule(@PathVariable vetId: Long, @RequestBody adminId: Long, @RequestBody shifts:List<Pair<Date, Date>>){
-        vets.setSchedule(vetId, adminId, shifts)
+    @PostMapping("/vets/shifts/{id}")
+    fun setSchedule(@PathVariable id: Long, @RequestBody shifts:List<ShiftsDTO>){
+        admins.addShift(id, shifts)
     }
 
     @ApiOperation(value = "Check a Vet's appointments")
@@ -71,8 +95,8 @@ class AdminController(val admins: AdminService, val vets: VetService) {
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
     ])
-    @GetMapping("/appointments/{vetId}")
+    @GetMapping("/vets/appointments/{vetId}")
     fun checkAppointments(@PathVariable vetId: Long){
-        vets.getAppointments(vetId)
+        admins.getVetAppointments(vetId)
     }
 }
