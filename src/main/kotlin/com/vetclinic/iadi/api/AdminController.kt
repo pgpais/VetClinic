@@ -19,15 +19,15 @@ import java.util.*
 
 @RestController
 @RequestMapping("/admin")
-class AdminController(val admins: AdminService, val vets: VetService, val clients:ClientService, val pets:PetService) {
+class AdminController(val admins: AdminService) {
 
     @GetMapping("/pet/{id}")
     fun getPet(@PathVariable id:Long) : PetDTO =
-            handle4xx { PetDTO(pets.getPetById(id)) }
+            handle4xx { PetDTO(admins.getPetById(id)) }
 
     @GetMapping("/client/{id}")
     fun getClient(@PathVariable id:Long) : ClientDTO =
-            handle4xx { ClientDTO(clients.getClientById(id)) }
+            handle4xx { ClientDTO(admins.getClientById(id)) }
 
     @GetMapping("/user/{id}")
     fun getUser(@PathVariable id:Long) : UserDTO =
@@ -70,7 +70,7 @@ class AdminController(val admins: AdminService, val vets: VetService, val client
     ])
     @PostMapping("/vets")
     fun createVet(@RequestBody vetDTO:VetShiftDTO) {
-        handle4xx { admins.createVet(VeterinarianDAO(vetDTO.vet,vetDTO.shiftsDTO.map { ShiftsDAO(it.id, it.start, it.end, vets.getVetbyId(it.vetId))}, emptyList())) }
+        handle4xx { admins.createVet(VeterinarianDAO(vetDTO.vet,vetDTO.shiftsDTO.map { ShiftsDAO(it.id, it.start, it.end, admins.getVetbyId(it.vetId))}, emptyList())) }
     }
 
     @PostMapping("/vets/{id}")
@@ -80,7 +80,7 @@ class AdminController(val admins: AdminService, val vets: VetService, val client
 
     @GetMapping("/vets/{id}")
     fun getVet(@PathVariable id:Long) : VeterinarianDTO =
-            handle4xx { VeterinarianDTO(vets.getVetbyId(id)) }
+            handle4xx { VeterinarianDTO(admins.getVetbyId(id)) }
 
     @ApiOperation(value="Add a shift to a Veterinarian's schedule")
     @ApiResponses(value = [
@@ -91,7 +91,7 @@ class AdminController(val admins: AdminService, val vets: VetService, val client
     ])
     @PostMapping("/vets/shifts")
     fun setSchedule(@RequestBody shifts:ShiftsDTO){
-        vets.addShift(shifts.vetId, ShiftsDAO( shifts, vets.getVetbyId(shifts.vetId)))
+        admins.addShift(ShiftsDAO(shifts, admins.getVetbyId(shifts.vetId)))
     }
 
     @ApiOperation(value = "Check a Vet's appointments")
@@ -103,6 +103,6 @@ class AdminController(val admins: AdminService, val vets: VetService, val client
     ])
     @GetMapping("/vets/appointments/{vetId}")
     fun checkAppointments(@PathVariable vetId: Long){
-        vets.getAppointments(vetId)
+        admins.getVetAppointments(vetId)
     }
 }
