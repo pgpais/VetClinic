@@ -83,4 +83,11 @@ class VetController (val vets:VetService) {
 
     }
 
+    @GetMapping("/schedule/{id}")
+    fun getSchedule(@PathVariable id:Long) : VetShiftDTO =
+        handle4xx {
+            VetShiftDTO(VeterinarianDTO(vets.getVetbyId(id)),
+                                        (vets.getSchedule(id).map{ ShiftsDTO(it)}))
+        }
+
 }

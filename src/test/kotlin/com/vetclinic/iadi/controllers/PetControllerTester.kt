@@ -125,7 +125,7 @@ class PetControllerTester {
         Mockito.`when`(clients.getClientById(nonNullAny(Long::class.java)))
                 .thenReturn(user);
 
-        Mockito.`when`(pets.addNew(nonNullAny(PetDAO::class.java)))
+        Mockito.`when`(pets.addNew(nonNullAny(PetDTO::class.java), user.id))
                 .then { assertThat(it.getArgument(0), equalTo(louroDAO)); it.getArgument(0) }
 
         mvc.perform(post(petsURL)
@@ -165,14 +165,14 @@ class PetControllerTester {
 
     @Test
     fun `Test adding an appointment to a pet`() {
-        val louro = PetDAO(0, "louro", "Papagaio","www.google.com", user, emptyList(),false)
+        val louro = PetDAO(1, "louro", "Papagaio","www.google.com", user, emptyList(),false)
         val apt = AppointmentDTO(0, LocalDateTime.now(), "consulta", AppointmentStatus.ACCEPTED, "", louro.id, user.id, vet.id)
         val aptDAO = AppointmentDAO(apt,louro, user, vet)
         louro.appointments = listOf(aptDAO)
 
         val aptJSON = mapper.writeValueAsString(apt)
 
-        Mockito.`when`(pets.newAppointment(nonNullAny(AppointmentDAO::class.java)))
+        Mockito.`when`(pets.newAppointment(1L, nonNullAny(AppointmentDTO::class.java)))
                 .then { assertThat( it.getArgument(0), equalTo(aptDAO)); it.getArgument(0) }
 
         Mockito.`when`(pets.getPetById(1)).thenReturn(louro)
@@ -193,7 +193,7 @@ class PetControllerTester {
 
         val aptJSON = mapper.writeValueAsString(apt)
 
-        Mockito.`when`(pets.newAppointment(nonNullAny(AppointmentDAO::class.java)))
+        Mockito.`when`(pets.newAppointment(1L, nonNullAny(AppointmentDTO::class.java)))
                 .thenThrow( PreconditionFailedException("id 0"))
 
         Mockito.`when`(pets.getPetById(1)).thenReturn(louro)

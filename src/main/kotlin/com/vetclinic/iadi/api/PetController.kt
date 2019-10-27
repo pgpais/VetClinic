@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/pets")
-class PetController(val pets: PetService, val clientService: ClientService, val vets:VetService) {
+class PetController(val pets: PetService) {
 
     @ApiOperation(value = "View a list of registered pets", response = List::class)
     @ApiResponses(value = [
@@ -35,10 +35,12 @@ class PetController(val pets: PetService, val clientService: ClientService, val 
         ApiResponse(code = 401, message = "You are not authorized to use this resource"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
     ])
-    @PostMapping("")
-    fun addNewPet(@RequestBody pet: PetDTO) =
+    @PostMapping("/{id}")
+    fun addNewPet(@PathVariable id: Long, @RequestBody pet: PetDTO) =
 
-            handle4xx { pets.addNew(PetDAO(pet, clientService.getClientById(pet.ownerId), emptyList())) }
+            handle4xx {
+                pets.addNew(pet, id)
+            }
 
 
 
@@ -61,7 +63,7 @@ class PetController(val pets: PetService, val clientService: ClientService, val 
     ])
     @PutMapping("/{id}")
     fun updatePet(@RequestBody pet: PetDTO, @PathVariable id: Long) =
-            handle4xx { pets.update(PetDAO(pet, clientService.getClientById(pet.ownerId),pets.getAppointments(id)), id) }
+            handle4xx { pets.update(pet, id) }
 
     @ApiOperation(value = "Delete a pet", response = Unit::class)
     @ApiResponses(value = [
@@ -85,7 +87,7 @@ class PetController(val pets: PetService, val clientService: ClientService, val 
                        @RequestBody apt:AppointmentDTO
     ) =
             handle4xx {
-                pets.newAppointment(AppointmentDAO(apt, pets.getPetById(id), clientService.getClientById(apt.clientId),vets.getVetbyId(apt.vetId)))
+                pets.newAppointment(id, apt)
             }
 
     @ApiOperation(value = "Get a list of a pet's appointments", response = List::class)
