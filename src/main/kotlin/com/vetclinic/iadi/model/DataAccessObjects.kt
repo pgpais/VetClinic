@@ -70,7 +70,7 @@ data class AppointmentDAO(
 
 @Entity
 data class VeterinarianDAO(
-        @Id @GeneratedValue override val id: Long,
+        @Id override val id: Long,
         @UniqueElements
         override var username: String,
         override var pass:String,
@@ -82,7 +82,6 @@ data class VeterinarianDAO(
         override var email:String,
         override var phone:Number,
         override var address:String,
-
 
         @OneToMany(mappedBy = "vet", fetch = FetchType.EAGER)
         var schedule:List<ShiftsDAO>,
@@ -113,12 +112,11 @@ abstract class RegisteredUsersDAO (//TODO: change to username
     abstract var address:String
 
 
-    //TODO: add rest of info
 }
 
 @Entity
 data class ClientDAO(
-        @Id @GeneratedValue override val id:Long,
+        @Id override val id:Long,
 
         @UniqueElements
         override var username:String,
@@ -141,7 +139,7 @@ data class ClientDAO(
 
 @Entity
 data class AdminDAO(
-        @Id @GeneratedValue override val id:Long,
+        @Id override val id:Long,
         @UniqueElements
         override var username: String,
         override  var pass: String,

@@ -42,7 +42,7 @@ class VetClinicApplication {
         vets.save(manel)
 
 
-        val admin = AdminDAO(3, "francisco123", "secret", "manel","","",6,"")
+        val admin = AdminDAO(1, "francisco123", "secret", "manel","","",6,"")
 
         admins.save(admin)
 
