@@ -1,46 +1,70 @@
 package com.vetclinic.iadi.services
 
 import com.vetclinic.iadi.api.AdminDTO
+import com.vetclinic.iadi.api.ShiftsDTO
 import com.vetclinic.iadi.api.VeterinarianDTO
-import com.vetclinic.iadi.model.AdminDAO
-import com.vetclinic.iadi.model.AdminRepository
-import com.vetclinic.iadi.model.VeterinarianDAO
-import com.vetclinic.iadi.model.VeterinaryRepository
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import com.vetclinic.iadi.api.handle4xx
+import com.vetclinic.iadi.model.*
+import org.springframework.data.jpa.domain.AbstractPersistable_.id
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class AdminService(val vets: VeterinaryRepository, val admins: AdminRepository) {
-
     fun getAdminByUsername(username:String)  :Optional<AdminDAO> = admins.findByUsername(username)
+class AdminService(val vets: VeterinaryRepository, val admins: AdminRepository, val users: UserRepository, val clients: ClientRepository, val pets: PetRepository) {
 
-
-    fun createAdmin(adminDTO: AdminDAO) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    fun createAdmin(admin: AdminDTO) {
+        val adminDAO = AdminDAO(admin)
+        if( adminDAO.id != 0L){
+            throw PreconditionFailedException("Id must be 0 on insertion")
+        } else
+            admins.save(adminDAO)
     }
 
-    fun createVet(vet: VeterinarianDAO) : Optional<VeterinarianDAO> {
-
-            val aVet = vets.findById(vet.id)
-
-            return if ( aVet.isPresent )
-                Optional.empty()
-            else {
-                vet.pass = BCryptPasswordEncoder().encode(vet.pass)
-                Optional.of(vets.save(vet))
-            }
+    fun createVet(vet: VeterinarianDTO) {
+        val vetDAO = VeterinarianDAO(vet, emptyList(), emptyList())
+        if( vetDAO.id != 0L){
+            throw PreconditionFailedException("Id must be 0 on insertion")
+        } else
+            vets.save(vetDAO)
     }
 
     fun deleteAdmin(id: Long) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val admin = admins.findById(id).orElseThrow { NotFoundException("Couldn't find admin") }
+        admins.delete(admin)
     }
 
     fun deleteVet(id: Long) {
-
         val vet = vets.findById(id).orElseThrow { NotFoundException ("Couldn't find vet with id $id") }
         vets.delete(vet)
-
     }
+
+    fun getAdminById(id: Long) =
+        admins.findById(id).orElseThrow{ NotFoundException("Couldn't find user with id $id") }
+
+    fun getUserById(id: Long) =
+        users.findById(id).orElseThrow { NotFoundException("Couldn't find user with id $id") }
+
+    fun getClientById(id: Long) =
+        clients.findById(id).orElseThrow{ NotFoundException("Couldn't find user with id $id") }
+
+    fun getPetById(id: Long) =
+        pets.findById(id).orElseThrow { NotFoundException("Couldn't find user with id $id") }
+
+
+    fun getVetbyId(vetId: Long) =
+        vets.findById(vetId).orElseThrow { NotFoundException("Couldn't find user with id $vetId") }
+
+    fun addShift(id: Long, shifts: List<ShiftsDTO>) {
+        val vet = getVetbyId(id)
+        vet.schedule = shifts.map { ShiftsDAO(it, vet)}
+        vets.save(vet)
+    }
+
+    fun getVetAppointments(vetId: Long) =
+        vets.findByIdWithAppointment(vetId).orElseThrow{ NotFoundException("Couldn't find user with id $vetId") }.appointments
+
+
+
 
 }

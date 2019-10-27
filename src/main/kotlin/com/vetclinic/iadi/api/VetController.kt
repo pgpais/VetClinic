@@ -17,27 +17,27 @@ import org.springframework.web.bind.annotation.*
 class VetController (val vets:VetService) {
     //TODO: "Veterinarians can also check the information of their clients, appointments, and of all pets"
 
-    @ApiOperation(value = "Get a list of Pending appointments", response = List::class)
+    @ApiOperation(value = "Get a list of the a Veterinarian's pending appointments", response = List::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully retrieved list of pending appointments"),
         ApiResponse(code = 404, message = "Provided Veterinarian not found"),
         ApiResponse(code = 401, message = "You're not allowed to access this resource")
 
     ])
-    @GetMapping("/appointments/pending/{id}")
+    @GetMapping("/appointments/pending")
     fun getPendingAppointments(@PathVariable id:Long):List<AppointmentDTO> =
         handle4xx {
             vets.getPendingAppointments(id).map{AppointmentDTO(it)}
         }
 
-    @ApiOperation(value = "Get a list of all appointments by Id", response = List::class)
+    @ApiOperation(value = "Get a list of all appointments of a vet", response = List::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully retrieved list of all appointments"),
         ApiResponse(code = 404, message = "Provided Veterinarian not found"),
         ApiResponse(code = 401, message = "You're not allowed to access this resource")
 
     ])
-    @GetMapping("/appointments/{id}")
+    @GetMapping("/appointments/{id}") //can be used for Vet and Client (?)
     fun getAppointments(@PathVariable id:Long):List<AppointmentDTO> =
             handle4xx {
                 vets.getAppointments(id).map{AppointmentDTO(it)}
@@ -84,5 +84,12 @@ class VetController (val vets:VetService) {
             vets.completeAppointment(aptId)}
 
     }
+
+    @GetMapping("/schedule/{id}")
+    fun getSchedule(@PathVariable id:Long) : VetShiftDTO =
+        handle4xx {
+            VetShiftDTO(VeterinarianDTO(vets.getVetbyId(id)),
+                                        (vets.getSchedule(id).map{ ShiftsDTO(it)}))
+        }
 
 }
