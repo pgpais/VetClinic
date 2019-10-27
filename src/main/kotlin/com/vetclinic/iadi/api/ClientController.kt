@@ -1,11 +1,7 @@
 package com.vetclinic.iadi.api
 
-import com.vetclinic.iadi.model.AppointmentDAO
-import com.vetclinic.iadi.model.PetDAO
-import com.vetclinic.iadi.services.AppointmentService
+
 import com.vetclinic.iadi.services.ClientService
-import com.vetclinic.iadi.services.PetService
-import com.vetclinic.iadi.services.VetService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -17,8 +13,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/client")
-class ClientController(val client:ClientService, val apts:AppointmentService, val pets:PetService, val vets:VetService){ //TODO: so many services up here....
-
+class ClientController(val client:ClientService){
 
     @GetMapping("/{id}")
     fun getOneClient(@PathVariable id:Long) : ClientDTO =
@@ -38,20 +33,15 @@ class ClientController(val client:ClientService, val apts:AppointmentService, va
     @ApiResponses(
             ApiResponse(code = 200, message = "Successfully booked appointment")
     )
-    @PostMapping("/apts/{userId}")
-    fun bookAppointment(@PathVariable userId:Long, @RequestBody apt:AppointmentDTO){ //TODO: maybe only needs @RequestBody (appointmentDTO has everything)
-        apts.newAppointment(AppointmentDAO(apt, pets.getPetById(apt.petId), client.getClientById(userId), vets.getVetbyId(apt.vetId)))
+    @PostMapping("/apts")
+    fun bookAppointment(@RequestBody apt:AppointmentDTO){ //TODO: maybe only needs @RequestBody (appointmentDTO has everything)
+        client.bookAppointment(apt)
     }
 
     @GetMapping("/pets/{userId}")
     fun getPets(@PathVariable userId: Long): List<PetDTO> =
-            handle4xx { client.getPets(userId).map{PetDTO(it)} }
-
-
-    @PostMapping("/pets/{userId}")
-    fun addPet(@PathVariable userId: Long, @RequestBody pet:PetDTO){ //TODO: not needed. Clients use /pets URL
-        pets.addNew(PetDAO(pet, client.getClientById(userId)))
-    }
+            handle4xx { client.getPets(userId).map{PetDTO(it)}
+            }
 
     @DeleteMapping("/pets/{userId}/{petId}")
     fun deletePet(@PathVariable userId: Long, @PathVariable petId: Long){
