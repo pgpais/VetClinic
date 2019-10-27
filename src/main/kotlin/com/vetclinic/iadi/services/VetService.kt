@@ -128,6 +128,8 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
 
         }
     }
+
+    fun getSchedule(id: Long): List<ShiftsDAO> = emptyList()
 }
 
 
