@@ -89,9 +89,10 @@ class AdminController(val admins: AdminService) {
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
     ])
-    @PostMapping("/vets/shifts")
-    fun setSchedule(@RequestBody shifts:ShiftsDTO){
-        admins.addShift(ShiftsDAO(shifts, admins.getVetbyId(shifts.vetId)))
+    @PostMapping("/vets/shifts/{id}")
+    fun setSchedule(@PathVariable id: Long, @RequestBody shifts:List<ShiftsDTO>){
+        val vet = admins.getVetbyId(id)
+        admins.addShift(vet, shifts.map { ShiftsDAO(it, vet) })
     }
 
     @ApiOperation(value = "Check a Vet's appointments")
