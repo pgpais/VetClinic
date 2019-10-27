@@ -12,6 +12,7 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
 @Api(value = "VetClinic Management System - Appointment API",
@@ -28,6 +29,7 @@ class AppointmentController(val apts: AppointmentService, val petService: PetSer
         ApiResponse(code = 401, message = "You are not authorized to view the resource"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
     ])
+    @PreAuthorize("hasRole('ROLE_VET')")
     @GetMapping("")
     fun getAllAppointments() : List<AppointmentDTO> =
             apts.getAllAppointments().map { AppointmentDTO(it.id, it.date, it.desc, it.status, it.reason, it.pet.id, it.client.id, it.vet.id) }
