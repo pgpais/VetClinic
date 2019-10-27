@@ -21,19 +21,20 @@ data class AppointmentDTO(val id:Long, val date: LocalDateTime, val desc: String
 }
 
 
-data class UserDTO(val id: Long, val username:String, val pass:String){ // TODO: check if password makes sense
-    constructor(user: RegisteredUsersDAO) : this(user.id, user.name, user.pass)
+data class UserDTO(val id: Long, val username:String, val pass:String, val name:String, val photo: String, val email:String, val phone:Number, val address:String){ // TODO: check if password makes sense
+    constructor(user: RegisteredUsersDAO) : this(user.id, user.username, user.pass, user.name, user.photo, user.email, user.phone, user.address)
 }
 
-data class ClientDTO(val id:Long, val name:String, val username: String, val pass:String)
+
+data class ClientDTO(val id:Long, val username: String, val pass:String, val name:String, val photo: String, val email: String, val phone: Number, val address: String)
 
 data class ClientPetDTO(val client:ClientDTO, val petDTO: List<PetDTO>)
 
 
-data class VeterinarianDTO(val vetId:Long, val name:String, val username: String, val pass: String, val photo: String){
+data class VeterinarianDTO(val vetId:Long, val username: String, val pass: String,val name:String, val photo: String, val email: String, val phone: Number, val address: String, val frozen:Boolean){
 
 
-    constructor(vetDAO: VeterinarianDAO) : this(vetDAO.id,  vetDAO.name, vetDAO.username, vetDAO.pass, vetDAO.photo)
+    constructor(vetDAO: VeterinarianDAO) : this(vetDAO.id, vetDAO.username, vetDAO.pass, vetDAO.name,  vetDAO.photo, vetDAO.email,vetDAO.phone, vetDAO.address, vetDAO.frozen)
 }
 
 data class ShiftsDTO(val id: Long, val start: LocalDateTime, val end:LocalDateTime, val vetId: Long){
@@ -45,7 +46,7 @@ data class VetShiftDTO(val vet:VeterinarianDTO, val shiftsDTO: List<ShiftsDTO>)
 
 data class VetAptsDTO(val vet:VeterinarianDTO, val apts: List<AppointmentDTO>)
 
-data class AdminDTO(val id: Long, val name:String, val username: String, val pass:String){
+data class AdminDTO(val id: Long, val username: String, val pass:String, val name: String, val photo: String, val email: String, val phone: Number, val address: String){
 
-    constructor(admin: AdminDAO) : this(admin.id, admin.name, admin.username, admin.pass)
+    constructor(admin: AdminDAO) : this(admin.id,  admin.username, admin.pass, admin.name, admin.photo, admin.email, admin.phone, admin.address)
 }

@@ -47,19 +47,26 @@ interface AppointmentRepository: JpaRepository<AppointmentDAO, Long>{
 }
 
 
-interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long>{
+interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long> {
 
-    @Query("select v from VeterinarianDAO v inner join fetch v.appointments where v.id = :id")
-    fun findByIdWithAppointment(id:Long) : Optional<VeterinarianDAO>
+    @Query("select v from VeterinarianDAO v inner join fetch v.appointments where v.id = :id and v.frozen = false")
+    fun findByIdWithAppointment(id: Long): Optional<VeterinarianDAO>
 
-    @Query("select v from VeterinarianDAO v inner join fetch v.appointments a where v.id = :id and a.desc = '' ")
-    fun findByIdWithAppointmentPending(id:Long) : Optional<VeterinarianDAO>
+    @Query("select v from VeterinarianDAO v inner join fetch v.appointments a where v.id = :id and a.desc = ''  and v.frozen = false")
+    fun findByIdWithAppointmentPending(id: Long): Optional<VeterinarianDAO>
+
 
     @Modifying
     @Transactional
     @Query("update VeterinarianDAO v set v.schedule = :plus  where v.id = :vetId")
     fun updateShifts(vetId: Long, plus: List<ShiftsDAO>)
 
+    @Query("update VeterinarianDAO v set v.frozen = true where v.id =:vetId")
+    fun freezeVet(vetId: Long)
+
+    fun findByIdAndFrozenIsFalse(id: Long): Optional<VeterinarianDAO>
+
+    fun findAllByFrozenIsFalse(): List<VeterinarianDAO>
 }
 
 interface ShiftsRepository: JpaRepository<ShiftsDAO, Long>{
@@ -68,7 +75,13 @@ interface ShiftsRepository: JpaRepository<ShiftsDAO, Long>{
 
 interface UserRepository: JpaRepository<RegisteredUsersDAO, Long>{
 
-
+    //fun findByUsername(username:String) : Optional<RegisteredUsersDAO>
+/*
+    @Modifying
+    @Transactional
+    @Query("update RegisteredUsersDAO u set u.id =: id, u.name =:name,u.username =:username, u.pass =:pass where u.id =: id")
+    fun updateUser(id:Long, name: String, username: String, pass:String)
+*/
 }
 
 interface AdminRepository: JpaRepository<AdminDAO, Long>{
