@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/client")
-class ClientController(val client:ClientService, val apts:AppointmentService, val pets:PetService, val vets:VetService){ //TODO: so many services up here....
-
+class ClientController(val client:ClientService){
 
     @GetMapping("/{id}")
     fun getOneClient(@PathVariable id:Long) : ClientDTO =
@@ -40,18 +39,15 @@ class ClientController(val client:ClientService, val apts:AppointmentService, va
     )
     @PostMapping("/apts/{userId}")
     fun bookAppointment(@PathVariable userId:Long, @RequestBody apt:AppointmentDTO){ //TODO: maybe only needs @RequestBody (appointmentDTO has everything)
-        apts.newAppointment(AppointmentDAO(apt, pets.getPetById(apt.petId), client.getClientById(userId), vets.getVetbyId(apt.vetId)))
+        client.bookAppointment(apt)
     }
 
     @GetMapping("/pets/{userId}")
     fun getPets(@PathVariable userId: Long): List<PetDTO> =
-            handle4xx { client.getPets(userId).map{PetDTO(it)} }
+            handle4xx { client.getPets(userId).map{PetDTO(it)}
+            }
 
 
-    @PostMapping("/pets/{userId}")
-    fun addPet(@PathVariable userId: Long, @RequestBody pet:PetDTO){ //TODO: not needed. Clients use /pets URL
-        pets.addNew(PetDAO(pet, client.getClientById(userId)))
-    }
 
     @DeleteMapping("/pets/{userId}/{petId}")
     fun deletePet(@PathVariable userId: Long, @PathVariable petId: Long){
