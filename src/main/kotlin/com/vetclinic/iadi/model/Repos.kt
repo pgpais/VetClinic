@@ -14,13 +14,15 @@ interface PetRepository : JpaRepository<PetDAO, Long> {
 
     fun findByName(name:String): MutableIterable<PetDAO>
 
-    @Query("select p from PetDAO p inner join fetch p.appointments where p.id = :id")
+    fun findByIdAndRemovedIsFalse(id:Long) : Optional<PetDAO>
+
+    @Query("select p from PetDAO p inner join fetch p.appointments where p.id = :id and p.removed = false")
     fun findByIdWithAppointment(id:Long) : Optional<PetDAO>
 
     @Query("select p from PetDAO p where p.owner =:owner")
     fun findAllByOwner(owner:String)
 
-    @Query("select p from PetDAO p where p.owner =:owner and p.id = :id")
+    @Query("select p from PetDAO p where p.owner =:owner and p.id = :id and p.removed = false")
     fun findPetByOwnerAndId(id:Long,owner:String)
 
     @Modifying
