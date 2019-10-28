@@ -62,7 +62,7 @@ class AdminController(val admins: AdminService) {
 
     @ApiOperation(value="Create a new admin")
     @ApiResponses(value = [
-        ApiResponse(code = 200, message = "Successfully created admin"),
+        ApiResponse(code = 201, message = "Successfully created admin"),
         ApiResponse(code = 401, message = "You are not logged in as admin"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
@@ -86,7 +86,7 @@ class AdminController(val admins: AdminService) {
 
     @ApiOperation(value="Create a new Veterinarian")
     @ApiResponses(value = [
-        ApiResponse(code = 200, message = "Successfully created veterinarian"),
+        ApiResponse(code = 201, message = "Successfully created veterinarian"),
         ApiResponse(code = 401, message = "You are not logged in as admin"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
@@ -99,7 +99,7 @@ class AdminController(val admins: AdminService) {
 
     @ApiOperation(value="Delete a vet by making him Frozen")
     @ApiResponses(value = [
-        ApiResponse(code = 200, message = "Successfully froze a veterinarian"),
+        ApiResponse(code = 201, message = "Successfully froze a veterinarian"),
         ApiResponse(code = 401, message = "You are not logged in as admin"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
