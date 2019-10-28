@@ -147,7 +147,7 @@ class PetControllerTester {
                 .andExpect(status().isOk)
                 .andReturn()
 
-        /* TODO: need to compare with result
+        /*
         val responseString = result.response.contentAsString
         val responseDTO = mapper.readValue<List<PetAptsDTO>>(responseString)
         assertThat(responseDTO, equalTo(petsAptsDTO))

@@ -58,7 +58,7 @@ class VetClinicApplication {
         shifts.save(turnodas8)
 
 
-        val newnewVet = AdminDTO(5, "francisco123", BCryptPasswordEncoder().encode("123"), "francisco","","",6,"")
+        val newnewVet = AdminDTO(5, "francisco123", BCryptPasswordEncoder().encode("123"), "francisco","","",6,"",UUID.randomUUID())
 
         //adminService.update(admin.id,newnewVet)
 

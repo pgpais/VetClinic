@@ -27,7 +27,7 @@ class AdminController(val admins: AdminService) {
     fun getPet(@PathVariable id:Long) : PetDTO =
             handle4xx { PetDTO(admins.getPetById(id)) }
 
-    @ApiOperation(value="Get a client by his ID")
+    @ApiOperation(value="Get a client by his ID", response = ClientDTO::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully got Client"),
         ApiResponse(code = 401, message = "You are not logged in as admin"),
@@ -38,7 +38,7 @@ class AdminController(val admins: AdminService) {
     fun getClient(@PathVariable id:Long) : ClientDTO =
             handle4xx { ClientDTO(admins.getClientById(id)) }
 
-    @ApiOperation(value="Get an user by his ID")
+    @ApiOperation(value="Get an user by his ID", response = UserDTO::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully got user"),
         ApiResponse(code = 401, message = "You are not logged in as admin"),
@@ -49,7 +49,7 @@ class AdminController(val admins: AdminService) {
     fun getUser(@PathVariable id:Long) : UserDTO =
         handle4xx { UserDTO(admins.getUserById(id)) }
 
-    @ApiOperation(value="Get an admin by his ID")
+    @ApiOperation(value="Get an admin by his ID", response = AdminDTO::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully got admin"),
         ApiResponse(code = 401, message = "You are not logged in as admin"),
@@ -72,7 +72,7 @@ class AdminController(val admins: AdminService) {
         handle4xx { admins.createAdmin(adminDTO) }
     }
 
-    @ApiOperation(value="Delete an admin")
+    @ApiOperation(value="Delete an admin", response = Unit::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully frozen admin"),
         ApiResponse(code = 401, message = "You are not logged in as admin"),
@@ -109,7 +109,7 @@ class AdminController(val admins: AdminService) {
         handle4xx { admins.deleteVet(id) }
     }
 
-    @ApiOperation(value="Get a Veterinarian by his id")
+    @ApiOperation(value="Get a Veterinarian by his id", response = VeterinarianDTO::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully froze a veterinarian"),
         ApiResponse(code = 401, message = "You are not logged in as admin"),
@@ -120,7 +120,7 @@ class AdminController(val admins: AdminService) {
     fun getVet(@PathVariable id:Long) : VeterinarianDTO =
             handle4xx { VeterinarianDTO(admins.getVetbyId(id)) }
 
-    @ApiOperation(value="Add a shift to a Veterinarian's schedule")
+    @ApiOperation(value="Add a shift to a Veterinarian's schedule", response = Unit::class)
     @ApiResponses(value = [
         ApiResponse(code = 201, message = "Successfully created schedule"),
         ApiResponse(code = 401, message = "You are not logged in as admin"),
@@ -132,7 +132,7 @@ class AdminController(val admins: AdminService) {
         admins.setSchedule(id, shifts)
     }
 
-    @ApiOperation(value = "Check a Vet's appointments")
+    @ApiOperation(value = "Check a Vet's appointments", response = List::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully retrieved vet's schedule"),
         ApiResponse(code = 401, message = "You are not logged in as admin"),

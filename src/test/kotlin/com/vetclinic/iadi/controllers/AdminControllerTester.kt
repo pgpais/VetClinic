@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import com.vetclinic.iadi.model.*
 import com.vetclinic.iadi.services.*
+import java.util.*
 
 @RunWith(SpringRunner::class)
 @SpringBootTest
@@ -35,7 +36,7 @@ class AdminControllerTester {
 
         val mapper = ObjectMapper().registerModule(KotlinModule())
 
-        val admin = AdminDTO(0L,"Admin123", "123",  "AdminExtra","","",5,"")
+        val admin = AdminDTO(0L,"Admin123", "123",  "AdminExtra","","",5,"", UUID.randomUUID())
 
         val adminsURL = "/admin"
     }

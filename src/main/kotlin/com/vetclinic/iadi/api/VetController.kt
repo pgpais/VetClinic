@@ -49,7 +49,7 @@ class VetController (val vets:VetService) {
 
     ])
     @PostMapping("/appointments/accept/{aptId}")
-    fun acceptAppointment(@PathVariable aptId:Long){ //TODO: add token to request
+    fun acceptAppointment(@PathVariable aptId:Long){
         handle4xx {
             vets.acceptAppointment(aptId)}
         }
@@ -64,7 +64,7 @@ class VetController (val vets:VetService) {
 
     ])
     @PutMapping("/appointments/reject/{aptId}")
-    fun rejectAppointment(@PathVariable aptId:Long, @RequestBody reason:String){ //TODO: add token to request
+    fun rejectAppointment(@PathVariable aptId:Long, @RequestBody reason:String){
         handle4xx {
             vets.rejectAppointment(aptId,reason)}
     }
