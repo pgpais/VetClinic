@@ -55,6 +55,10 @@ interface AppointmentRepository: JpaRepository<AppointmentDAO, Long>{
 
 interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long> {
 
+
+    fun findByUsername(username:String) : Optional<VeterinarianDAO>
+
+
     @Query("select v from VeterinarianDAO v inner join fetch v.appointments where v.id = :id and v.frozen = false")
     fun findByIdWithAppointment(id: Long): Optional<VeterinarianDAO>
 
@@ -85,21 +89,26 @@ interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long> {
 
 interface ShiftsRepository: JpaRepository<ShiftsDAO, Long>{
 
+    fun findByVetId(id:Long) : List<ShiftsDAO>
+
 }
 
 interface UserRepository: JpaRepository<RegisteredUsersDAO, Long>{
 
-   /* fun findByUsername(username:String) : Optional<RegisteredUsersDAO>
 
-    @Modifying
-    @Transactional
-    @Query("update RegisteredUsersDAO u set u.id =:id, u.name =:name, u.username =:username, u.pass =:pass where u.id =:id")
-    fun updateUser(id:Long, name: String, username: String, pass:String)
-*/
+     fun findByUsername(username:String) : Optional<RegisteredUsersDAO>
+
+ /*
+     @Modifying
+     @Transactional
+     @Query("update RegisteredUsersDAO u set u.id =:id, u.name =:name, u.username =:username, u.pass =:pass where u.id =:id")
+     fun updateUser(id:Long, name: String, username: String, pass:String)
+ */
 }
 
 interface AdminRepository: JpaRepository<AdminDAO, Long>{
 
+    fun findByUsername(username:String) : Optional<AdminDAO>
 
 }
 
@@ -109,4 +118,7 @@ interface ClientRepository : JpaRepository<ClientDAO, Long> {
 
     @Query("select c from ClientDAO c inner join fetch c.pets where c.id = :id")
     fun findByIdWithPets(id: Long): Optional<ClientDAO>
+
+    fun findByUsername(username:String) : Optional<ClientDAO>
+
 }

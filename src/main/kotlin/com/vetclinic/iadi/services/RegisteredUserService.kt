@@ -8,9 +8,10 @@ import org.springframework.stereotype.Service
 @Service
 class RegisteredUserService(val pets: PetRepository, val userRepository: UserRepository) {
 
+    //TODO: this might make all other values null (check it)
     fun updateInfo(username: String, newUser: UserDTO) {
-
-
-
-        }
+        val oldUserDAO: RegisteredUsersDAO = userRepository.findByUsername(username).orElseThrow { NotFoundException("Can't find User with username $username") }
+        val newUserDAO: RegisteredUsersDAO = RegisteredUsersDAO(oldUserDAO.id, oldUserDAO.username, newUser.pass, newUser.name, newUser.photo, newUser.email, newUser.phone, newUser.address)
+        userRepository.save(newUserDAO)
     }
+}

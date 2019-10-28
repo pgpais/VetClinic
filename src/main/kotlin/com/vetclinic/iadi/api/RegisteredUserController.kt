@@ -11,37 +11,20 @@ import org.springframework.web.bind.annotation.*
         description = "Management access operations in the IADI 2019 Pet Clinic")
 
 @RestController
-@RequestMapping("/home/{username}")
+@RequestMapping("/home")
 class RegisteredUserController (val regUserService: RegisteredUserService){
 
 
-    /*@ApiOperation(value = "Get the details of your pet by Id", response = PetDTO::class)
+    @ApiOperation(value = "Update a user's info", response = Unit::class)
     @ApiResponses(value = [
-        ApiResponse(code = 200, message = "Successfully retrieved pet details"),
-        ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-        ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+        ApiResponse(code = 200, message = "Successfully updated a user's information"),
+        ApiResponse(code = 404, message = "User not found"),
+        ApiResponse(code = 401, message = "You are not authorized to use this resource"),
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
     ])
-    @GetMapping("/pets/{id}")
-    fun getPetById(@PathVariable id:Long, @PathVariable username:String){}
 
-
-    @ApiOperation(value = "Get the details of your pet by Id", response = List::class)
-    @ApiResponses(value = [
-        ApiResponse(code = 200, message = "Successfully retrieved pet details"),
-        ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-        ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
-    ])
-    @GetMapping("/pets")
-    fun getAllPets(@PathVariable username:String){}*/// This should not be here
-
-    @ApiOperation(value = "Update user info")
-    @PutMapping("")
+    @PutMapping("/{username}")
     fun updateInfo(@PathVariable username: String, @RequestBody newUser:UserDTO){
         regUserService.updateInfo(username, newUser)
-
     }
-
-    //TODO: log out?
 }

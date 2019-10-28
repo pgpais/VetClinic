@@ -23,7 +23,8 @@ class AppointmentController(val apts: AppointmentService, val petService: PetSer
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully retrieved list"),
         ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+        ApiResponse(code = 404, message = "There are no appointments")
     ])
     @GetMapping("")
     fun getAllAppointments() : List<AppointmentDTO> =
@@ -34,7 +35,7 @@ class AppointmentController(val apts: AppointmentService, val petService: PetSer
         ApiResponse(code = 200, message = "Successfully retrieved pet details"),
         ApiResponse(code = 401, message = "You are not authorized to view the resource"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-        ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
+        ApiResponse(code = 404, message = "The appointment could not be found")
     ])
     @GetMapping("/{id}")
     fun getOneAppointment(@PathVariable id:Long) : AppointmentDTO =
@@ -43,7 +44,7 @@ class AppointmentController(val apts: AppointmentService, val petService: PetSer
 
     @ApiOperation(value = "Add an appointment", response = Unit::class)
     @ApiResponses(value = [
-        ApiResponse(code = 200, message = "Successfully added an appointment"),
+        ApiResponse(code = 201, message = "Successfully added an appointment"),
         ApiResponse(code = 401, message = "You are not authorized to use this resource"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
     ])
@@ -57,7 +58,8 @@ class AppointmentController(val apts: AppointmentService, val petService: PetSer
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully deleted an appointment"),
         ApiResponse(code = 401, message = "You are not authorized to use this resource"),
-        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+        ApiResponse(code = 404, message = "The appointment could not be found")
     ])
     @DeleteMapping("/{id}")
     fun deleteAppointment(@PathVariable id: Long) =

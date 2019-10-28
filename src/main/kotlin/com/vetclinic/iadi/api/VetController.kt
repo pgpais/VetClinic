@@ -41,21 +41,21 @@ class VetController (val vets:VetService) {
                 vets.getAppointments(id).map{AppointmentDTO(it)}
             }
 
-    @ApiOperation(value = "Accept a pending appointment")
+    @ApiOperation(value = "Accept a pending appointment", response = Unit::class)
     @ApiResponses(value = [
-        ApiResponse(code = 200, message = "Successfully accepted appointment"),
+        ApiResponse(code = 201, message = "Successfully accepted appointment"),
         ApiResponse(code = 404, message = "Provided pending appointment not found "),
         ApiResponse(code = 401, message = "You're not allowed to access this resource")
 
     ])
     @PostMapping("/appointments/accept/{aptId}")
-    fun acceptAppointment(@PathVariable aptId:Long){ //TODO: add token to request
+    fun acceptAppointment(@PathVariable aptId:Long){
         handle4xx {
             vets.acceptAppointment(aptId)}
         }
 
 
-    @ApiOperation(value = "Reject a pending appointment")
+    @ApiOperation(value = "Reject a pending appointment", response = Unit::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully accepted appointment"),
         ApiResponse(code = 400, message = "Request malformed (maybe you're missing the reason?)"),
@@ -63,31 +63,49 @@ class VetController (val vets:VetService) {
         ApiResponse(code = 401, message = "You're not allowed to access this resource")
 
     ])
-    @PostMapping("/appointments/reject/{aptId}")
-    fun rejectAppointment(@PathVariable aptId:Long, @RequestBody reason:String){ //TODO: add token to request
+    @PutMapping("/appointments/reject/{aptId}")
+    fun rejectAppointment(@PathVariable aptId:Long, @RequestBody reason:String){
         handle4xx {
             vets.rejectAppointment(aptId,reason)}
     }
 
-    @ApiOperation(value = "Complete an appointment")
+    @ApiOperation(value = "Complete an appointment", response = Unit::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully completed appointment"),
         ApiResponse(code = 404, message = "Provided pending appointment not found "),
         ApiResponse(code = 401, message = "You're not allowed to access this resource")
 
     ])
-    @PostMapping("/appointments/complete/{aptId}")
+    @PutMapping("/appointments/complete/{aptId}")
     fun completeAppointment(@PathVariable aptId:Long){ //TODO: add token to request
         handle4xx {
             vets.completeAppointment(aptId)}
 
     }
 
+    @ApiOperation(value = "Update a user's info", response = List::class)
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "Successfully updated a user's information"),
+        ApiResponse(code = 404, message = "User not found"),
+        ApiResponse(code = 401, message = "You are not authorized to use this resource"),
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
+    ])
     @GetMapping("/schedule/{id}")
     fun getSchedule(@PathVariable id:Long) : VetShiftDTO =
         handle4xx {
             VetShiftDTO(VeterinarianDTO(vets.getVetbyId(id)),
                                         (vets.getSchedule(id).map{ ShiftsDTO(it)}))
-        }
+    }
 
+    @ApiOperation(value = "Update a vet", response = Unit::class)
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "Successfully updated a vet"),
+        ApiResponse(code = 401, message = "You are not authorized to use this resource"),
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+        ApiResponse(code = 404, message = "The vet you tried to update was not found")
+    ])
+    @PutMapping("{id}")
+    fun update(@PathVariable id:Long, @RequestBody vet: VeterinarianDTO){
+        vets.update(id, vet)
+    }
 }
