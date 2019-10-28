@@ -1,11 +1,14 @@
 package com.vetclinic.iadi.api
 
+import com.vetclinic.iadi.model.AppointmentStatus
 import com.vetclinic.iadi.services.VetService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDateTime
+import java.util.*
 
 @Api(value = "VetClinic Management System - Veterinarian API",
         description = "Management operations of Veterinarians in the IADI 2019 Pet Clinic")
@@ -15,79 +18,60 @@ import org.springframework.web.bind.annotation.*
 class VetController (val vets:VetService) {
     //TODO: "Veterinarians can also check the information of their clients, appointments, and of all pets"
 
-    @ApiOperation(value = "Get a list of the a Veterinarian's pending appointments", response = List::class)
-    @ApiResponses(value = [
-        ApiResponse(code = 200, message = "Successfully retrieved list of pending appointments"),
-        ApiResponse(code = 404, message = "Provided Veterinarian not found"),
-        ApiResponse(code = 401, message = "You're not allowed to access this resource")
-
-    ])
-    @GetMapping("/appointments/pending")
-    fun getPendingAppointments(@PathVariable id:Long):List<AppointmentDTO> =
-        handle4xx {
-            vets.getPendingAppointments(id).map{AppointmentDTO(it)}
-        }
-
-    @ApiOperation(value = "Get a list of all appointments of a vet", response = List::class)
+    @ApiOperation(value = "Get a list of all appointments by Vet Id", response = List::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully retrieved list of all appointments"),
         ApiResponse(code = 404, message = "Provided Veterinarian not found"),
         ApiResponse(code = 401, message = "You're not allowed to access this resource")
 
     ])
-    @GetMapping("/appointments/{id}") //can be used for Vet and Client (?)
-    fun getAppointments(@PathVariable id:Long):List<AppointmentDTO> =
+    @GetMapping("/{id}/appointments")
+    fun getAppointments(@PathVariable id:Long,
+                        @RequestParam(required = false) startDate: String?,
+                        @RequestParam(required = false) endDate: String?,
+                        @RequestParam(required = false) status: AppointmentStatus?):List<AppointmentDTO> =
             handle4xx {
-                vets.getAppointments(id).map{AppointmentDTO(it)}
+                if(status != null) {
+                    vets.getAllAppointmentsWithStatus(id,status).map { AppointmentDTO(it) }
+
+                }
+                if(startDate != null && endDate != null) {
+                    vets.getAllAppointmentsWithDate(id, startDate, endDate).map { AppointmentDTO(it) }
+                }
+                else
+                {
+                    vets.getAppointments(id).map{AppointmentDTO(it)}
+                }
             }
 
-    @ApiOperation(value = "Accept a pending appointment")
+    @ApiOperation(value = "Update appointment Status")
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully accepted appointment"),
-        ApiResponse(code = 404, message = "Provided pending appointment not found "),
+        ApiResponse(code = 404, message = "Provided appointment not found "),
         ApiResponse(code = 401, message = "You're not allowed to access this resource")
 
     ])
-    @PostMapping("/appointments/accept/{aptId}")
-    fun acceptAppointment(@PathVariable aptId:Long){ //TODO: add token to request
+    @PutMapping("/{id}/appointments/{aptid}")
+    fun updateAppointment(@RequestBody (required =false) reason: String ,@RequestParam(required = false) status: AppointmentStatus?, @PathVariable id: Long, @PathVariable aptid: Long) { //TODO: add token to request
         handle4xx {
-            vets.acceptAppointment(aptId)}
+            if (status != null) {
+                vets.updateAppointment(reason, status, id,aptid)
+            }
         }
+    }
 
-
-    @ApiOperation(value = "Reject a pending appointment")
+    @ApiOperation(value = "Get vet full schedule")
     @ApiResponses(value = [
-        ApiResponse(code = 200, message = "Successfully accepted appointment"),
-        ApiResponse(code = 400, message = "Request malformed (maybe you're missing the reason?)"),
-        ApiResponse(code = 404, message = "Provided pending appointment not found "),
+        ApiResponse(code = 200, message = "Successfully retrieved list of schedules"),
+        ApiResponse(code = 404, message = "Provided Veterinarian not found "),
         ApiResponse(code = 401, message = "You're not allowed to access this resource")
 
     ])
-    @PostMapping("/appointments/reject/{aptId}")
-    fun rejectAppointment(@PathVariable aptId:Long, @RequestBody reason:String){ //TODO: add token to request
-        handle4xx {
-            vets.rejectAppointment(aptId,reason)}
-    }
-
-    @ApiOperation(value = "Complete an appointment")
-    @ApiResponses(value = [
-        ApiResponse(code = 200, message = "Successfully completed appointment"),
-        ApiResponse(code = 404, message = "Provided pending appointment not found "),
-        ApiResponse(code = 401, message = "You're not allowed to access this resource")
-
-    ])
-    @PostMapping("/appointments/complete/{aptId}")
-    fun completeAppointment(@PathVariable aptId:Long){ //TODO: add token to request
-        handle4xx {
-            vets.completeAppointment(aptId)}
-
-    }
-
-    @GetMapping("/schedule/{id}")
+    @GetMapping("/{id}/schedule")
     fun getSchedule(@PathVariable id:Long) : VetShiftDTO =
-        handle4xx {
-            VetShiftDTO(VeterinarianDTO(vets.getVetbyId(id)),
-                                        (vets.getSchedule(id).map{ ShiftsDTO(it)}))
-        }
+            handle4xx {
+                VetShiftDTO(VeterinarianDTO(vets.getVetbyId(id)),
+                        (vets.getSchedule(id).map{ ShiftsDTO(it)}))
+            }
 
 }
