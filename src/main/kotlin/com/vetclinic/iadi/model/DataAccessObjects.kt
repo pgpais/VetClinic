@@ -142,6 +142,7 @@ data class ClientDAO(
 
     constructor(client:ClientDTO): this(client.id, client.username, client.pass,client.name, client.photo, client.email, client.phone,client.address,emptyList(), emptyList())
     constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.username, client.pass,client.name,client.photo, client.email,client.phone,client.address,pets, emptyList())
+    constructor(id: Long, username: String, pets: List<PetDAO>, appointments: List<AppointmentDAO>, client: ClientDTO) : this(id, username, client.pass,client.name,client.photo, client.email,client.phone,client.address,pets)
 }
 
 @Entity
