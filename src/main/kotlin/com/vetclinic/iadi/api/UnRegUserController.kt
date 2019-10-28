@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/home")
 class UnRegUserController (val clientService: ClientService, val vets: VetService) { //TODO: add service (call it something related with accounts?)
 
-    @ApiOperation(value = "Login with given user") // TODO: should probably return a token
+    /*@ApiOperation(value = "Login with given user") // TODO: should probably return a token
     @ApiResponses(value = [
         ApiResponse(code = 201, message = "Successfully logged in"), //201 for successful token creation?
         ApiResponse(code = 404, message = "Could not find provided user"),
@@ -28,7 +28,7 @@ class UnRegUserController (val clientService: ClientService, val vets: VetServic
     fun login(@RequestBody username:String, @RequestBody password:String) =
             {
                 // TODO: execute login, maybe encrypt password here
-            }
+            }*/
 
     @ApiOperation(value = "Register a new user")
     @ApiResponses(value = [

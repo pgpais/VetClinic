@@ -31,7 +31,7 @@ class PetController(val pets: PetService) {
 
     @ApiOperation(value = "Add a new pet", response = Unit::class)
     @ApiResponses(value = [
-        ApiResponse(code = 200, message = "Successfully added a pet"),
+        ApiResponse(code = 201, message = "Successfully added a pet"),
         ApiResponse(code = 401, message = "You are not authorized to use this resource"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
     ])
@@ -59,11 +59,12 @@ class PetController(val pets: PetService) {
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully updated a pet"),
         ApiResponse(code = 401, message = "You are not authorized to use this resource"),
-        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+        ApiResponse(code = 404, message = "The pet you tried to update was not found")
     ])
     @PutMapping("/{id}")
     fun updatePet(@RequestBody pet: PetDTO, @PathVariable id: Long) =
-            handle4xx { pets.update(pet, id) }
+            handle4xx { pets.update(id, pet) }
 
     @ApiOperation(value = "Delete a pet", response = Unit::class)
     @ApiResponses(value = [
@@ -77,7 +78,7 @@ class PetController(val pets: PetService) {
 
     @ApiOperation(value = "Add a new appointment to a pet", response = Unit::class)
     @ApiResponses(value = [
-        ApiResponse(code = 200, message = "Successfully added an appointment to a pet"),
+        ApiResponse(code = 201, message = "Successfully added an appointment to a pet"),
         ApiResponse(code = 401, message = "You are not authorized to use this resource"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "The resource you were trying to reach is not found")

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/client")
-class ClientController(val client:ClientService){
+class ClientController(val clients:ClientService){
 
     @ApiOperation(value="Get client by Id")
     @ApiResponses(
@@ -22,7 +22,7 @@ class ClientController(val client:ClientService){
     )
     @GetMapping("/{id}")
     fun getOneClient(@PathVariable id:Long) : ClientDTO =
-            handle4xx { client.getClientById(id).let{ ClientDTO(it.id, it.name, it.username, it.pass, it.photo, it.email, it.phone, it.address) } }
+            handle4xx { clients.getClientById(id).let{ ClientDTO(it.id, it.name, it.username, it.pass, it.photo, it.email, it.phone, it.address) } }
 
     @ApiOperation(value="Get appointments of this user")
     @ApiResponses(
@@ -31,7 +31,7 @@ class ClientController(val client:ClientService){
     )
     @GetMapping("/apts/{userId}")
     fun getAppointments(@PathVariable userId:Long): List<AppointmentDTO> =
-            handle4xx { client.getAppointments(userId).map{AppointmentDTO(it)} }
+            handle4xx { clients.getAppointments(userId).map{AppointmentDTO(it)} }
 
 
     @ApiOperation(value = "Book appointment for this user")
@@ -40,7 +40,7 @@ class ClientController(val client:ClientService){
     )
     @PostMapping("/apts")
     fun bookAppointment(@RequestBody apt:AppointmentDTO){
-        client.bookAppointment(apt)
+        clients.bookAppointment(apt)
     }
 
     @ApiOperation(value = "Gets a user's Pets")
@@ -49,7 +49,7 @@ class ClientController(val client:ClientService){
     )
     @GetMapping("/pets/{userId}")
     fun getPets(@PathVariable userId: Long): List<PetDTO> =
-            handle4xx { client.getPets(userId).map{PetDTO(it)}
+            handle4xx { clients.getPets(userId).map{PetDTO(it)}
             }
 
     @ApiOperation(value = "Add user's Pets")
@@ -58,7 +58,7 @@ class ClientController(val client:ClientService){
     )
     @PostMapping("/pets/{userId}")
     fun createPet(@PathVariable userId: Long, pet:PetDTO) =
-            handle4xx { client.createPet(userId, pet) }
+            handle4xx { clients.createPet(userId, pet) }
 
 
     @ApiOperation(value = "Delete a pet")
@@ -67,6 +67,18 @@ class ClientController(val client:ClientService){
     )
     @DeleteMapping("/pets/{userId}/{petId}")
     fun deletePet(@PathVariable userId: Long, @PathVariable petId: Long){
-        client.deleteClientsPet(userId, petId)
+        clients.deleteClientsPet(userId, petId)
+    }
+
+    @ApiOperation(value = "Update a client", response = Unit::class)
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "Successfully updated a client"),
+        ApiResponse(code = 401, message = "You are not authorized to use this resource"),
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+        ApiResponse(code = 404, message = "The client you tried to update was not found")
+    ])
+    @PutMapping("/{id}")
+    fun update(@PathVariable id: Long, @RequestBody client:ClientDTO){
+        clients.update(id, client)
     }
 }

@@ -52,7 +52,7 @@ class PetService(val pets: PetRepository, val appointments: AppointmentRepositor
             appointments.save(aptDAO)
     }
 
-    fun update(pet: PetDTO, id: Long) {
+    fun update(id: Long, pet: PetDTO) {
         getPetById(id).let { it.update(PetDAO(pet, it.owner)); pets.save(it) }
     }
 

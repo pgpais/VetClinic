@@ -1,5 +1,6 @@
 package com.vetclinic.iadi.services
 
+import com.vetclinic.iadi.api.VeterinarianDTO
 import com.vetclinic.iadi.model.*
 import org.springframework.stereotype.Service
 import java.lang.Exception
@@ -155,6 +156,12 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
     }
 
     fun getSchedule(id: Long): List<ShiftsDAO> = shiftRep.findByVetId(id)
+    
+    fun update(id: Long, vet: VeterinarianDTO) {
+        val oldVetDAO = getVetbyId(id)
+        var newVetDAO = VeterinarianDAO(id, oldVetDAO.username, vet, oldVetDAO.schedule, oldVetDAO.appointments)
+        vets.save(newVetDAO)
+    }
 }
 
 
