@@ -9,6 +9,7 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
 @Api(value = "VetClinic Management System - Appointment API",
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*
 
 
 @RestController
+@PreAuthorize("hasRole('ROLE_VET')")
 @RequestMapping("/appointments")
 class AppointmentController(val apts: AppointmentService, val petService: PetService, val clientService: ClientService, val vetService: VetService) {
 

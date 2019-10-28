@@ -6,6 +6,7 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
 @Api(value="VetClinic Management System - Client API",
@@ -22,6 +23,7 @@ class ClientController(val clients:ClientService){
             ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             ApiResponse(code = 404, message = "User does not exist")
     )
+    @PreAuthorize("hasRole('ROLE_VET') or hasRole('ROLE_CLIENT')")
     @GetMapping("/{id}")
     fun getOneClient(@PathVariable id:Long) : ClientDTO =
             handle4xx { clients.getClientById(id).let{ ClientDTO(it.id, it.name, it.username, it.pass, it.photo, it.email, it.phone, it.address) } }
@@ -33,6 +35,7 @@ class ClientController(val clients:ClientService){
             ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             ApiResponse(code = 404, message = "User does not exist")
     )
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @GetMapping("/apts/{userId}")
     fun getAppointments(@PathVariable userId:Long): List<AppointmentDTO> =
             handle4xx { clients.getAppointments(userId).map{AppointmentDTO(it)} }
@@ -45,6 +48,7 @@ class ClientController(val clients:ClientService){
             ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             ApiResponse(code = 404, message = "Some information could not be found")
     )
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @PostMapping("/apts")
     fun bookAppointment(@RequestBody apt:AppointmentDTO){
         clients.bookAppointment(apt)
@@ -57,6 +61,7 @@ class ClientController(val clients:ClientService){
             ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             ApiResponse(code = 404, message = "Some information could not be found")
     )
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @GetMapping("/pets/{userId}")
     fun getPets(@PathVariable userId: Long): List<PetDTO> =
             handle4xx { clients.getPets(userId).map{PetDTO(it)}
@@ -69,6 +74,7 @@ class ClientController(val clients:ClientService){
             ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             ApiResponse(code = 404, message = "Some information could not be found")
     )
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @PostMapping("/pets/{userId}")
     fun createPet(@PathVariable userId: Long, pet:PetDTO) =
             handle4xx { clients.createPet(userId, pet) }
@@ -81,6 +87,7 @@ class ClientController(val clients:ClientService){
             ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             ApiResponse(code = 404, message = "Some information could not be found")
     )
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @DeleteMapping("/pets/{userId}/{petId}")
     fun deletePet(@PathVariable userId: Long, @PathVariable petId: Long){
         clients.deleteClientsPet(userId, petId)
@@ -93,6 +100,7 @@ class ClientController(val clients:ClientService){
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "The client you tried to update was not found")
     ])
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @PutMapping("/{id}")
     fun update(@PathVariable id: Long, @RequestBody client:ClientDTO){
         clients.update(id, client)
