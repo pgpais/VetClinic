@@ -15,15 +15,15 @@ import java.util.*
 @RequestMapping("/admin")
 class AdminController(val admins: AdminService) {
 
-    @GetMapping("/pet/{id}")
+    @GetMapping("/pets/{id}")
     fun getPet(@PathVariable id:Long) : PetDTO =
             handle4xx { PetDTO(admins.getPetById(id)) }
 
-    @GetMapping("/client/{id}")
+    @GetMapping("/clients/{id}")
     fun getClient(@PathVariable id:Long) : ClientDTO =
             handle4xx { ClientDTO(admins.getClientById(id)) }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/users/{id}")
     fun getUser(@PathVariable id:Long) : UserDTO =
         handle4xx { UserDTO(admins.getUserById(id)) }
 
