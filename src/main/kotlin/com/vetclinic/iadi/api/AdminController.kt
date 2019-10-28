@@ -144,6 +144,14 @@ class AdminController(val admins: AdminService) {
         admins.getVetAppointments(vetId)
     }
 
+
+    @ApiOperation(value = "Update an admin", response = Unit::class)
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "Successfully updated an admin"),
+        ApiResponse(code = 401, message = "You are not authorized to use this resource"),
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+        ApiResponse(code = 404, message = "The admin you tried to update was not found")
+    ])
     @PutMapping("/{id}")
     fun updateInfo(@PathVariable id:Long, @RequestBody admin:AdminDTO){
         admins.update(id, admin)

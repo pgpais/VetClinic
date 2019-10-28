@@ -70,6 +70,13 @@ class ClientController(val clients:ClientService){
         clients.deleteClientsPet(userId, petId)
     }
 
+    @ApiOperation(value = "Update a client", response = Unit::class)
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "Successfully updated a client"),
+        ApiResponse(code = 401, message = "You are not authorized to use this resource"),
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+        ApiResponse(code = 404, message = "The client you tried to update was not found")
+    ])
     @PutMapping("/{id}")
     fun update(@PathVariable id: Long, @RequestBody client:ClientDTO){
         clients.update(id, client)

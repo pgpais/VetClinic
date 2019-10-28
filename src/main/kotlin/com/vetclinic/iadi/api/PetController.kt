@@ -59,7 +59,8 @@ class PetController(val pets: PetService) {
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully updated a pet"),
         ApiResponse(code = 401, message = "You are not authorized to use this resource"),
-        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+        ApiResponse(code = 404, message = "The pet you tried to update was not found")
     ])
     @PutMapping("/{id}")
     fun updatePet(@RequestBody pet: PetDTO, @PathVariable id: Long) =

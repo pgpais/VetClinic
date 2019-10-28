@@ -97,6 +97,13 @@ class VetController (val vets:VetService) {
                                         (vets.getSchedule(id).map{ ShiftsDTO(it)}))
     }
 
+    @ApiOperation(value = "Update a vet", response = Unit::class)
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "Successfully updated a vet"),
+        ApiResponse(code = 401, message = "You are not authorized to use this resource"),
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+        ApiResponse(code = 404, message = "The vet you tried to update was not found")
+    ])
     @PutMapping("{id}")
     fun update(@PathVariable id:Long, @RequestBody vet: VeterinarianDTO){
         vets.update(id, vet)
