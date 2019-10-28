@@ -43,7 +43,7 @@ class AppointmentController(val apts: AppointmentService, val petService: PetSer
 
     @ApiOperation(value = "Add an appointment", response = Unit::class)
     @ApiResponses(value = [
-        ApiResponse(code = 200, message = "Successfully added an appointment"),
+        ApiResponse(code = 201, message = "Successfully added an appointment"),
         ApiResponse(code = 401, message = "You are not authorized to use this resource"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
     ])

@@ -43,7 +43,7 @@ class VetController (val vets:VetService) {
 
     @ApiOperation(value = "Accept a pending appointment")
     @ApiResponses(value = [
-        ApiResponse(code = 200, message = "Successfully accepted appointment"),
+        ApiResponse(code = 201, message = "Successfully accepted appointment"),
         ApiResponse(code = 404, message = "Provided pending appointment not found "),
         ApiResponse(code = 401, message = "You're not allowed to access this resource")
 
@@ -63,7 +63,7 @@ class VetController (val vets:VetService) {
         ApiResponse(code = 401, message = "You're not allowed to access this resource")
 
     ])
-    @PostMapping("/appointments/reject/{aptId}")
+    @PutMapping("/appointments/reject/{aptId}")
     fun rejectAppointment(@PathVariable aptId:Long, @RequestBody reason:String){ //TODO: add token to request
         handle4xx {
             vets.rejectAppointment(aptId,reason)}
@@ -76,7 +76,7 @@ class VetController (val vets:VetService) {
         ApiResponse(code = 401, message = "You're not allowed to access this resource")
 
     ])
-    @PostMapping("/appointments/complete/{aptId}")
+    @PutMapping("/appointments/complete/{aptId}")
     fun completeAppointment(@PathVariable aptId:Long){ //TODO: add token to request
         handle4xx {
             vets.completeAppointment(aptId)}
