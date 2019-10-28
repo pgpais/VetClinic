@@ -3,10 +3,10 @@ package com.vetclinic.iadi.model
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.CrudRepository
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
-import javax.annotation.PostConstruct
 
 interface PetRepository : JpaRepository<PetDAO, Long> {
 
@@ -49,7 +49,14 @@ interface AppointmentRepository: JpaRepository<AppointmentDAO, Long>{
     @Query("select a from AppointmentDAO a where a.vet.id = :id and a.status = 0 ")
     fun getPendingByVetId(id:Long) : List<AppointmentDAO>
 
-    fun getById(id:Long)
+    @Query("select a from AppointmentDAO a where a.vet.id = :id")
+    fun getAllAppointmentsByVetId(id:Long) : List<AppointmentDAO>
+
+    @Query("select a from AppointmentDAO a where a.vet.id = :id and a.status = :status ")
+    fun getAllAppointmentsWithStatusByVetId(id:Long,status:AppointmentStatus) : List<AppointmentDAO>
+
+    @Query("select a from AppointmentDAO a where a.vet.id = :id and a.date >= :startDate and a.date <= :endDate ")
+    fun getAllAppointmentsWithDatesByVetId(id:Long, startDate: LocalDateTime, endDate: LocalDateTime) : List<AppointmentDAO>
 }
 
 
@@ -84,18 +91,19 @@ interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long> {
 }
 
 interface ShiftsRepository: JpaRepository<ShiftsDAO, Long>{
-
+    @Query("select s from ShiftsDAO s where s.vet.id = :id")
+    fun getScheduleByVetId(id:Long) : List<ShiftsDAO>
 }
 
 interface UserRepository: JpaRepository<RegisteredUsersDAO, Long>{
 
-   /* fun findByUsername(username:String) : Optional<RegisteredUsersDAO>
+    /* fun findByUsername(username:String) : Optional<RegisteredUsersDAO>
 
-    @Modifying
-    @Transactional
-    @Query("update RegisteredUsersDAO u set u.id =:id, u.name =:name, u.username =:username, u.pass =:pass where u.id =:id")
-    fun updateUser(id:Long, name: String, username: String, pass:String)
-*/
+     @Modifying
+     @Transactional
+     @Query("update RegisteredUsersDAO u set u.id =:id, u.name =:name, u.username =:username, u.pass =:pass where u.id =:id")
+     fun updateUser(id:Long, name: String, username: String, pass:String)
+ */
 }
 
 interface AdminRepository: JpaRepository<AdminDAO, Long>{
