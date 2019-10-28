@@ -34,10 +34,32 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
     fun acceptAppointment(id:Long){
         val app = appointments.findById(id).orElseThrow{NotFoundException("There is no Appointment with Id $id")}
 
-        if(app.status == AppointmentStatus.PENDING)
-            appointments.updateStatusById(id, "", AppointmentStatus.ACCEPTED)
-        else
+        if(app.status == AppointmentStatus.PENDING) {
+
+            if (checkIfAcceptable(app.vet, app)) {
+                appointments.updateStatusById(id, "", AppointmentStatus.ACCEPTED)
+            } else {
+                appointments.updateStatusById(id, "Out of working hours", AppointmentStatus.REJECTED)
+            }
+        }
+
+        else{
             throw PreconditionFailedException("The Appointment cannot be completed because it's Status is ${app.status}")
+        }
+
+    }
+
+    fun checkIfAcceptable(vet:VeterinarianDAO, app:AppointmentDAO):Boolean {
+
+        vet.schedule.forEach {
+
+            //has to be in the middle of a shift and can't
+            if (app.date.isAfter(it.start) and app.date.isBefore(it.end) and (ChronoUnit.MINUTES.between(app.date, it.end) <= 30))
+                return true
+
+        }
+
+        return false
 
     }
 
@@ -133,8 +155,8 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
         }
     }
 
-    fun getSchedule(id: Long): List<ShiftsDAO> = emptyList()
-
+    fun getSchedule(id: Long): List<ShiftsDAO> = shiftRep.findByVetId(id)
+    
     fun update(id: Long, vet: VeterinarianDTO) {
         val oldVetDAO = getVetbyId(id)
         var newVetDAO = VeterinarianDAO(id, oldVetDAO.username, vet, oldVetDAO.schedule, oldVetDAO.appointments)

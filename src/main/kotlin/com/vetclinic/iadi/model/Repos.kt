@@ -89,6 +89,8 @@ interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long> {
 
 interface ShiftsRepository: JpaRepository<ShiftsDAO, Long>{
 
+    fun findByVetId(id:Long) : List<ShiftsDAO>
+
 }
 
 interface UserRepository: JpaRepository<RegisteredUsersDAO, Long>{
