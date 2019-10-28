@@ -1,7 +1,12 @@
 package com.vetclinic.iadi.config
 
+import com.vetclinic.iadi.model.AdminRepository
+import com.vetclinic.iadi.model.ClientRepository
+import com.vetclinic.iadi.model.UserRepository
+import com.vetclinic.iadi.model.VeterinaryRepository
 import com.vetclinic.iadi.services.AdminService
 import com.vetclinic.iadi.services.ClientService
+import com.vetclinic.iadi.services.NotFoundException
 import com.vetclinic.iadi.services.VetService
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -10,6 +15,8 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.lang.Exception
+import javax.persistence.DiscriminatorValue
 
 class ClientCustomInfo(
         private val username:String,
@@ -34,33 +41,32 @@ class ClientCustomInfo(
 @Transactional
 @Service
 class CustomClientInfoService(
-        val clientService: ClientService,
-        val adminService:AdminService,
-        val vetService: VetService
+        val users:UserRepository
 ) : UserDetailsService {
 
     override fun loadUserByUsername(username: String?): UserDetails {
 
         username?.let {
-            val clientDAO = clientService.getClientByUsername(it)
-            val adminDAO = adminService.getAdminByUsername(it)
-            val veterinarianDAO = vetService.getVetByUsername(it)
 
+            val usersDAO = users.findByUsername(username).orElseThrow { NotFoundException("bla") }
 
-            if( clientDAO.isPresent) {
-                return ClientCustomInfo(clientDAO.get().username, clientDAO.get().pass, mutableListOf(SimpleGrantedAuthority("ROLE_CLIENT")))
+            val type = usersDAO.getDiscriminatorValue()
 
-            } else if (adminDAO.isPresent) {
-               return  ClientCustomInfo(adminDAO.get().username, adminDAO.get().pass,
-                        mutableListOf(SimpleGrantedAuthority("ROLE_ADMIN")))
+            print(type)
 
-            } else if (veterinarianDAO.isPresent){
-                return ClientCustomInfo(veterinarianDAO.get().username, veterinarianDAO.get().pass,
-                        mutableListOf(SimpleGrantedAuthority("ROLE_VETERINARIAN")))
-            } else
-                throw UsernameNotFoundException(username)
+            when (type) {
+                "com.vetclinic.iadi.model.ClientDAO" -> return ClientCustomInfo(usersDAO.username, usersDAO.pass, mutableListOf(SimpleGrantedAuthority("ROLE_CLIENT")))
+                "com.vetclinic.iadi.model.VeterinarianDAO"  -> return ClientCustomInfo(usersDAO.username, usersDAO.pass, mutableListOf(SimpleGrantedAuthority("ROLE_VET")))
+                "com.vetclinic.iadi.model.AdminDAO"  -> return ClientCustomInfo(usersDAO.username, usersDAO.pass, mutableListOf(SimpleGrantedAuthority("ROLE_ADMIN")))
+                else -> { // Note the block
+                    throw Exception("when is badly done")
+                }
+
             }
 
+        }
         throw UsernameNotFoundException(username)
+
     }
 }
+

@@ -69,6 +69,8 @@ data class AppointmentDAO(
 }
 
 @Entity
+@DiscriminatorValue("Vet")
+
 data class VeterinarianDAO(
         @Id @GeneratedValue override val id: Long,
         @UniqueElements
@@ -90,7 +92,7 @@ data class VeterinarianDAO(
         var appointments: List<AppointmentDAO>,
 
         var frozen:Boolean = false
-):RegisteredUsersDAO(id) {
+):RegisteredUsersDAO(id, username, pass, name, photo, email, phone, address) {
 
     constructor(vet: VeterinarianDTO, schedule: List<ShiftsDAO>, apt: List<AppointmentDAO>) : this(vet.vetId,vet.username, vet.pass, vet.name, vet.photo, vet.email, vet.phone, vet.address ,schedule, apt)
 
@@ -100,27 +102,30 @@ data class VeterinarianDAO(
     }
 }
 @Entity
+@DiscriminatorColumn(name = "USER_ROLE")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-abstract class RegisteredUsersDAO (//TODO: change to username
-        @Id @GeneratedValue open val id: Long) {
+open class RegisteredUsersDAO (//TODO: change to username
+        @Id @GeneratedValue open val id: Long,
 
-    abstract var name:String
-    abstract var username: String
-    abstract var pass: String
-    abstract var photo:String
-    abstract var email:String
-    abstract var phone:Number
-    abstract var address:String
+        open var username: String,
+        open var pass: String,
+        open var name:String,
 
+        open var photo:String,
+        open var email:String,
+        open var phone:Number,
+        open var address:String
 
+){
+    fun getDiscriminatorValue() = this.javaClass.name
     //TODO: add rest of info
 }
 
 @Entity
+@DiscriminatorValue("Client")
 data class ClientDAO(
         @Id @GeneratedValue override val id:Long,
 
-        @UniqueElements
         override var username:String,
         override var pass:String,
 
@@ -133,13 +138,14 @@ data class ClientDAO(
         @OneToMany(mappedBy = "owner")
         var pets:List<PetDAO>,
         @OneToMany(mappedBy = "client")
-        var appointments: List<AppointmentDAO>) : RegisteredUsersDAO(id) {
+        var appointments: List<AppointmentDAO>) : RegisteredUsersDAO(id,username,pass, name, photo, email, phone, address) {
 
     constructor(client:ClientDTO): this(client.id, client.username, client.pass,client.name, client.photo, client.email, client.phone,client.address,emptyList(), emptyList())
     constructor(client:ClientDTO, pets: List<PetDAO>): this(client.id, client.username, client.pass,client.name,client.photo, client.email,client.phone,client.address,pets, emptyList())
 }
 
 @Entity
+@DiscriminatorValue("Admin")
 data class AdminDAO(
         @Id @GeneratedValue override val id:Long,
         @UniqueElements
@@ -153,7 +159,7 @@ data class AdminDAO(
         override var phone:Number,
         override var address:String
 
-) : RegisteredUsersDAO(id) {
+) : RegisteredUsersDAO(id, username, pass, name, photo, email, phone, address) {
     constructor(admin: AdminDTO) : this(admin.id, admin.username, admin.pass, admin.name,admin.photo,admin.email,admin.phone,admin.address)
 }
 

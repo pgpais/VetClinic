@@ -5,6 +5,7 @@ import com.vetclinic.iadi.api.ClientDTO
 import com.vetclinic.iadi.api.PetDTO
 import com.vetclinic.iadi.api.handle4xx
 import com.vetclinic.iadi.model.*
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -20,6 +21,16 @@ class ClientService(val clientRepository: ClientRepository, val apts: Appointmen
 
     fun getClientByUsername(username:String)  : Optional<ClientDAO> = clientRepository.findByUsername(username)
 
+    fun addClient(user: ClientDAO): Optional<ClientDAO> {
+        val aUser = clientRepository.findById(user.id)
+
+        return if (aUser.isPresent)
+            Optional.empty()
+        else {
+            user.pass = BCryptPasswordEncoder().encode(user.pass)
+            Optional.of(clientRepository.save(user))
+        }
+    }
 
     fun getClientById(id:Long) = clientRepository.findById(id).orElseThrow{NotFoundException("Couldn't find client with id $id")}
 

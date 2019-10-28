@@ -56,7 +56,7 @@ class UserPasswordAuthenticationFilterToJWT (
         //getting user from request body
 
         //TODO: How to make it for every time of registered user
-        val user = ObjectMapper().readValue(request!!.inputStream, ClientDAO::class.java)
+        val user = ObjectMapper().readValue(request!!.inputStream, RegisteredUsersDAO::class.java)
 
         // perform the "normal" authentication
         val auth = anAuthenticationManager.authenticate(UsernamePasswordAuthenticationToken(user.username, user.pass))

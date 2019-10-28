@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Profile
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -26,30 +27,30 @@ class VetClinicApplication {
             vetService: VetService
     ) = CommandLineRunner {
 
-        val user = ClientDAO(1,"pedro123","123","pedro","","",34,"", emptyList(), emptyList())
+        val user = ClientDAO(1L,"pedro123",BCryptPasswordEncoder().encode("123"),"pedro","","",34,"", emptyList(), emptyList())
         clients.save(user)
 
-        val pantufas = PetDAO(2L, "pantufas", "Dog", "", user, emptyList(), false)
+        //val pantufas = PetDAO(2L, "pantufas", "Dog", "", user, emptyList(), false)
 
-        val manel =  VeterinarianDAO(4L, "manel123","123","manel","","",54,"",emptyList(), emptyList())
+        var manel =  VeterinarianDAO(1L, "manel123",BCryptPasswordEncoder().encode("123"),"manel","","",54,"",emptyList(), emptyList())
 
-        pets.save(pantufas)
+        //pets.save(pantufas)
 
         val bigodes = PetDAO(3L, "bigodes", "Cat","",user, emptyList(), false)
 
         pets.save(bigodes)
 
-        vets.save(manel)
+        manel = vets.save(manel)
 
 
-        val admin = AdminDAO(3, "francisco123", "secret", "manel","","",6,"")
+        val admin = AdminDAO(3, "francisco123", BCryptPasswordEncoder().encode("123"), "manel","","",6,"")
 
         admins.save(admin)
 
         val turnodas8 = ShiftsDAO(4L, LocalDateTime.now().plusDays(3), LocalDateTime.now().plusDays(4),manel)
 
         shifts.save(turnodas8)
-
+/*
         val apt = AppointmentDAO(1L, LocalDateTime.now(), "consulta", AppointmentStatus.PENDING," ", pantufas, user, manel)
 
         apts.save(apt)
@@ -58,7 +59,7 @@ class VetClinicApplication {
 
         apts.updateStatusById(1,"",AppointmentStatus.ACCEPTED)
 
-
+*/
 
        //vetService.addShift(manel.id, turnodas8)
 
