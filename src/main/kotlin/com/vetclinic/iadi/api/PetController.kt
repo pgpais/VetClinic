@@ -74,7 +74,7 @@ class PetController(val pets: PetService) {
     ])
     @DeleteMapping("/{id}")
     fun deletePet(@PathVariable id: Long) =
-            handle4xx { pets.delete(id) } // TODO: don't delete entirely
+            handle4xx { pets.delete(id) }
 
     @ApiOperation(value = "Add a new appointment to a pet", response = Unit::class)
     @ApiResponses(value = [

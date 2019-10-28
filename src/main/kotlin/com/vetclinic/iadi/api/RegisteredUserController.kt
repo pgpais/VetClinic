@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 class RegisteredUserController (val regUserService: RegisteredUserService){
 
 
-    @ApiOperation(value = "Update a user's info")
+    @ApiOperation(value = "Update a user's info", response = Unit::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully updated a user's information"),
         ApiResponse(code = 404, message = "User not found"),

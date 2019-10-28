@@ -30,7 +30,7 @@ class UnRegUserController (val clientService: ClientService, val vets: VetServic
                 // TODO: execute login, maybe encrypt password here
             }*/
 
-    @ApiOperation(value = "Register a new user")
+    @ApiOperation(value = "Register a new user", response = Unit::class)
     @ApiResponses(value = [
         ApiResponse(code = 201, message = "Successfully created a new user"),
         ApiResponse(code = 403, message = "You cannot access this resource (maybe already logged in?)")

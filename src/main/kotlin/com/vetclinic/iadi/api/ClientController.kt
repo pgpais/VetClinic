@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/client")
 class ClientController(val clients:ClientService){
 
-    @ApiOperation(value="Get client by Id")
+    @ApiOperation(value="Get client by Id", response = ClientDTO::class)
     @ApiResponses(
             ApiResponse(code = 200, message = "Successfully retrieve a client"),
+            ApiResponse(code = 401, message = "You are not authorized to use this resource"),
+            ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             ApiResponse(code = 404, message = "User does not exist")
     )
     @GetMapping("/{id}")
@@ -27,6 +29,8 @@ class ClientController(val clients:ClientService){
     @ApiOperation(value="Get appointments of this user")
     @ApiResponses(
             ApiResponse(code = 200, message = "Successfully retrieve client's appointments"),
+            ApiResponse(code = 401, message = "You are not authorized to use this resource"),
+            ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
             ApiResponse(code = 404, message = "User does not exist")
     )
     @GetMapping("/apts/{userId}")
@@ -34,27 +38,36 @@ class ClientController(val clients:ClientService){
             handle4xx { clients.getAppointments(userId).map{AppointmentDTO(it)} }
 
 
-    @ApiOperation(value = "Book appointment for this user")
+    @ApiOperation(value = "Book appointment for this user", response = Unit::class)
     @ApiResponses(
-            ApiResponse(code = 200, message = "Successfully booked appointment")
+            ApiResponse(code = 200, message = "Successfully booked appointment"),
+            ApiResponse(code = 401, message = "You are not authorized to use this resource"),
+            ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            ApiResponse(code = 404, message = "Some information could not be found")
     )
     @PostMapping("/apts")
     fun bookAppointment(@RequestBody apt:AppointmentDTO){
         clients.bookAppointment(apt)
     }
 
-    @ApiOperation(value = "Gets a user's Pets")
+    @ApiOperation(value = "Gets a user's Pets", response = List::class)
     @ApiResponses(
-            ApiResponse(code = 200, message = "Successfully got pets")
+            ApiResponse(code = 200, message = "Successfully got pets"),
+            ApiResponse(code = 401, message = "You are not authorized to use this resource"),
+            ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            ApiResponse(code = 404, message = "Some information could not be found")
     )
     @GetMapping("/pets/{userId}")
     fun getPets(@PathVariable userId: Long): List<PetDTO> =
             handle4xx { clients.getPets(userId).map{PetDTO(it)}
             }
 
-    @ApiOperation(value = "Add user's Pets")
+    @ApiOperation(value = "Add user's Pets", response = Unit::class)
     @ApiResponses(
-            ApiResponse(code = 200, message = "Successfully added pets")
+            ApiResponse(code = 200, message = "Successfully added pets"),
+            ApiResponse(code = 401, message = "You are not authorized to use this resource"),
+            ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            ApiResponse(code = 404, message = "Some information could not be found")
     )
     @PostMapping("/pets/{userId}")
     fun createPet(@PathVariable userId: Long, pet:PetDTO) =

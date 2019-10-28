@@ -41,7 +41,7 @@ class VetController (val vets:VetService) {
                 vets.getAppointments(id).map{AppointmentDTO(it)}
             }
 
-    @ApiOperation(value = "Accept a pending appointment")
+    @ApiOperation(value = "Accept a pending appointment", response = Unit::class)
     @ApiResponses(value = [
         ApiResponse(code = 201, message = "Successfully accepted appointment"),
         ApiResponse(code = 404, message = "Provided pending appointment not found "),
@@ -55,7 +55,7 @@ class VetController (val vets:VetService) {
         }
 
 
-    @ApiOperation(value = "Reject a pending appointment")
+    @ApiOperation(value = "Reject a pending appointment", response = Unit::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully accepted appointment"),
         ApiResponse(code = 400, message = "Request malformed (maybe you're missing the reason?)"),
@@ -69,7 +69,7 @@ class VetController (val vets:VetService) {
             vets.rejectAppointment(aptId,reason)}
     }
 
-    @ApiOperation(value = "Complete an appointment")
+    @ApiOperation(value = "Complete an appointment", response = Unit::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully completed appointment"),
         ApiResponse(code = 404, message = "Provided pending appointment not found "),

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/admin")
 class AdminController(val admins: AdminService) {
 
-    @ApiOperation(value="Get a pet by his ID")
+    @ApiOperation(value="Get a pet by his ID", response = PetDTO::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully got Pet"),
         ApiResponse(code = 401, message = "You are not logged in as admin"),
@@ -60,7 +60,7 @@ class AdminController(val admins: AdminService) {
     fun getAdmin(@PathVariable id:Long) : AdminDTO =
             handle4xx { AdminDTO(admins.getAdminById(id)) }
 
-    @ApiOperation(value="Create a new admin")
+    @ApiOperation(value="Create a new admin", response = Unit::class)
     @ApiResponses(value = [
         ApiResponse(code = 201, message = "Successfully created admin"),
         ApiResponse(code = 401, message = "You are not logged in as admin"),
@@ -84,7 +84,7 @@ class AdminController(val admins: AdminService) {
         handle4xx { admins.deleteAdmin(id) }
     }
 
-    @ApiOperation(value="Create a new Veterinarian")
+    @ApiOperation(value="Create a new Veterinarian", response = Unit::class)
     @ApiResponses(value = [
         ApiResponse(code = 201, message = "Successfully created veterinarian"),
         ApiResponse(code = 401, message = "You are not logged in as admin"),
@@ -97,7 +97,7 @@ class AdminController(val admins: AdminService) {
     }
 
 
-    @ApiOperation(value="Delete a vet by making him Frozen")
+    @ApiOperation(value="Delete a vet by making him Frozen", response = Unit::class)
     @ApiResponses(value = [
         ApiResponse(code = 201, message = "Successfully froze a veterinarian"),
         ApiResponse(code = 401, message = "You are not logged in as admin"),
