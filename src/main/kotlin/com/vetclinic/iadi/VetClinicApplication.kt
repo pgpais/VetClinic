@@ -1,6 +1,10 @@
 package com.vetclinic.iadi
 
+import com.vetclinic.iadi.api.AdminDTO
+import com.vetclinic.iadi.api.UserDTO
 import com.vetclinic.iadi.model.*
+import com.vetclinic.iadi.services.AdminService
+import com.vetclinic.iadi.services.RegisteredUserService
 import com.vetclinic.iadi.services.VetService
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -24,7 +28,9 @@ class VetClinicApplication {
             admins: AdminRepository,
             shifts: ShiftsRepository,
             vets: VeterinaryRepository,
-            vetService: VetService
+            vetService: VetService,
+            userService: RegisteredUserService,
+            adminService:AdminService
     ) = CommandLineRunner {
 
         val user = ClientDAO(1L,"pedro123",BCryptPasswordEncoder().encode("123"),"pedro","","",34,"", emptyList(), emptyList())
@@ -43,13 +49,19 @@ class VetClinicApplication {
         manel = vets.save(manel)
 
 
-        val admin = AdminDAO(3, "francisco123", BCryptPasswordEncoder().encode("123"), "manel","","",6,"")
+        val admin = AdminDAO(30L, "francisco123", BCryptPasswordEncoder().encode("123"), "manel","","",6,"")
 
         admins.save(admin)
 
         val turnodas8 = ShiftsDAO(4L, LocalDateTime.now().plusDays(3), LocalDateTime.now().plusDays(4),manel)
 
         shifts.save(turnodas8)
+
+
+        val newnewVet = AdminDTO(5, "francisco123", BCryptPasswordEncoder().encode("123"), "francisco","","",6,"")
+
+        //adminService.update(admin.id,newnewVet)
+
 /*
         val apt = AppointmentDAO(1L, LocalDateTime.now(), "consulta", AppointmentStatus.PENDING," ", pantufas, user, manel)
 
