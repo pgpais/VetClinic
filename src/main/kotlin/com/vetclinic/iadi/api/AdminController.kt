@@ -7,7 +7,6 @@ import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
-import java.util.*
 
 @Api(value="VetClinic Management System - Admin API",
         description = "Management operations of Admins in the IADI 2019 Pet Clinic")
@@ -17,18 +16,46 @@ import java.util.*
 @RequestMapping("/admin")
 class AdminController(val admins: AdminService) {
 
+    @ApiOperation(value="Get a pet by his ID")
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "Successfully got Pet"),
+        ApiResponse(code = 401, message = "You are not logged in as admin"),
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+        ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
+    ])
     @GetMapping("/pets/{id}")
     fun getPet(@PathVariable id:Long) : PetDTO =
             handle4xx { PetDTO(admins.getPetById(id)) }
 
+    @ApiOperation(value="Get a client by his ID")
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "Successfully got Client"),
+        ApiResponse(code = 401, message = "You are not logged in as admin"),
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+        ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
+    ])
     @GetMapping("/clients/{id}")
     fun getClient(@PathVariable id:Long) : ClientDTO =
             handle4xx { ClientDTO(admins.getClientById(id)) }
 
+    @ApiOperation(value="Get an user by his ID")
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "Successfully got user"),
+        ApiResponse(code = 401, message = "You are not logged in as admin"),
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+        ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
+    ])
     @GetMapping("/users/{id}")
     fun getUser(@PathVariable id:Long) : UserDTO =
         handle4xx { UserDTO(admins.getUserById(id)) }
 
+    @ApiOperation(value="Get an admin by his ID")
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "Successfully got admin"),
+        ApiResponse(code = 401, message = "You are not logged in as admin"),
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+        ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
+    ])
     @GetMapping("/{id}")
     fun getAdmin(@PathVariable id:Long) : AdminDTO =
             handle4xx { AdminDTO(admins.getAdminById(id)) }
@@ -47,7 +74,7 @@ class AdminController(val admins: AdminService) {
 
     @ApiOperation(value="Delete an admin")
     @ApiResponses(value = [
-        ApiResponse(code = 200, message = "Successfully created admin"),
+        ApiResponse(code = 200, message = "Successfully frozen admin"),
         ApiResponse(code = 401, message = "You are not logged in as admin"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
@@ -69,11 +96,26 @@ class AdminController(val admins: AdminService) {
         handle4xx { admins.createVet(vet) }
     }
 
+
+    @ApiOperation(value="Delete a vet by making him Frozen")
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "Successfully froze a veterinarian"),
+        ApiResponse(code = 401, message = "You are not logged in as admin"),
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+        ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
+    ])
     @PostMapping("/vets/{id}")
     fun deleteVet(@PathVariable id:Long){
         handle4xx { admins.deleteVet(id) }
     }
 
+    @ApiOperation(value="Get a Veterinarian by his id")
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "Successfully froze a veterinarian"),
+        ApiResponse(code = 401, message = "You are not logged in as admin"),
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+        ApiResponse(code = 404, message = "This is not the resource you are looking for - MindTrick.jpg")
+    ])
     @GetMapping("/vets/{id}")
     fun getVet(@PathVariable id:Long) : VeterinarianDTO =
             handle4xx { VeterinarianDTO(admins.getVetbyId(id)) }
@@ -87,7 +129,7 @@ class AdminController(val admins: AdminService) {
     ])
     @PostMapping("/vets/shifts/{id}")
     fun setSchedule(@PathVariable id: Long, @RequestBody shifts:List<ShiftsDTO>){
-        admins.addShift(id, shifts)
+        admins.setSchedule(id, shifts)
     }
 
     @ApiOperation(value = "Check a Vet's appointments")

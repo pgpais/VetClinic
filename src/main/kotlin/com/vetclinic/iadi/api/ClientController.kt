@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/client")
 class ClientController(val clients:ClientService){
 
+    @ApiOperation(value="Get client by Id")
+    @ApiResponses(
+            ApiResponse(code = 200, message = "Successfully retrieve a client"),
+            ApiResponse(code = 404, message = "User does not exist")
+    )
     @GetMapping("/{id}")
     fun getOneClient(@PathVariable id:Long) : ClientDTO =
             handle4xx { clients.getClientById(id).let{ ClientDTO(it.id, it.name, it.username, it.pass, it.photo, it.email, it.phone, it.address) } }
@@ -38,15 +43,28 @@ class ClientController(val clients:ClientService){
         clients.bookAppointment(apt)
     }
 
+    @ApiOperation(value = "Gets a user's Pets")
+    @ApiResponses(
+            ApiResponse(code = 200, message = "Successfully got pets")
+    )
     @GetMapping("/pets/{userId}")
     fun getPets(@PathVariable userId: Long): List<PetDTO> =
             handle4xx { clients.getPets(userId).map{PetDTO(it)}
             }
 
+    @ApiOperation(value = "Add user's Pets")
+    @ApiResponses(
+            ApiResponse(code = 200, message = "Successfully added pets")
+    )
     @PostMapping("/pets/{userId}")
     fun createPet(@PathVariable userId: Long, pet:PetDTO) =
             handle4xx { clients.createPet(userId, pet) }
 
+
+    @ApiOperation(value = "Delete a pet")
+    @ApiResponses(
+            ApiResponse(code = 200, message = "Successfully 'deleted' pet")
+    )
     @DeleteMapping("/pets/{userId}/{petId}")
     fun deletePet(@PathVariable userId: Long, @PathVariable petId: Long){
         clients.deleteClientsPet(userId, petId)

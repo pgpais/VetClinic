@@ -54,7 +54,7 @@ class AdminService(val vets: VeterinaryRepository, val admins: AdminRepository, 
     fun getVetbyId(vetId: Long) =
         vets.findById(vetId).orElseThrow { NotFoundException("Couldn't find user with id $vetId") }
 
-    fun addShift(id: Long, shifts: List<ShiftsDTO>) {
+    fun setSchedule(id: Long, shifts: List<ShiftsDTO>) {
         val vet = getVetbyId(id)
         vet.schedule = shifts.map { ShiftsDAO(it, vet)}
         vets.save(vet)
