@@ -63,7 +63,7 @@ class PetController(val pets: PetService) {
     ])
     @PutMapping("/{id}")
     fun updatePet(@RequestBody pet: PetDTO, @PathVariable id: Long) =
-            handle4xx { pets.update(pet, id) }
+            handle4xx { pets.update(id, pet) }
 
     @ApiOperation(value = "Delete a pet", response = Unit::class)
     @ApiResponses(value = [

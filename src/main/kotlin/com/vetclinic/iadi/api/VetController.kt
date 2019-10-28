@@ -95,6 +95,10 @@ class VetController (val vets:VetService) {
         handle4xx {
             VetShiftDTO(VeterinarianDTO(vets.getVetbyId(id)),
                                         (vets.getSchedule(id).map{ ShiftsDTO(it)}))
-        }
+    }
 
+    @PutMapping("{id}")
+    fun update(@PathVariable id:Long, @RequestBody vet: VeterinarianDTO){
+        vets.update(id, vet)
+    }
 }
