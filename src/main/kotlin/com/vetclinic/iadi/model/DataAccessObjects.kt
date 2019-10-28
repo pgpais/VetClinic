@@ -92,6 +92,7 @@ data class VeterinarianDAO(
         var appointments: List<AppointmentDAO>,
 
         var frozen:Boolean = false,
+        @UniqueElements
         val employeeID: UUID = UUID.randomUUID()
 
 
@@ -164,6 +165,7 @@ data class AdminDAO(
         override var phone:Number,
         override var address:String,
 
+        @UniqueElements
         val employeeID: UUID = UUID.randomUUID()
 
 
