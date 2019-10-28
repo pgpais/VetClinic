@@ -161,6 +161,7 @@ data class AdminDAO(
 
 ) : RegisteredUsersDAO(id, username, pass, name, photo, email, phone, address) {
     constructor(admin: AdminDTO) : this(admin.id, admin.username, admin.pass, admin.name,admin.photo,admin.email,admin.phone,admin.address)
+    constructor(id: Long, username: String, admin: AdminDTO) : this(id, username, admin.pass, admin.name, admin.photo, admin.email, admin.phone, admin.address)
 }
 
 @Entity

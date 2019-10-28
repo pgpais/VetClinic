@@ -101,4 +101,9 @@ class AdminController(val admins: AdminService) {
     fun checkAppointments(@PathVariable vetId: Long){
         admins.getVetAppointments(vetId)
     }
+
+    @PutMapping("/{id}")
+    fun updateInfo(@PathVariable id:Long, @RequestBody admin:AdminDTO){
+        admins.update(id, admin)
+    }
 }

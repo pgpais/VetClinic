@@ -66,6 +66,11 @@ class AdminService(val vets: VeterinaryRepository, val admins: AdminRepository, 
 
     fun getAdminByUsername(username:String)  : Optional<AdminDAO> = admins.findByUsername(username)
 
+    fun update(id:Long, newAdminDTO: AdminDTO) {
+        val oldAdminDAO = getAdminById(id)
+        var newAdminDAO = AdminDAO(id, oldAdminDAO.username, newAdminDTO)
+        admins.save(newAdminDAO)
+    }
 
 
 }
