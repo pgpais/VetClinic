@@ -5,7 +5,9 @@ import com.vetclinic.iadi.api.ClientDTO
 import com.vetclinic.iadi.api.PetDTO
 import com.vetclinic.iadi.api.handle4xx
 import com.vetclinic.iadi.model.*
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class ClientService(val clientRepository: ClientRepository, val apts: AppointmentRepository, val vets:VeterinaryRepository, val clients: ClientRepository, val pets:PetRepository) {
@@ -15,6 +17,19 @@ class ClientService(val clientRepository: ClientRepository, val apts: Appointmen
 
     fun register(client: ClientDTO) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun getClientByUsername(username:String)  : Optional<ClientDAO> = clientRepository.findByUsername(username)
+
+    fun addClient(user: ClientDAO): Optional<ClientDAO> {
+        val aUser = clientRepository.findById(user.id)
+
+        return if (aUser.isPresent)
+            Optional.empty()
+        else {
+            user.pass = BCryptPasswordEncoder().encode(user.pass)
+            Optional.of(clientRepository.save(user))
+        }
     }
 
     fun getClientById(id:Long) = clientRepository.findById(id).orElseThrow{NotFoundException("Couldn't find client with id $id")}
@@ -64,5 +79,12 @@ class ClientService(val clientRepository: ClientRepository, val apts: Appointmen
             throw PreconditionFailedException("id must be 0 on insert")
         else
             pets.save(petDAO)
+    }
+
+    fun update(id: Long, client: ClientDTO) {
+        val clientDAO = getClientById(id)
+        val newClientDAO = ClientDAO(id, clientDAO.username, clientDAO.pets, clientDAO.appointments, client)
+
+        clients.save(newClientDAO)
     }
 }

@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/home")
-class UnRegUserController (val clientService: ClientService, val vets: VetService) { //TODO: add service (call it something related with accounts?)
+class UnRegUserController (val clientService: ClientService, val vets: VetService) {
 
-    @ApiOperation(value = "Login with given user") // TODO: should probably return a token
+    /*@ApiOperation(value = "Login with given user")
     @ApiResponses(value = [
         ApiResponse(code = 201, message = "Successfully logged in"), //201 for successful token creation?
         ApiResponse(code = 404, message = "Could not find provided user"),
@@ -27,10 +27,10 @@ class UnRegUserController (val clientService: ClientService, val vets: VetServic
     @PostMapping("/login")
     fun login(@RequestBody username:String, @RequestBody password:String) =
             {
-                // TODO: execute login, maybe encrypt password here
-            }
 
-    @ApiOperation(value = "Register a new user")
+            }*/
+
+    @ApiOperation(value = "Register a new user", response = Unit::class)
     @ApiResponses(value = [
         ApiResponse(code = 201, message = "Successfully created a new user"),
         ApiResponse(code = 403, message = "You cannot access this resource (maybe already logged in?)")

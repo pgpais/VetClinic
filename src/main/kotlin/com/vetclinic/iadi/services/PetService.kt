@@ -17,7 +17,7 @@ class PetService(val pets: PetRepository, val appointments: AppointmentRepositor
 */
     fun getPetById(id:Long) = pets.findByIdAndRemovedIsFalse(id).orElseThrow{NotFoundException("There is no Pet with Id $id")}
 
-    fun getAllPets():Iterable<PetDAO> = pets.findAllByRemovedFalse()
+    fun getAllPets() = pets.findAllByRemovedFalse()
 
     fun addNew(pet: PetDTO, ownerId:Long) {
 
@@ -52,7 +52,7 @@ class PetService(val pets: PetRepository, val appointments: AppointmentRepositor
             appointments.save(aptDAO)
     }
 
-    fun update(pet: PetDTO, id: Long) {
+    fun update(id: Long, pet: PetDTO) {
         getPetById(id).let { it.update(PetDAO(pet, it.owner)); pets.save(it) }
     }
 
