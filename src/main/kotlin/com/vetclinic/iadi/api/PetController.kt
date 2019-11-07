@@ -24,6 +24,7 @@ class PetController(val pets: PetService) {
         ApiResponse(code = 401, message = "You are not authorized to view the resource"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
     ])
+    @CrossOrigin(origins=["*"])
     @GetMapping("")
     fun getAllPets() : List<PetAptsDTO> =
             pets.getAllPets().map { PetAptsDTO(PetDTO(it),

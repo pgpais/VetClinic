@@ -34,8 +34,20 @@ class VetClinicApplication {
     ) = CommandLineRunner {
 
         // BASE ADMIN ACCOUNT
-        val baseAdmin = AdminDAO(1L, "BASEADMIN", BCryptPasswordEncoder().encode("ADMIN"), "BASEADMIN","","",6,"")
+        val baseAdmin = AdminDAO(0L, "BASEADMIN", BCryptPasswordEncoder().encode("ADMIN"), "BASEADMIN","","",6,"")
         admins.save(baseAdmin)
+
+        val user = ClientDAO(0L,"Client123", "123", "manel","","",6,"",emptyList(), emptyList())
+
+        val vet = VeterinarianDAO(0L,"VET123", "123","Joaquina" ,"www.google.com", "",7,"",emptyList(), emptyList())
+
+        val pantufas = PetDAO(0L, "pantufas", "Dog", "www.google.com", user, emptyList(),false)
+        val bigodes = PetDAO(0L, "bigodes", "Cat", "www.google.com", user, emptyList(),false)
+        val petsDAO = ArrayList(listOf(pantufas, bigodes))
+
+        clients.save(user)
+        pets.save(pantufas)
+        pets.save(bigodes)
     }
 
 
