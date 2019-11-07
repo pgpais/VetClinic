@@ -11,12 +11,15 @@ function getPets() {
       let response = JSON.parse(xhttp.response);
       console.log(response);
       response.forEach(obj => {
-          let pet = obj['pet']
-        console.log(pet['name']);
-        innerHTML += "<li>" + pet['name'] + "</li> \n";
+        let pet = obj["pet"];
+        console.log(pet["name"]);
+        innerHTML += "<li>" + pet["name"] + "</li> \n";
       });
 
+      console.log(list)
       list.innerHTML = innerHTML;
     }
   };
+
+  let listHTML = document.getElementById("list")
 }
