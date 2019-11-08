@@ -16,6 +16,32 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/vets")
 class VetController (val vets:VetService) {
 
+    @ApiOperation(value = "Get a single Veterinarian", response = VeterinarianDTO::class)
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "Successfully retrieved Veterinarian"),
+        ApiResponse(code = 401, message = "Your account is not allowed to access this resource"),
+        ApiResponse(code = 403, message = "You're not allowed to view this resource"),
+        ApiResponse(code = 404, message = "Could not find the Veterinarian you were looking for")
+    ])
+    @GetMapping("/{id}")
+    fun getById(@PathVariable id:Long): VeterinarianDTO =
+            handle4xx {
+                VeterinarianDTO(vets.getVetbyId(id))
+            }
+
+    @ApiOperation(value = "Get all Veterinarians", response = VeterinarianDTO::class)
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "Successfully retrieved all Veterinarians"),
+        ApiResponse(code = 401, message = "Your account is not allowed to access this resource"),
+        ApiResponse(code = 403, message = "You're not allowed to view this resource"),
+        ApiResponse(code = 404, message = "Could not find any Veterinarian")
+    ])
+    @GetMapping("")
+    fun getAll(): List<VeterinarianDTO> =
+            handle4xx {
+                vets.getAllVets().map { VeterinarianDTO(it) }
+            }
+
     @ApiOperation(value = "Get a list of the a Veterinarian's pending appointments", response = List::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully retrieved list of pending appointments"),
@@ -36,7 +62,7 @@ class VetController (val vets:VetService) {
         ApiResponse(code = 401, message = "You're not allowed to access this resource")
 
     ])
-    @GetMapping("/appointments/{id}") //can be used for Vet and Client (?)
+    @GetMapping("/appointments/{id}") //TODO: change name to getAcceptedAppointments?
     fun getAppointments(@PathVariable id:Long):List<AppointmentDTO> =
             handle4xx {
                 vets.getAppointments(id).map{AppointmentDTO(it)}
@@ -78,13 +104,13 @@ class VetController (val vets:VetService) {
 
     ])
     @PutMapping("/appointments/complete/{aptId}")
-    fun completeAppointment(@PathVariable aptId:Long){ //TODO: add token to request
+    fun completeAppointment(@PathVariable aptId:Long){
         handle4xx {
             vets.completeAppointment(aptId)}
 
     }
 
-    @ApiOperation(value = "Update a user's info", response = List::class)
+    @ApiOperation(value = "Get a Veterinarian's schedule", response = VetShiftDTO::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully updated a user's information"),
         ApiResponse(code = 404, message = "User not found"),
@@ -96,6 +122,24 @@ class VetController (val vets:VetService) {
         handle4xx {
             VetShiftDTO(VeterinarianDTO(vets.getVetbyId(id)),
                                         (vets.getSchedule(id).map{ ShiftsDTO(it)}))
+    }
+
+    @ApiOperation(value = "Set a Veterinarian's schedule", response = VetShiftDTO::class)
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "Successfully updated a Veterinarians's schedule"),
+        ApiResponse(code = 404, message = "Veterinarian not found"),
+        ApiResponse(code = 401, message = "You are not authorized to use this resource"),
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
+    ])
+    @PostMapping("/schedule")
+    fun setSchedule(@PathVariable id:Long, @RequestBody shifts: List<ShiftsDTO>) =
+            handle4xx {
+                vets.setSchedule(id, shifts)
+            }
+
+    @PostMapping("")
+    fun addNew(@RequestBody vet:VeterinarianDTO) {
+        vets.createVet(vet)
     }
 
     @ApiOperation(value = "Update a vet", response = Unit::class)

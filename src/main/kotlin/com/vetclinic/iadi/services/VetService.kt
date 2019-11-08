@@ -1,5 +1,7 @@
 package com.vetclinic.iadi.services
 
+import com.vetclinic.iadi.api.ShiftsDTO
+import com.vetclinic.iadi.api.VetShiftDTO
 import com.vetclinic.iadi.api.VeterinarianDTO
 import com.vetclinic.iadi.model.*
 import org.springframework.stereotype.Service
@@ -9,6 +11,14 @@ import java.util.*
 
 @Service
 class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRepository, val shiftRep: ShiftsRepository) {
+
+    fun createVet(vet: VeterinarianDTO) {
+        val vetDAO = VeterinarianDAO(vet, emptyList(), emptyList())
+        if( vetDAO.id != 0L){
+            throw PreconditionFailedException("Id must be 0 on insertion")
+        } else
+            vets.save(vetDAO)
+    }
 
     fun getVetbyId(id:Long) = vets.findByIdAndFrozenIsFalse(id).orElseThrow{NotFoundException("There is no Veterinarian with Id $id")}
 
@@ -77,7 +87,13 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
         return appointments.getPendingByVetId(id);
     }
 
-    fun addShift(vetId: Long, newShift:ShiftsDAO) {
+    fun setSchedule(id: Long, shifts: List<ShiftsDTO>) {
+        val vet = getVetbyId(id)
+        vet.schedule = shifts.map { ShiftsDAO(it, vet)}
+        vets.save(vet)
+    }
+
+    fun addShift(vetId: Long, newShift:ShiftsDAO) { //TODO: why is this not used?
 
         val shifts = getVetbyId(vetId).schedule
 
@@ -156,12 +172,13 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
     }
 
     fun getSchedule(id: Long): List<ShiftsDAO> = shiftRep.findByVetId(id)
-    
+
     fun update(id: Long, vet: VeterinarianDTO) {
         val oldVetDAO = getVetbyId(id)
         var newVetDAO = VeterinarianDAO(id, oldVetDAO.username, vet, oldVetDAO.schedule, oldVetDAO.appointments)
         vets.save(newVetDAO)
     }
+
 }
 
 
