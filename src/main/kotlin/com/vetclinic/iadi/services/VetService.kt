@@ -27,9 +27,10 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
     fun getVetByUsername(username:String)  : Optional<VeterinarianDAO> = vets.findByUsername(username)
 
 
-    fun getAppointments(id:Long): List<AppointmentDAO> {
+    fun getAcceptedAppointments(id:Long): List<AppointmentDAO> {
 
-        val vet  = vets.findByIdWithAppointment(id).orElseThrow { NotFoundException("There is no Vet with Id $id") }
+
+        val vet  = vets.findByIdWithAppointmentAccepted(id).orElseThrow { NotFoundException("There is no Vet with Id $id") }
         return vet.appointments
     }
 /*
@@ -183,7 +184,7 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
 
     fun update(id: Long, vet: VeterinarianDTO) {
         val oldVetDAO = getVetbyId(id)
-        var newVetDAO = VeterinarianDAO(id, oldVetDAO.username, vet, oldVetDAO.schedule, oldVetDAO.appointments)
+        val newVetDAO = VeterinarianDAO(id, oldVetDAO.username, vet, oldVetDAO.schedule, oldVetDAO.appointments)
         vets.save(newVetDAO)
     }
 

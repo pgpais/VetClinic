@@ -65,7 +65,7 @@ class VetController (val vets:VetService) {
     @GetMapping("/{id}/appointments")
     fun getAcceptedAppointments(@PathVariable id:Long):List<AppointmentDTO> =
             handle4xx {
-                vets.getAppointments(id).map{AppointmentDTO(it)}
+                vets.getAcceptedAppointments(id).map{AppointmentDTO(it)}
             }
 /*
     @ApiOperation(value = "Accept a pending appointment", response = Unit::class)
