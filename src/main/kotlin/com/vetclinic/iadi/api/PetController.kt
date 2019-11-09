@@ -54,9 +54,6 @@ class PetController(val pets: PetService) {
                 pets.addNew(pet, id)
             }
 
-
-
-
     @ApiOperation(value = "Update a pet", response = Unit::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully updated a pet"),
@@ -78,9 +75,19 @@ class PetController(val pets: PetService) {
     fun deletePet(@PathVariable id: Long) =
             handle4xx { pets.delete(id) }
 
+    @ApiOperation(value = "Get a list of a pet's appointments", response = List::class)
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "Successfully retrieved list of pet's appointments"),
+        ApiResponse(code = 404, message = "Pet not found"),
+        ApiResponse(code = 401, message = "You are not authorized to use this resource"),
+        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
+    ])
+    @GetMapping("/{id}/appointments")
+    fun appointmentsOfPet(@PathVariable id:Long) : List<AppointmentDTO> =
+            handle4xx { pets.getAppointments(id).map{ AppointmentDTO(it) } }
 
     // TODO: REMOVE HERE -----------------------------------------------------------------------------------------------
-
+/*
     @ApiOperation(value = "Add a new appointment to a pet", response = Unit::class)
     @ApiResponses(value = [
         ApiResponse(code = 201, message = "Successfully added an appointment to a pet"),
@@ -95,16 +102,6 @@ class PetController(val pets: PetService) {
             handle4xx {
                 pets.newAppointment(id, apt)
             }
-
-    @ApiOperation(value = "Get a list of a pet's appointments", response = List::class)
-    @ApiResponses(value = [
-        ApiResponse(code = 200, message = "Successfully retrieved list of pet's appointments"),
-        ApiResponse(code = 404, message = "Pet not found"),
-        ApiResponse(code = 401, message = "You are not authorized to use this resource"),
-        ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
-    ])
-    @GetMapping("/{id}/appointments")
-    fun appointmentsOfPet(@PathVariable id:Long) : List<AppointmentDTO> =
-            handle4xx { pets.getAppointments(id).map{ AppointmentDTO(it) } }
+*/
 }
 

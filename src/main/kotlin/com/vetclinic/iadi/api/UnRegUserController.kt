@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/home")
 class UnRegUserController (val clientService: ClientService, val vets: VetService) {
 
+    //TODO: why did we comment this?
     /*@ApiOperation(value = "Login with given user")
     @ApiResponses(value = [
         ApiResponse(code = 201, message = "Successfully logged in"), //201 for successful token creation?
@@ -38,6 +39,7 @@ class UnRegUserController (val clientService: ClientService, val vets: VetServic
     @PostMapping("/register")
     fun register(@RequestBody user:ClientDTO) = clientService.register(user)
 
+    /*
     @ApiOperation(value = "Get the list of Employees", response = List::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully retrieved the list of Employees"),
@@ -45,6 +47,6 @@ class UnRegUserController (val clientService: ClientService, val vets: VetServic
     ])
     @GetMapping("/listVets")
     fun listVets():List<VetAptsDTO> = vets.getAllVets().map { VetAptsDTO(VeterinarianDTO(it),it.appointments.map { AppointmentDTO(it) }) }
-
+*/
 
 }

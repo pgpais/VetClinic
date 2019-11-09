@@ -49,7 +49,7 @@ class VetController (val vets:VetService) {
         ApiResponse(code = 401, message = "You're not allowed to access this resource")
 
     ])
-    @GetMapping("/appointments/pending")
+    @GetMapping("/{id}/appointments/pending")
     fun getPendingAppointments(@PathVariable id:Long):List<AppointmentDTO> =
         handle4xx {
             vets.getPendingAppointments(id).map{AppointmentDTO(it)}
@@ -62,7 +62,7 @@ class VetController (val vets:VetService) {
         ApiResponse(code = 401, message = "You're not allowed to access this resource")
 
     ])
-    @GetMapping("/appointments/{id}") //TODO: change name to getAcceptedAppointments?
+    @GetMapping("/{id}/appointments") //TODO: change name to getAcceptedAppointments?
     fun getAppointments(@PathVariable id:Long):List<AppointmentDTO> =
             handle4xx {
                 vets.getAppointments(id).map{AppointmentDTO(it)}
@@ -153,4 +153,6 @@ class VetController (val vets:VetService) {
     fun update(@PathVariable id:Long, @RequestBody vet: VeterinarianDTO){
         vets.update(id, vet)
     }
+
+    //TODO: remove vet?
 }
