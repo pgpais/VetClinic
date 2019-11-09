@@ -123,7 +123,6 @@ open class RegisteredUsersDAO (//TODO: change to username
 
 ){
     fun getDiscriminatorValue() = this.javaClass.name
-    //TODO: add rest of info
 }
 
 @Entity

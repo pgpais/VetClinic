@@ -67,7 +67,7 @@ class VetController (val vets:VetService) {
             handle4xx {
                 vets.getAppointments(id).map{AppointmentDTO(it)}
             }
-
+/*
     @ApiOperation(value = "Accept a pending appointment", response = Unit::class)
     @ApiResponses(value = [
         ApiResponse(code = 201, message = "Successfully accepted appointment"),
@@ -109,6 +109,22 @@ class VetController (val vets:VetService) {
             vets.completeAppointment(aptId)}
 
     }
+*/
+    @ApiOperation(value = "Update an appointment status to completed, accepted or rejected", response = Unit::class)
+    @ApiResponses(value = [
+        ApiResponse(code = 200, message = "Successfully completed appointment"),
+        ApiResponse(code = 404, message = "Provided pending appointment not found "),
+        ApiResponse(code = 401, message = "You're not allowed to access this resource")
+
+    ])
+    @PutMapping("/appointments/{aptId}")
+    fun updateAppointmentStatus(@PathVariable aptId:Long, @RequestParam mode:String, @RequestParam reason:String?){
+        handle4xx {
+            vets.updateAppointment(aptId,mode,reason)}
+
+    }
+
+
 
     @ApiOperation(value = "Get a Veterinarian's schedule", response = VetShiftDTO::class)
     @ApiResponses(value = [
