@@ -5,6 +5,7 @@ import com.vetclinic.iadi.api.UserDTO
 import com.vetclinic.iadi.model.*
 import com.vetclinic.iadi.services.AdminService
 import com.vetclinic.iadi.services.RegisteredUserService
+import com.vetclinic.iadi.services.SecurityService
 import com.vetclinic.iadi.services.VetService
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -37,15 +38,18 @@ class VetClinicApplication {
         val baseAdmin = AdminDAO(0L, "BASEADMIN", BCryptPasswordEncoder().encode("ADMIN"), "BASEADMIN","","",6,"")
         admins.save(baseAdmin)
 
-        val user = ClientDAO(0L,"Client123", "123", "manel","","",6,"",emptyList(), emptyList())
+        val user = ClientDAO(0L,"Client123", BCryptPasswordEncoder().encode("123"), "manel","","",6,"",emptyList(), emptyList())
+
+        val user2 = ClientDAO(0L,"Client124", BCryptPasswordEncoder().encode("123"), "manel","","",6,"",emptyList(), emptyList())
 
         val vet = VeterinarianDAO(0L,"VET123", "123","Joaquina" ,"www.google.com", "",7,"",emptyList(), emptyList())
 
         val pantufas = PetDAO(0L, "pantufas", "Dog", "www.google.com", user, emptyList(),false)
-        val bigodes = PetDAO(0L, "bigodes", "Cat", "www.google.com", user, emptyList(),false)
+        val bigodes = PetDAO(0L, "bigodes", "Cat", "www.google.com", user2, emptyList(),false)
         val petsDAO = ArrayList(listOf(pantufas, bigodes))
 
         clients.save(user)
+        clients.save(user2)
         pets.save(pantufas)
         pets.save(bigodes)
     }

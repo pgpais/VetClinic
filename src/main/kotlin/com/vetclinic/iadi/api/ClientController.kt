@@ -35,19 +35,22 @@ class ClientController(val clients:ClientService){
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "The client you tried to update was not found")
     ])
-    @PreAuthorize("hasRole('ROLE_CLIENT')")
+    @PreAuthorize("hasRole('ROLE_CLIENT') and @securityService.isClient(principal, #id)")
     @PutMapping("/{id}")
     fun update(@PathVariable id: Long, @RequestBody client:ClientDTO){
         clients.update(id, client)
     }
 
+    fun checkUser(){
+
+    }
     @ApiOperation(value = "Gets a user's Pets", response = List::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully got pets"),
         ApiResponse(code = 401, message = "You are not authorized to use this resource"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "Some information could not be found")])
-    @PreAuthorize("hasRole('ROLE_CLIENT')")
+    @PreAuthorize("hasRole('ROLE_CLIENT') and @securityService.isClient(principal, #userId)")
     @GetMapping("/{userId}/pets")
     fun getPets(@PathVariable userId: Long): List<PetDTO> =
             handle4xx { clients.getPets(userId).map{PetDTO(it)}

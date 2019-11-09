@@ -19,6 +19,7 @@ import java.lang.Exception
 import javax.persistence.DiscriminatorValue
 
 class ClientCustomInfo(
+        private val id:Long,
         private val username:String,
         private val password:String,
         private val someAuthorities:MutableCollection<out GrantedAuthority>) : UserDetails {
@@ -28,6 +29,8 @@ class ClientCustomInfo(
     override fun isEnabled(): Boolean = true
 
     override fun getUsername(): String = username
+
+    fun getId() = id
 
     override fun isCredentialsNonExpired(): Boolean = true
 
@@ -48,16 +51,16 @@ class CustomClientInfoService(
 
         username?.let {
 
-            val usersDAO = users.findByUsername(username).orElseThrow { NotFoundException("bla") }
+            val usersDAO = users.findByUsername(username).orElseThrow { NotFoundException("Didn't find that user with username $username") }
 
             val type = usersDAO.getDiscriminatorValue()
 
             print(type)
 
             when (type) {
-                "com.vetclinic.iadi.model.ClientDAO" -> return ClientCustomInfo(usersDAO.username, usersDAO.pass, mutableListOf(SimpleGrantedAuthority("ROLE_CLIENT")))
-                "com.vetclinic.iadi.model.VeterinarianDAO"  -> return ClientCustomInfo(usersDAO.username, usersDAO.pass, mutableListOf(SimpleGrantedAuthority("ROLE_VET")))
-                "com.vetclinic.iadi.model.AdminDAO"  -> return ClientCustomInfo(usersDAO.username, usersDAO.pass, mutableListOf(SimpleGrantedAuthority("ROLE_ADMIN")))
+                "com.vetclinic.iadi.model.ClientDAO" -> return ClientCustomInfo(usersDAO.id,usersDAO.username, usersDAO.pass, mutableListOf(SimpleGrantedAuthority("ROLE_CLIENT")))
+                "com.vetclinic.iadi.model.VeterinarianDAO"  -> return ClientCustomInfo(usersDAO.id,usersDAO.username, usersDAO.pass, mutableListOf(SimpleGrantedAuthority("ROLE_VET")))
+                "com.vetclinic.iadi.model.AdminDAO"  -> return ClientCustomInfo(usersDAO.id,usersDAO.username, usersDAO.pass, mutableListOf(SimpleGrantedAuthority("ROLE_ADMIN")))
                 else -> { // Note the block
                     throw Exception("when is badly done")
                 }
