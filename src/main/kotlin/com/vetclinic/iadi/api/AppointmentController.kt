@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*
 
 
 @RestController
-@PreAuthorize("hasRole('ROLE_VET')")
+@PreAuthorize("hasRole('ROLE_VET')") // TODO: Wrong - Clients book appointments.
 @RequestMapping("/appointments")
 class AppointmentController(val apts: AppointmentService, val petService: PetService, val clientService: ClientService, val vetService: VetService) {
 
@@ -40,7 +40,7 @@ class AppointmentController(val apts: AppointmentService, val petService: PetSer
         ApiResponse(code = 404, message = "The appointment could not be found")
     ])
     @GetMapping("/{id}")
-    fun getOneAppointment(@PathVariable id:Long) : AppointmentDTO =
+    fun getById(@PathVariable id:Long) : AppointmentDTO =
             handle4xx { apts.getAppointmentByID(id).let { AppointmentDTO(it.id, it.date, it.desc, it.status, it.reason, it.pet.id, it.client.id, it.vet.id) } }
 
 
