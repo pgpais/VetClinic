@@ -1,7 +1,6 @@
-package com.vetclinic.iadi
+package com.vetclinic.iadi.repos
 
 import com.vetclinic.iadi.model.*
-import org.h2.engine.User
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.not
 import org.junit.Assert.assertThat

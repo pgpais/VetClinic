@@ -1,5 +1,7 @@
 package com.vetclinic.iadi.services
 
+import com.vetclinic.iadi.api.ShiftsDTO
+import com.vetclinic.iadi.api.VetShiftDTO
 import com.vetclinic.iadi.api.VeterinarianDTO
 import com.vetclinic.iadi.model.*
 import org.springframework.stereotype.Service
@@ -10,6 +12,14 @@ import java.util.*
 @Service
 class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRepository, val shiftRep: ShiftsRepository) {
 
+    fun createVet(vet: VeterinarianDTO) {
+        val vetDAO = VeterinarianDAO(vet, emptyList(), emptyList())
+        if( vetDAO.id != 0L){
+            throw PreconditionFailedException("Id must be 0 on insertion")
+        } else
+            vets.save(vetDAO)
+    }
+
     fun getVetbyId(id:Long) = vets.findByIdAndFrozenIsFalse(id).orElseThrow{NotFoundException("There is no Veterinarian with Id $id")}
 
     fun getAllVets():Iterable<VeterinarianDAO> = vets.findAll()
@@ -17,11 +27,13 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
     fun getVetByUsername(username:String)  : Optional<VeterinarianDAO> = vets.findByUsername(username)
 
 
-    fun getAppointments(id:Long): List<AppointmentDAO> {
+    fun getAcceptedAppointments(id:Long): List<AppointmentDAO> {
 
-        val vet  = vets.findByIdWithAppointment(id).orElseThrow { NotFoundException("There is no Vet with Id $id") }
+
+        val vet  = vets.findByIdWithAppointmentAccepted(id).orElseThrow { NotFoundException("There is no Vet with Id $id") }
         return vet.appointments
     }
+/*
     fun rejectAppointment(id:Long, reason:String){
         val app = appointments.findById(id).orElseThrow{NotFoundException("There is no Appointment with Id $id")}
 
@@ -31,6 +43,9 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
             throw PreconditionFailedException("The Appointment cannot be completed because it's Status is ${app.status}")
     }
 
+
+ */
+    /*
     fun acceptAppointment(id:Long){
         val app = appointments.findById(id).orElseThrow{NotFoundException("There is no Appointment with Id $id")}
 
@@ -49,6 +64,8 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
 
     }
 
+
+     */
     fun checkIfAcceptable(vet:VeterinarianDAO, app:AppointmentDAO):Boolean {
 
         vet.schedule.forEach {
@@ -62,7 +79,7 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
         return false
 
     }
-
+/*
     fun completeAppointment(id:Long){
         val app = appointments.findById(id).orElseThrow{NotFoundException("There is no Appointment with Id $id")}
         if(app.status == AppointmentStatus.ACCEPTED)
@@ -71,13 +88,21 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
             throw PreconditionFailedException("The Appointment cannot be completed because it's Status is ${app.status}")
 
     }
+    */
+
 
     fun getPendingAppointments(id: Long): List<AppointmentDAO> {
         vets.findByIdAndFrozenIsFalse(id).orElseThrow { NotFoundException("There is no Vet with Id $id") }
         return appointments.getPendingByVetId(id);
     }
 
-    fun addShift(vetId: Long, newShift:ShiftsDAO) {
+    fun setSchedule(id: Long, shifts: List<ShiftsDTO>) {
+        val vet = getVetbyId(id)
+        vet.schedule = shifts.map { ShiftsDAO(it, vet)}
+        vets.save(vet)
+    }
+
+    fun addShift(vetId: Long, newShift:ShiftsDAO) { //TODO: why is this not used?
 
         val shifts = getVetbyId(vetId).schedule
 
@@ -156,12 +181,42 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
     }
 
     fun getSchedule(id: Long): List<ShiftsDAO> = shiftRep.findByVetId(id)
-    
+
     fun update(id: Long, vet: VeterinarianDTO) {
         val oldVetDAO = getVetbyId(id)
-        var newVetDAO = VeterinarianDAO(id, oldVetDAO.username, vet, oldVetDAO.schedule, oldVetDAO.appointments)
+        val newVetDAO = VeterinarianDAO(id, oldVetDAO.username, vet, oldVetDAO.schedule, oldVetDAO.appointments)
         vets.save(newVetDAO)
     }
+
+    fun updateAppointment(aptId: Long, mode: String, reason: String?) {
+
+        val app = appointments.findById(aptId).orElseThrow{NotFoundException("There is no Appointment with Id $aptId")}
+
+        if(app.status == AppointmentStatus.PENDING) {
+            when (mode) {
+                "rejected" -> {
+                    reason?.let {
+                        appointments.updateStatusById(aptId, reason, AppointmentStatus.REJECTED)
+                    }
+                    throw Exception("Must give reason when rejecting appointment")
+                }
+                "accepted" -> {
+
+                    if (checkIfAcceptable(app.vet, app)) {
+                        appointments.updateStatusById(aptId, "", AppointmentStatus.ACCEPTED)
+                    } else {
+                        appointments.updateStatusById(aptId, "Out of working hours", AppointmentStatus.REJECTED)
+                    }
+                }
+                    }
+            }
+        else if(app.status == AppointmentStatus.ACCEPTED && mode == "completed")
+            appointments.updateStatusById(aptId, "", AppointmentStatus.COMPLETED)
+
+        else throw PreconditionFailedException("The Appointment cannot be completed because it's Status is ${app.status}")
+
+    }
+
 }
 
 
