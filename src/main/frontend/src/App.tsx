@@ -17,6 +17,7 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
 import './App.css';
 import SignInForm, { getData } from "./SignIn";
+import RegisterForm from "./Register";
 
 // This code is on one file only for demonstration purposes. Modularity should be applied here.
 
@@ -47,12 +48,14 @@ const App = () => {
   let filteredList = pets; // pets.filter(p => p.name.includes(filter) ); // << filter on client with this code.
 
   return (<>
-      <SignInForm isSignedIn={isSignedIn} signIn={signIn}/>
+      <RegisterForm isSignedIn={false}/>
+      </>);
+};
+/*
+<SignInForm isSignedIn={isSignedIn} signIn={signIn}/>
       { isSignedIn &&
         <> <PetList pets={filteredList}/>
            <input onChange={handle} value={filter}/>
         </>}
-      </>);
-};
-
+ */
 export default App;
