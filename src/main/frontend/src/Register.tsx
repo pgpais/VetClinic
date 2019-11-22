@@ -66,6 +66,8 @@ const RegisterForm = (props:{isSignedIn:boolean}) => {
 
         <button>Register</button>
     </form>;
+
+    return registerForm;
 };
 
 export default RegisterForm
