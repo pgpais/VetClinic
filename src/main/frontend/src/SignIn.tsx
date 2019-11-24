@@ -15,6 +15,7 @@
  */
 
 import React, {ChangeEvent, FormEvent, useState} from "react";
+import RegisterForm from "./Register";
 
 // This is sample code, to be used in the context of IADI 2019/2020.
 
@@ -82,6 +83,7 @@ const SignInForm = (props:{isSignedIn:boolean, signIn:(b:boolean)=>void}) => {
 
     const [ username, setUsername ] = useState("");
     const [ pass, setpass ] = useState("");
+    const [ register, setRegister] = useState(false);
 
     if( localStorage.getItem('jwt') ) props.signIn(true);
     // and test if it is expired, if yes clean it up
@@ -93,6 +95,10 @@ const SignInForm = (props:{isSignedIn:boolean, signIn:(b:boolean)=>void}) => {
         setpass("")
     };
 
+    let registerHandler = () => setRegister(true);
+
+    let cancelRegisterHandler = () => setRegister(false);
+
     let handlerLogout = (e:FormEvent<HTMLButtonElement>) => { performLogout(props.signIn) };
 
     let usernameChangeHandler = (e:ChangeEvent<HTMLInputElement>) => { setUsername(e.target.value) };
@@ -100,11 +106,22 @@ const SignInForm = (props:{isSignedIn:boolean, signIn:(b:boolean)=>void}) => {
     let passChangeHandler = (e:ChangeEvent<HTMLInputElement>) => { setpass(e.target.value) };
 
     let signInForm =
-        (<form onSubmit={submitHandler}>
-            <div><label>Username: <input type="text" value={username} onChange={usernameChangeHandler}/></label></div>
-            <div><label>pass: <input type="pass" value={pass} onChange={passChangeHandler}/></label></div>
-            <button>Sign In</button>
-            </form>);
+        (<>
+            {register?
+                <>
+                    <RegisterForm/>
+                    <button onClick={cancelRegisterHandler}>Cancel</button>
+                </>
+                :
+                <>
+                    <form onSubmit={submitHandler}>
+                        <div><label>Username: <input type="text" value={username} onChange={usernameChangeHandler}/></label></div>
+                        <div><label>pass: <input type="pass" value={pass} onChange={passChangeHandler}/></label></div>
+                        <button>Sign In</button>
+                    </form>
+                    <button onClick={registerHandler}>Register </button>
+                </>}
+        </>);
 
     let signOutForm = <button onClick={handlerLogout}>Sign out</button>;
 

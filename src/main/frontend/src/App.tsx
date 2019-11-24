@@ -47,15 +47,17 @@ const App = () => {
   let handle = (e:ChangeEvent<HTMLInputElement>) => setFilter(e.target.value);
   let filteredList = pets; // pets.filter(p => p.name.includes(filter) ); // << filter on client with this code.
 
-  return (<>
+  /*return (<>
       <RegisterForm isSignedIn={false}/>
       </>);
+    */
+  return (<>
+        <SignInForm isSignedIn={isSignedIn} signIn={signIn}/>
+        { isSignedIn &&
+          <> <PetList pets={filteredList}/>
+             <input onChange={handle} value={filter}/>
+          </>}
+        </>);
 };
-/*
-<SignInForm isSignedIn={isSignedIn} signIn={signIn}/>
-      { isSignedIn &&
-        <> <PetList pets={filteredList}/>
-           <input onChange={handle} value={filter}/>
-        </>}
- */
+
 export default App;

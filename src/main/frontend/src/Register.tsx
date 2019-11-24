@@ -26,7 +26,7 @@ async function performRegister(name: string, username: string, pass: string, pho
         })
 }
 
-const RegisterForm = (props:{isSignedIn:boolean}) => {
+const RegisterForm = () => {
     const [ name, setName] = useState("");
     const [ username, setUsername ] = useState("");
     const [ pass, setpass ] = useState("");
