@@ -40,6 +40,7 @@ async function performLogin(username:string, pass:string, signIn:(b:boolean)=>vo
     .then( token => {
         if (token ) {
             localStorage.setItem('jwt', token);
+            localStorage.setItem('clientId', )
             // not the safest of ways... but usable for now.
             signIn(true)
         }
