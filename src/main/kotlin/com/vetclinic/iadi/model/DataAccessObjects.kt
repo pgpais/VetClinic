@@ -112,6 +112,7 @@ data class VeterinarianDAO(
 open class RegisteredUsersDAO (//TODO: change to username
         @Id @GeneratedValue open val id: Long,
 
+        @Column(unique = true)
         open var username: String,
         open var pass: String,
         open var name:String,
