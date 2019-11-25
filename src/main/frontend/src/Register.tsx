@@ -7,12 +7,12 @@ async function performRegister(name: string, username: string, pass: string, pho
     fetch("/home/register",
         {method:'POST',
             headers: myHeaders,
-            body: JSON.stringify({name:name, username:username, pass:pass, photo:photo, email:email, phone:phone, address:address})})
+            body: JSON.stringify({id:0, name:name, username:username, pass:pass, photo:photo, email:email, phone:phone, address:address})})
         .then( response => {
             if( response.ok )
                 return response.headers.get('Authorization');
             else {
-                console.log(`Error: ${response.status}: ${response.statusText}`)
+                console.log(`Error: ${response.status}: ${response.statusText}`);
                 return null;
                 // and add a message to the Ui: wrong pass ?? other errors?
             }
@@ -58,10 +58,10 @@ const RegisterForm = () => {
     let registerForm = <form onSubmit={submitHandler}>
         <div><label>Name: <input type="text" value={name} onChange={nameChangeHandler}/></label></div>
         <div><label>Username: <input type="text" value={username} onChange={usernameChangeHandler}/></label></div>
-        <div><label>pass: <input type="pass" value={pass} onChange={passChangeHandler}/></label></div>
+        <div><label>pass: <input type="password" value={pass} onChange={passChangeHandler}/></label></div>
         <div><label>Photo: <input type="text" value={photo} onChange={photoChangeHandler}/></label></div>
         <div><label>Email: <input type="text" value={email} onChange={emailChangeHandler}/></label></div>
-        <div><label>Phone: <input type="text" value={phone} onChange={phoneChangeHandler}/></label></div>
+        <div><label>Phone: <input type="number" value={phone} onChange={phoneChangeHandler}/></label></div>
         <div><label>Address: <input type="text" value={address} onChange={addressChangeHandler}/></label></div>
 
         <button>Register</button>
