@@ -24,24 +24,29 @@ import RegisterForm from "./Register";
 interface Pet { id:number, name:string }
 
 function loadPets(setPets:(pets:Pet[]) => void, filter:string) {
+    console.log("LOADPETS")
     getData(`/pets?search=${encodeURI(filter)}`, [])
         .then(data => { data && setPets(data.map( (p:{pet:Pet}) => p.pet )) })
     // notice that there is an extra "pet" in the path above which is produced
     // in this particular implementation of the service. {pet: Pet, appointments:List<AppointmentDTO>}
 }
 
-const PetList = (props:{pets:Pet[]}) =>
-    <ul>
+const PetList = (props:{pets:Pet[], setPets:(p:Pet[])=>void, filter:string}) =>{
+
+    useEffect(() => loadPets(props.setPets, props.filter), [props.filter]);
+    // filter in the deps repeats the search on the server side
+    // If the list is empty, the effect is only triggered on component mount
+
+    return (<ul>
         { props.pets.map((pet:Pet) => <li key={pet.id}>{pet.name}</li>)}
-    </ul>;
+    </ul>)
+};
 
 const App = () => {
   const [ pets, setPets ] = useState([] as Pet[]);
   const [ filter, setFilter ] = useState("");
   const [ isSignedIn, signIn ] = useState(false);
-  useEffect(() => loadPets(setPets, filter), [filter]);
-  // filter in the deps repeats the search on the server side
-  // If the list is empty, the effect is only triggered on component mount
+
 
 
   let handle = (e:ChangeEvent<HTMLInputElement>) => setFilter(e.target.value);
@@ -54,7 +59,7 @@ const App = () => {
   return (<>
         <SignInForm isSignedIn={isSignedIn} signIn={signIn}/>
         { isSignedIn &&
-          <> <PetList pets={filteredList}/>
+          <> <PetList pets={filteredList} setPets={setPets} filter={filter}/>
              <input onChange={handle} value={filter}/>
           </>}
         </>);
