@@ -22,18 +22,26 @@ import RegisterForm from "./Register";
 // This code is on one file only for demonstration purposes. Modularity should be applied here.
 
 interface Pet { id:number, name:string }
+interface Client {id: number, name:string}
 
 function loadPets(setPets:(pets:Pet[]) => void, filter:string) {
-    console.log("LOADPETS")
+    console.log("LOADPETS");
     getData(`/pets?search=${encodeURI(filter)}`, [])
         .then(data => { data && setPets(data.map( (p:{pet:Pet}) => p.pet )) })
     // notice that there is an extra "pet" in the path above which is produced
     // in this particular implementation of the service. {pet: Pet, appointments:List<AppointmentDTO>}
 }
 
-const PetList = (props:{pets:Pet[], setPets:(p:Pet[])=>void, filter:string}) =>{
+function loadClient(setClient:(c:Client) => void){
+    console.log("LOADCLIENT");
+    getData(`/client/5`, {} as Client)
+        .then(data => { data && setClient(data as Client)})
+}
+
+const PetList = (props:{pets:Pet[], setPets:(p:Pet[])=>void, filter:string, setClient:(c:Client)=>void}) => {
 
     useEffect(() => loadPets(props.setPets, props.filter), [props.filter]);
+    useEffect(() => loadClient(props.setClient), []);
     // filter in the deps repeats the search on the server side
     // If the list is empty, the effect is only triggered on component mount
 
@@ -44,6 +52,7 @@ const PetList = (props:{pets:Pet[], setPets:(p:Pet[])=>void, filter:string}) =>{
 
 const App = () => {
   const [ pets, setPets ] = useState([] as Pet[]);
+  const [ client, setClient ] = useState({} as Client);
   const [ filter, setFilter ] = useState("");
   const [ isSignedIn, signIn ] = useState(false);
 
@@ -59,7 +68,7 @@ const App = () => {
   return (<>
         <SignInForm isSignedIn={isSignedIn} signIn={signIn}/>
         { isSignedIn &&
-          <> <PetList pets={filteredList} setPets={setPets} filter={filter}/>
+          <> <PetList pets={filteredList} setPets={setPets} filter={filter} setClient={setClient}/>
              <input onChange={handle} value={filter}/>
           </>}
         </>);
