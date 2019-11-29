@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter
 import org.springframework.web.filter.GenericFilterBean
 
@@ -79,24 +80,24 @@ class UserPasswordAuthenticationFilterToJWT (
     }
 }
 
-class UserAuthToken(private var login:String) : Authentication {
+class UserAuthToken(private var user:UserDetails) : Authentication {
 
-    override fun getAuthorities() = null
+    override fun getAuthorities() = user.authorities;
 
     override fun setAuthenticated(isAuthenticated: Boolean) {}
 
-    override fun getName() = login
+    override fun getName() = user.username
 
-    override fun getCredentials() = null
+    override fun getCredentials() = user.isCredentialsNonExpired
 
     override fun getPrincipal() = this
 
     override fun isAuthenticated() = true
 
-    override fun getDetails() = login
+    override fun getDetails() = user;
 }
 
-class JWTAuthenticationFilter: GenericFilterBean() {
+class JWTAuthenticationFilter(private val service: CustomClientInfoService): GenericFilterBean() {
 
     // To try it out, go to https://jwt.io to generate custom tokens, in this case we only need a name...
 
@@ -118,7 +119,7 @@ class JWTAuthenticationFilter: GenericFilterBean() {
 
             else {
 
-                val authentication = UserAuthToken(claims["username"] as String)
+                val authentication = UserAuthToken(service.loadUserByUsername(claims["username"] as String))
                 // Can go to the database to get the actual user information (e.g. authorities)
 
                 SecurityContextHolder.getContext().authentication = authentication
@@ -151,7 +152,8 @@ class JWTAuthenticationFilter: GenericFilterBean() {
 
 class ClientPasswordSignUpFilterToJWT (
         defaultFilterProcessesUrl: String?,
-        private val users: ClientService
+        private val users: ClientService,
+        private val service: CustomClientInfoService
 ) : AbstractAuthenticationProcessingFilter(defaultFilterProcessesUrl) {
 
     override fun attemptAuthentication(request: HttpServletRequest?,
@@ -163,7 +165,7 @@ class ClientPasswordSignUpFilterToJWT (
                 .addClient(user)
                 .orElse( null )
                 .let {
-                    val auth = UserAuthToken(user.username)
+                    val auth = UserAuthToken(service.loadUserByUsername(user.username))
                     SecurityContextHolder.getContext().authentication = auth
                     auth
                 }

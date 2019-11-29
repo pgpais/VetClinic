@@ -35,9 +35,9 @@ class Security(val customClientinfo:CustomClientInfoService,
                 .and()
                 .addFilterBefore(UserPasswordAuthenticationFilterToJWT ("/login", super.authenticationManagerBean()),
                         BasicAuthenticationFilter::class.java)
-                .addFilterBefore(ClientPasswordSignUpFilterToJWT ("/register", clients),
+                .addFilterBefore(ClientPasswordSignUpFilterToJWT ("/register", clients, customClientinfo),
                         BasicAuthenticationFilter::class.java)
-                .addFilterBefore(JWTAuthenticationFilter(),
+                .addFilterBefore(JWTAuthenticationFilter(customClientinfo),
                         BasicAuthenticationFilter::class.java)
     }
 
