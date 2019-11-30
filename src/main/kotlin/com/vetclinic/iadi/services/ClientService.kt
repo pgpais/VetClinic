@@ -19,7 +19,7 @@ class ClientService(val clientRepository: ClientRepository, val apts: Appointmen
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    fun getClientByUsername(username:String)  : Optional<ClientDAO> = clientRepository.findByUsername(username)
+    fun getClientByUsername(username:String)   = clientRepository.findByUsername(username).orElseThrow{NotFoundException("Couldn't find client with username $username")}
 
     fun addClient(user: ClientDAO): Optional<ClientDAO> {
         val aUser = clientRepository.findById(user.id)

@@ -8,6 +8,7 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
 import io.swagger.annotations.ApiResponses
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
 
@@ -24,6 +25,7 @@ class PetController(val pets: PetService) {
         ApiResponse(code = 401, message = "You are not authorized to view the resource"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
     ])
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @GetMapping("")
     fun getAllPets() : List<PetAptsDTO> =
             pets.getAllPets().map { PetAptsDTO(PetDTO(it),
@@ -36,6 +38,7 @@ class PetController(val pets: PetService) {
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
         ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
     ])
+    @PreAuthorize("hasRole('ROLE_CLIENT')")
     @GetMapping("/{id}")
     fun getById(@PathVariable id:Long) : PetAptsDTO =
             handle4xx { pets.getPetById(id).let { PetAptsDTO(PetDTO(it), it.appointments.map { AppointmentDTO(it) }) } }

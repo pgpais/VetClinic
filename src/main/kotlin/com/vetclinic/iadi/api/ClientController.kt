@@ -1,6 +1,7 @@
 package com.vetclinic.iadi.api
 
 
+import ch.qos.logback.core.net.server.Client
 import com.vetclinic.iadi.services.ClientService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -15,6 +16,18 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/client")
 class ClientController(val clients:ClientService){
+
+    @ApiOperation(value="Get client by username", response = ClientDTO::class)
+    @ApiResponses(
+            ApiResponse(code = 200, message = "Successfully retrieve a client"),
+            ApiResponse(code = 401, message = "You are not authorized to use this resource"),
+            ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+            ApiResponse(code = 404, message = "User does not exist")
+    )
+    @PreAuthorize("hasRole('ROLE_VET') or hasRole('ROLE_CLIENT')")
+    @GetMapping("/byUsername/{username}")
+    fun getOneClientByUsername(@PathVariable username:String) : ClientDTO =
+            handle4xx { clients.getClientByUsername(username).let { ClientDTO(it.id, it.name, it.username, it.pass, it.photo, it.email, it.phone, it.address) } }
 
     @ApiOperation(value="Get client by Id", response = ClientDTO::class)
     @ApiResponses(
