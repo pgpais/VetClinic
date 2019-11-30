@@ -15,7 +15,7 @@
  */
 
 import {Action} from "redux";
-import {SIGN_IN, SIGN_OUT, SignInAction} from "./actions";
+import {REGISTER, SIGN_IN, SIGN_OUT, SignInAction} from "./actions";
 
 function checkIfTokenIsValid() {
     return localStorage.getItem('jwt') != null;
@@ -36,6 +36,14 @@ function signInReducer(state = initialState, action:Action) {
         case SIGN_OUT:
             localStorage.removeItem('jwt');
             return {...state, isSignedIn: false};
+        case REGISTER:
+            let regtoken = (action as SignInAction).data;
+            if( regtoken ) {
+                localStorage.setItem('jwt',regtoken);
+                return {...state, isSignedIn: true};
+            } else {
+                return state;
+            }
         default:
             return state;
     }
