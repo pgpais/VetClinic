@@ -30,7 +30,7 @@ class Security(val customClientinfo:CustomClientInfoService,
                 .antMatchers("/swagger-resources/**", "/swagger-ui.html", "/webjars/**", "/v2/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers(HttpMethod.POST,"/register").permitAll()
-                .antMatchers("/home","/pets","/vets").permitAll()
+                .antMatchers("/home","/vets").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(UserPasswordAuthenticationFilterToJWT ("/login", super.authenticationManagerBean(), customClientinfo),
