@@ -33,7 +33,7 @@ class Security(val customClientinfo:CustomClientInfoService,
                 .antMatchers("/home","/pets","/vets").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .addFilterBefore(UserPasswordAuthenticationFilterToJWT ("/login", super.authenticationManagerBean()),
+                .addFilterBefore(UserPasswordAuthenticationFilterToJWT ("/login", super.authenticationManagerBean(), customClientinfo),
                         BasicAuthenticationFilter::class.java)
                 .addFilterBefore(ClientPasswordSignUpFilterToJWT ("/register", clients, customClientinfo),
                         BasicAuthenticationFilter::class.java)

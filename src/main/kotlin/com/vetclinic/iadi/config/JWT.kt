@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.vetclinic.iadi.model.ClientDAO
 import com.vetclinic.iadi.model.RegisteredUsersDAO
 import com.vetclinic.iadi.services.ClientService
-import com.vetclinic.iadi.services.RegisteredUserService
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter
@@ -34,6 +34,7 @@ private fun addResponseToken(authentication: Authentication, response: HttpServl
 
     val claims = HashMap<String, Any?>()
     claims["username"] = authentication.name
+    claims["authorities"] = authentication.authorities
 
     val token = Jwts
             .builder()
@@ -49,7 +50,8 @@ private fun addResponseToken(authentication: Authentication, response: HttpServl
 
 class UserPasswordAuthenticationFilterToJWT (
         defaultFilterProcessesUrl: String?,
-        private val anAuthenticationManager: AuthenticationManager
+        private val anAuthenticationManager: AuthenticationManager,
+        private val service: CustomClientInfoService
 ) : AbstractAuthenticationProcessingFilter(defaultFilterProcessesUrl) {
 
     override fun attemptAuthentication(request: HttpServletRequest?,
@@ -59,8 +61,10 @@ class UserPasswordAuthenticationFilterToJWT (
         //TODO: How to make it for every time of registered user
         val user = ObjectMapper().readValue(request!!.inputStream, RegisteredUsersDAO::class.java)
 
+        val u = service.loadUserByUsername(user.username).authorities;
+
         // perform the "normal" authentication
-        val auth = anAuthenticationManager.authenticate(UsernamePasswordAuthenticationToken(user.username, user.pass))
+        val auth = anAuthenticationManager.authenticate(UsernamePasswordAuthenticationToken(user.username, user.pass, u))
 
         return if (auth.isAuthenticated) {
             // Proceed with an authenticated user
@@ -75,6 +79,7 @@ class UserPasswordAuthenticationFilterToJWT (
                                           filterChain: FilterChain?,
                                           auth: Authentication) {
 
+        val u = service.loadUserByUsername(auth.name).authorities;
         // When returning from the Filter loop, add the token to the response
         addResponseToken(auth, response)
     }

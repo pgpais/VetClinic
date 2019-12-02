@@ -24,7 +24,7 @@ export interface SignInAction extends Action { data:string | null }
 
 export const signIn = (token:string|null) => ({type:SIGN_IN, data:token});
 export const signOut = () => ({type:SIGN_OUT});
-export const register = (token:string|null) => ({type:REGISTER, data:token})
+export const register = (token:string|null) => ({type:REGISTER, data:token});
 
 export function requestSignIn(username:string, password:string)  {
     return (dispatch:any) =>

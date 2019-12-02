@@ -17,9 +17,32 @@
 import {Action} from "redux";
 import {REGISTER, SIGN_IN, SIGN_OUT, SignInAction} from "./actions";
 
+interface Authorities {authority:String}
+
 function checkIfTokenIsValid() {
     return localStorage.getItem('jwt') != null;
 }
+
+const parseJwt = (token:string) => {
+    try {
+        return JSON.parse(atob(token.split('.')[1]));
+    } catch (e) {
+        return null;
+    }
+};
+
+const parseAuthorities = (authorities:Array<Authorities>) => { //TODO: what's the type?
+    //TODO: get authorities from token
+    let roles: String[] = [];
+    authorities.forEach(e => {
+        roles.push(e["authority"])
+    });
+    console.log(roles)
+    const first = authorities[0];
+    console.log(first);
+    console.log(first["authority"]);
+    return first["authority"].toString();
+};
 
 const initialState = {isSignedIn: checkIfTokenIsValid() };
 
@@ -28,6 +51,10 @@ function signInReducer(state = initialState, action:Action) {
         case SIGN_IN:
             let token = (action as SignInAction).data;
             if( token ) {
+                let t = parseJwt(token.split(" ")[1]);
+                console.log(t);
+                //console.log(roles);
+                localStorage.setItem("role", parseAuthorities(t["authorities"])); //TODO: save in globalState (How do you make it persist?)
                 localStorage.setItem('jwt',token);
                 return {...state, isSignedIn: true};
             } else {
