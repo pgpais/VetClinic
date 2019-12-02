@@ -12,15 +12,19 @@ const VetList = (props:{vets:Vet[]}) =>
         { props.vets.map((vet:Vet) => <li key={vet.vetId}>{vet.name}</li>)}
     </ul>;
 
-const ProtoVetList = (props:{vets:Vet[], loadVets:()=>void}) =>{
+const ProtoVetList = (props:{vets:Vet[], loadVets:()=>void, isSignedIn:boolean}) =>{
+
+    const [viewingVets, setViewingVets] = useState(false);
 
     useEffect(() => props.loadVets(), []);
 
     return  <>
-                <VetList vets={props.vets}/>
+                {viewingVets && <VetList vets={props.vets}/>}
+                {viewingVets? <button onClick={() => setViewingVets(false)}> Hide Vets </button>
+                    : <button onClick={() => setViewingVets(true)}>View all Vets</button>}
             </>
 };
 
-const mapStateToProps = (state:GlobalState) => ({vets:state.vets.vets});
+const mapStateToProps = (state:GlobalState) => ({vets:state.vets.vets, isSignedIn:state.signIn.isSignedIn});
 const mapDispatchToProps = (dispatch:any) => ({loadVets:() => { dispatch(fetchVets())}});
 export const Home = connect(mapStateToProps,mapDispatchToProps)(ProtoVetList);
