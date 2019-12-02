@@ -123,6 +123,9 @@ interface ClientRepository : JpaRepository<ClientDAO, Long> {
     @Query("select c from ClientDAO c inner join fetch c.pets where c.id = :id")
     fun findByIdWithPets(id: Long): Optional<ClientDAO>
 
+    @Query("select c from ClientDAO c inner join fetch c.pets where c.username = :username")
+    fun findByUsernameWithPets(username: String): Optional<ClientDAO>
+
     fun findByUsername(username:String) : Optional<ClientDAO>
 
 }

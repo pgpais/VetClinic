@@ -46,11 +46,17 @@ class ClientService(val clientRepository: ClientRepository, val apts: Appointmen
         return client.pets
     }
 
+    fun getPets(username: String): List<PetDAO> {
+        val client = clientRepository.findByUsernameWithPets(username)
+                .orElseThrow {NotFoundException("There is no client with id $username")}
+        return client.pets;
+    }
+
+
     fun deleteClient(userId: Long) = handle4xx {
         val client: ClientDAO = clientRepository.findById(userId).orElseThrow { NotFoundException("There is no client with id $userId") }
         clientRepository.delete(client)
     }
-
 
     fun bookAppointment(apt: AppointmentDTO) {
 

@@ -19,7 +19,7 @@ import {connect} from "react-redux";
 import {GlobalState} from "../App";
 import {requestRegister, requestSignIn, SignInAction, signOut} from "./actions";
 
-export interface SignInState { isSignedIn: boolean }
+export interface SignInState { isSignedIn: boolean, role:string, username:string }
 
 const ProtoSignInForm = (
     props:{

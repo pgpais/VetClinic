@@ -27,11 +27,11 @@ const PetList = (props:{pets:Pet[]}) =>
         { props.pets.map((pet:Pet) => <li key={pet.id}>{pet.name}</li>)}
     </ul>;
 
-const ProtoFilteredPetList = (props:{pets:Pet[], loadPets:(filter:string)=>void}) => {
+const ProtoFilteredPetList = (props:{pets:Pet[], username:string,  loadPets:(username:string, filter:string)=>void}) => {
     const [ filter, setFilter ] = useState("");
     let handle = (e:ChangeEvent<HTMLInputElement>) => setFilter(e.target.value);
     // eslint-disable-next-line
-    useEffect(() => props.loadPets(filter), [filter]);
+    useEffect(() => props.loadPets(props.username, filter), [filter]);
 
     return <>
              <PetList pets={props.pets}/>
@@ -39,6 +39,6 @@ const ProtoFilteredPetList = (props:{pets:Pet[], loadPets:(filter:string)=>void}
            </>;
 };
 
-const mapStateToProps = (state:GlobalState) => ({pets:state.pets.pets});
-const mapDispatchToProps = (dispatch:any) => ({loadPets:(filter:string) => { dispatch(fetchPets(filter))}});
+const mapStateToProps = (state:GlobalState) => ({username:state.signIn.username, pets:state.pets.pets});
+const mapDispatchToProps = (dispatch:any) => ({loadPets:(username:string, filter:string) => { dispatch(fetchPets(username, filter))}});
 export const FilteredPetList = connect(mapStateToProps,mapDispatchToProps)(ProtoFilteredPetList);

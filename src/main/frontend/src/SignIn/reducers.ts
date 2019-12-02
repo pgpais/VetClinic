@@ -31,16 +31,12 @@ const parseJwt = (token:string) => {
     }
 };
 
-const parseAuthorities = (authorities:Array<Authorities>) => { //TODO: what's the type?
-    //TODO: get authorities from token
-    let roles: String[] = [];
+const parseAuthorities = (authorities:Array<Authorities>) => {
+    let roles = "";
     authorities.forEach(e => {
-        roles.push(e["authority"])
-    });
-    console.log(roles)
+        roles += " " + e["authority"]
+    }); //TODO: how to store several authorities?
     const first = authorities[0];
-    console.log(first);
-    console.log(first["authority"]);
     return first["authority"].toString();
 };
 
@@ -52,22 +48,27 @@ function signInReducer(state = initialState, action:Action) {
             let token = (action as SignInAction).data;
             if( token ) {
                 let t = parseJwt(token.split(" ")[1]);
-                console.log(t);
                 //console.log(roles);
-                localStorage.setItem("role", parseAuthorities(t["authorities"])); //TODO: save in globalState (How do you make it persist?)
+                let username = t["username"];
+                console.log(username);
+                let roles = parseAuthorities(t["authorities"]);
+                localStorage.setItem("role", roles); //TODO: save in globalState (How do you make it persist?)
                 localStorage.setItem('jwt',token);
-                return {...state, isSignedIn: true};
+                return {...state, isSignedIn: true, roles:roles, username:username};
             } else {
                 return state;
             }
         case SIGN_OUT:
             localStorage.removeItem('jwt');
-            return {...state, isSignedIn: false};
+            return {...state, isSignedIn: false, roles:null, username:""};
         case REGISTER:
             let regtoken = (action as SignInAction).data;
             if( regtoken ) {
+                let t = parseJwt(regtoken.split(" ")[1]);
+                let username = t["username"];
+                let roles = parseAuthorities(t["authorities"]);
                 localStorage.setItem('jwt',regtoken);
-                return {...state, isSignedIn: true};
+                return {...state, isSignedIn: true, roles:roles, username:username};
             } else {
                 return state;
             }

@@ -25,7 +25,7 @@ import {connect, Provider} from "react-redux";
 import {createLogger} from "redux-logger";
 import {Home, VetState} from "../Home";
 
-export interface GlobalState { pets: PetState, signIn: SignInState, vets:VetState }
+export interface GlobalState {username: string, pets: PetState, signIn: SignInState, vets:VetState }
 
 const ProtoPage = (props:{isSignedIn:boolean}) => {
   return (<>
@@ -36,7 +36,7 @@ const ProtoPage = (props:{isSignedIn:boolean}) => {
             <Home/>
           </>);
 };
-const mapStateToProps = (state:GlobalState) => ({isSignedIn: state.signIn.isSignedIn});
+const mapStateToProps = (state:GlobalState) => ({isSignedIn: state.signIn.isSignedIn, username:state.username});
 const Page = connect(mapStateToProps)(ProtoPage);
 
 const logger = createLogger(); // see the console for the effect of this middleware

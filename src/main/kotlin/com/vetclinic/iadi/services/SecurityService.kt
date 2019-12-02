@@ -1,6 +1,7 @@
 package com.vetclinic.iadi.services
 
 import com.vetclinic.iadi.config.ClientCustomInfo
+import com.vetclinic.iadi.config.UserAuthToken
 import com.vetclinic.iadi.model.ClientRepository
 import com.vetclinic.iadi.model.VeterinaryRepository
 import org.springframework.stereotype.Service
@@ -8,9 +9,9 @@ import org.springframework.stereotype.Service
 @Service
 class SecurityService(val clientRepository: ClientRepository, val veterinaryRepository: VeterinaryRepository) {
 
-    fun isClient(principal: ClientCustomInfo, id: Long) : Boolean{
+    fun isClient(principal: UserAuthToken, id: Long) : Boolean{
         val client = clientRepository.findById(id)
-        return client.isPresent && client.get().username == principal.username
+        return client.isPresent && client.get().username == principal.name
     }
 
     fun isVet(principal: ClientCustomInfo, id: Long) : Boolean{

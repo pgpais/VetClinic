@@ -29,12 +29,19 @@ export const addPet = (pet:Pet) => ({type:ADD_PET, data:pet});
 export const requestPets = () => ({type: REQUEST_PETS});
 export const receivePets = (data:Pet[]) => ({type: RECEIVE_PETS, data:data});
 
-export function fetchPets(filter:string) {
+export function fetchPets(username:string, filter:string) {
     return (dispatch:any) => {
         dispatch(requestPets());
-        return getData(`/pets?search=${encodeURI(filter)}`, [])
-            .then(data => { data && dispatch(receivePets(data.map( (p:{pet:Pet}) => p.pet ))) })
+        console.log(username);
+        return getData(`/client/byUsername/${username}/pets?search=${encodeURI(filter)}`, [])
+            .then(data => { data && dispatch(receivePets(data as Pet[])) })
         // notice that there is an extra "pet" in the path above which is produced
         // in this particular implementation of the service. {pet: Pet, appointments:List<AppointmentDTO>}
+    }
+}
+
+export function fetchClientPets() {
+    return (dispatch:any) => {
+        dispatch()
     }
 }
