@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*
         description = "Management operations of Veterinarians in the IADI 2019 Pet Clinic")
 
 @RestController
-@PreAuthorize("hasRole('ROLE_VET')")
 @RequestMapping("/vets")
 class VetController (val vets:VetService) {
 
@@ -23,6 +22,7 @@ class VetController (val vets:VetService) {
         ApiResponse(code = 403, message = "You're not allowed to view this resource"),
         ApiResponse(code = 404, message = "Could not find the Veterinarian you were looking for")
     ])
+    @PreAuthorize("hasRole('ROLE_VET') and hasRole('ROLE_ADMIN')")
     @GetMapping("/{id}")
     fun getById(@PathVariable id:Long): VeterinarianDTO =
             handle4xx {
@@ -49,6 +49,7 @@ class VetController (val vets:VetService) {
         ApiResponse(code = 401, message = "You're not allowed to access this resource")
 
     ])
+    @PreAuthorize("hasRole('ROLE_VET')")
     @GetMapping("/{id}/appointments/pending")
     fun getPendingAppointments(@PathVariable id:Long):List<AppointmentDTO> =
         handle4xx {
@@ -62,6 +63,7 @@ class VetController (val vets:VetService) {
         ApiResponse(code = 401, message = "You're not allowed to access this resource")
 
     ])
+    @PreAuthorize("hasRole('ROLE_VET')")
     @GetMapping("/{id}/appointments")
     fun getAcceptedAppointments(@PathVariable id:Long):List<AppointmentDTO> =
             handle4xx {

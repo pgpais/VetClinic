@@ -23,13 +23,17 @@ import {applyMiddleware, createStore} from "redux";
 import thunk from 'redux-thunk';
 import {connect, Provider} from "react-redux";
 import {createLogger} from "redux-logger";
+import {Home, VetState} from "../Home";
 
-export interface GlobalState { pets: PetState, signIn: SignInState }
+export interface GlobalState { pets: PetState, signIn: SignInState, vets:VetState }
 
 const ProtoPage = (props:{isSignedIn:boolean}) => {
   return (<>
+            <>
               <SignInForm/>
               { props.isSignedIn && <FilteredPetList/> }
+            </>
+            <Home/>
           </>);
 };
 const mapStateToProps = (state:GlobalState) => ({isSignedIn: state.signIn.isSignedIn});

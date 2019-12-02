@@ -17,7 +17,8 @@
 import petReducer from '../Pets/reducers'
 import {combineReducers} from "redux";
 import signInReducer from "../SignIn/reducers";
+import vetReducer from "../Home/reducers";
 
-const reducer = combineReducers({pets: petReducer, signIn:signInReducer });
+const reducer = combineReducers({pets: petReducer, signIn:signInReducer, vets:vetReducer });
 
 export default reducer

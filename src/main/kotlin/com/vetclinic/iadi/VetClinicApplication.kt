@@ -52,6 +52,7 @@ class VetClinicApplication {
         clients.save(user2)
         pets.save(pantufas)
         pets.save(bigodes)
+        vets.save(vet)
     }
 
 
