@@ -22,6 +22,7 @@ import {GlobalState} from "../App";
 export interface Pet { id:number, name:string }
 export interface PetState { pets: Pet[], isFetching: boolean }
 
+//TODO: create Pet Component to be able to operate it (create appointments and such)
 const PetList = (props:{pets:Pet[]}) =>
     <ul>
         { props.pets.map((pet:Pet) => <li key={pet.id}>{pet.name}</li>)}
