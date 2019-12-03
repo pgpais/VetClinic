@@ -19,17 +19,27 @@ import {connect} from "react-redux";
 import {fetchPets} from "./actions";
 import {GlobalState} from "../App";
 import "./Pets.css"
+import ProtoAppointment, {Appointment} from "../Appointment";
 
 export interface Pet { id:number, name:string, photo:string }
-export interface PetState { pets: Pet[], isFetching: boolean }
+export interface PetState { pets: Pet[], isFetching: boolean, isFetchingApts: boolean, apts: Appointment[] }
 
 //TODO: create Pet Component to be able to operate it (create appointments and such)
 
-const Pet = (props:{pet:Pet}) =>
-    <div className={"entityView"}>
-        Name: {props.pet.name} | ID: {props.pet.id}
-        <img src={props.pet.photo}/>
-    </div>
+const Pet = (props:{pet:Pet}) =>{
+
+    let [showApt, setShowApt] = useState(false);
+
+    //TODO: create separate folder for a single Pet
+
+
+    return <>
+        <div className={"entityView"} onClick={() => setShowApt(!showApt)}>
+            <img src={props.pet.photo} alt={"Pet " + props.pet.name + " photo"}/> <br/>
+            Name: {props.pet.name} | ID: {props.pet.id}
+        </div>
+        </>
+};
 
 const PetList = (props:{pets:Pet[]}) =>
     <ul>

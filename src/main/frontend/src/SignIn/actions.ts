@@ -41,8 +41,10 @@ async function performLogin(username:string, password:string) {
             headers: myHeaders,
             body: JSON.stringify({username:username, pass:password})})
         .then( response => {
-            if( response.ok )
+            if( response.ok ) {
+                localStorage.setItem("username", username);
                 return response.headers.get('Authorization');
+            }
             else {
                 console.log(`Error: ${response.status}: ${response.statusText}`);
                 return null;

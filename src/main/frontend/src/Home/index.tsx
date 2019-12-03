@@ -7,19 +7,22 @@ export interface Vet {vetId:number, name:string}
 export interface VetState { vets:Vet[], isFetching:boolean}
 
 // Add a Vet or User component here. so it is clickable to find more information on this user
-const VetList = (props:{vets:Vet[]}) =>
-    <ul>
+const VetList = (props:{vets:Vet[], loadVets:()=>void}) => {
+    useEffect(() => props.loadVets(), []);
+
+    return <ul>
         { props.vets.map((vet:Vet) => <li key={vet.vetId}>{vet.name}</li>)}
-    </ul>;
+        </ul>;
+}
 
 const ProtoVetList = (props:{vets:Vet[], loadVets:()=>void, isSignedIn:boolean}) =>{
 
     const [viewingVets, setViewingVets] = useState(false);
 
-    useEffect(() => props.loadVets(), []);
+
 
     return  <>
-                {viewingVets && <VetList vets={props.vets}/>}
+                {viewingVets && <VetList vets={props.vets} loadVets={props.loadVets}/>}
                 {viewingVets? <button onClick={() => setViewingVets(false)}> Hide Vets </button>
                     : <button onClick={() => setViewingVets(true)}>View all Vets</button>}
             </>

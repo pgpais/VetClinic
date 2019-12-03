@@ -15,12 +15,22 @@
  */
 
 import {Action} from "redux";
-import {ADD_PET, AddPetAction, RECEIVE_PETS, ReceivePetAction, REQUEST_PETS} from './actions';
+import {
+    ADD_PET,
+    AddPetAction,
+    RECEIVE_PETS,
+    ReceiveAptAction,
+    ReceivePetAction,
+    REQUEST_APTS,
+    REQUEST_PETS
+} from './actions';
 import {PetState} from "./index";
 
 const initialState = {
     pets:[],
     isFetching:false,
+    isFetchingApts:false,
+    apts:[],
 };
 function petReducer(state:PetState = initialState, action:Action):PetState {
     switch (action.type) {
@@ -30,6 +40,10 @@ function petReducer(state:PetState = initialState, action:Action):PetState {
             return {...state, isFetching:true};
         case RECEIVE_PETS:
             return {...state, isFetching:false, pets: (action as ReceivePetAction).data};
+        case REQUEST_APTS:
+            return {...state, isFetchingApts: true};
+        case RECEIVE_PETS:
+            return {...state, isFetchingApts: false, apts: (action as ReceiveAptAction).data};
         default:
             return state
     }
