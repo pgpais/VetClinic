@@ -60,7 +60,7 @@ interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long> {
 
 
     //TODO Is this right? 1=Accepted
-    @Query("select v from VeterinarianDAO v inner join v.appointments a where v.id = :id and v.frozen = false and a.status = 1")
+    @Query("select v from VeterinarianDAO v inner join v.appointments a where v.username = :username and v.frozen = false and a.status = 1")
     fun findByUsernameWithAppointmentAccepted(username: String): Optional<VeterinarianDAO>
 
     @Query("select v from VeterinarianDAO v inner join v.appointments a where v.id = :id and v.frozen = false")
