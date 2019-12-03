@@ -28,12 +28,14 @@ import {Home, VetState} from "../Home";
 export interface GlobalState {username: string, pets: PetState, signIn: SignInState, vets:VetState }
 
 const ProtoPage = (props:{isSignedIn:boolean}) => {
+    //TODO: move this to home?
+    //TODO: show different stuff on Home based on role
   return (<>
             <>
               <SignInForm/>
               { props.isSignedIn && <FilteredPetList/> }
             </>
-            <Home/>
+            <Home/> //TODO: show different stuff based on role
           </>);
 };
 const mapStateToProps = (state:GlobalState) => ({isSignedIn: state.signIn.isSignedIn, username:state.username});

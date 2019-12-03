@@ -25,7 +25,7 @@ const ProtoSignInForm = (
     props:{
         isSignedIn:boolean,
         performSignIn:(username:string, pass:string)=>void,
-        performSignOut:()=>void
+        performSignOut:()=>void,
         performRegister:(username: string, password: string, name:string, photo: string, email: string, phone: string, address: string) => void;
     }) => {
 
@@ -81,7 +81,7 @@ const ProtoSignInForm = (
             <button>Register</button>
             <button onClick={() => setRegister(false)}>Cancel</button>
         </form>
-    )
+    );
 
     let signInForm =
         (<form onSubmit={submitHandler}>

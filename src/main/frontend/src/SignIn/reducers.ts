@@ -19,26 +19,6 @@ import {REGISTER, SIGN_IN, SIGN_OUT, SignInAction} from "./actions";
 
 interface Authorities {authority:String}
 
-function checkIfTokenIsValid() {
-    return localStorage.getItem('jwt') != null;
-}
-
-const parseJwt = (token:string) => {
-    try {
-        return JSON.parse(atob(token.split('.')[1]));
-    } catch (e) {
-        return null;
-    }
-};
-
-const parseAuthorities = (authorities:Array<Authorities>) => {
-    let roles = "";
-    authorities.forEach(e => {
-        roles += " " + e["authority"]
-    }); //TODO: how to store several authorities?
-    const first = authorities[0];
-    return first["authority"].toString();
-};
 
 const initialState = {isSignedIn: checkIfTokenIsValid() };
 
@@ -59,6 +39,8 @@ function signInReducer(state = initialState, action:Action) {
                 return state;
             }
         case SIGN_OUT:
+            localStorage.removeItem("username");
+            localStorage.removeItem("role");
             localStorage.removeItem('jwt');
             return {...state, isSignedIn: false, roles:null, username:""};
         case REGISTER:
@@ -67,6 +49,7 @@ function signInReducer(state = initialState, action:Action) {
                 let t = parseJwt(regtoken.split(" ")[1]);
                 let username = t["username"];
                 let roles = parseAuthorities(t["authorities"]);
+                localStorage.setItem("role", roles);
                 localStorage.setItem('jwt',regtoken);
                 return {...state, isSignedIn: true, roles:roles, username:username};
             } else {
@@ -78,3 +61,26 @@ function signInReducer(state = initialState, action:Action) {
 }
 
 export default signInReducer
+
+//HELPERS
+
+function checkIfTokenIsValid() {
+    return localStorage.getItem('jwt') != null;
+}
+
+const parseJwt = (token:string) => {
+    try {
+        return JSON.parse(atob(token.split('.')[1]));
+    } catch (e) {
+        return null;
+    }
+};
+
+const parseAuthorities = (authorities:Array<Authorities>) => {
+    let roles = "";
+    authorities.forEach(e => {
+        roles += " " + e["authority"]
+    }); //TODO: how to store several authorities?
+    const first = authorities[0];
+    return first["authority"].toString();
+};

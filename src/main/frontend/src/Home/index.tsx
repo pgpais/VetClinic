@@ -2,6 +2,7 @@ import React, {ChangeEvent, useEffect, useState} from "react";
 import {connect} from "react-redux";
 import {fetchVets} from "./actions";
 import {GlobalState} from "../App";
+import ProtoClientHome from "./ClientHome";
 
 export interface Vet {vetId:number, name:string}
 export interface VetState { vets:Vet[], isFetching:boolean}
@@ -13,15 +14,16 @@ const VetList = (props:{vets:Vet[], loadVets:()=>void}) => {
     return <ul>
         { props.vets.map((vet:Vet) => <li key={vet.vetId}>{vet.name}</li>)}
         </ul>;
-}
+};
 
 const ProtoVetList = (props:{vets:Vet[], loadVets:()=>void, isSignedIn:boolean}) =>{
-
+    //TODO: change name to ProtoHome?
     const [viewingVets, setViewingVets] = useState(false);
 
-
+    let role = localStorage.getItem("role");
 
     return  <>
+                {role == "ROLE_CLIENT" && <ProtoClientHome/>}
                 {viewingVets && <VetList vets={props.vets} loadVets={props.loadVets}/>}
                 {viewingVets? <button onClick={() => setViewingVets(false)}> Hide Vets </button>
                     : <button onClick={() => setViewingVets(true)}>View all Vets</button>}
