@@ -49,9 +49,9 @@ class ClientController(val clients:ClientService){
         ApiResponse(code = 404, message = "The client you tried to update was not found")
     ])
     @PreAuthorize("hasRole('ROLE_CLIENT') and @securityService.isClient(principal, #id)")
-    @PutMapping("/{id}")
-    fun update(@PathVariable id: Long, @RequestBody client:ClientDTO){
-        clients.update(id, client)
+    @PutMapping("/{username}")
+    fun update(@PathVariable username: String, @RequestBody client:ClientDTO){
+        clients.update(username, client)
     }
 
     fun checkUser(){

@@ -61,7 +61,7 @@ interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long> {
 
     //TODO Is this right? 1=Accepted
     @Query("select v from VeterinarianDAO v inner join v.appointments a where v.id = :id and v.frozen = false and a.status = 1")
-    fun findByIdWithAppointmentAccepted(id: Long): Optional<VeterinarianDAO>
+    fun findByUsernameWithAppointmentAccepted(username: String): Optional<VeterinarianDAO>
 
     @Query("select v from VeterinarianDAO v inner join v.appointments a where v.id = :id and v.frozen = false")
     fun findByIdWithAppointment(id: Long): Optional<VeterinarianDAO>
@@ -86,6 +86,8 @@ interface VeterinaryRepository: JpaRepository<VeterinarianDAO, Long> {
     override fun deleteAll()
 
     fun findByIdAndFrozenIsFalse(id: Long): Optional<VeterinarianDAO>
+
+    fun findByUsernameAndFrozenIsFalse(username: String): Optional<VeterinarianDAO>
 
     fun findAllByFrozenIsFalse(): List<VeterinarianDAO>
 

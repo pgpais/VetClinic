@@ -22,15 +22,17 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
 
     fun getVetbyId(id:Long) = vets.findByIdAndFrozenIsFalse(id).orElseThrow{NotFoundException("There is no Veterinarian with Id $id")}
 
+    fun getVetbyUsername(username: String) = vets.findByUsernameAndFrozenIsFalse(username).orElseThrow{NotFoundException("There is no Veterinarian with username $username")}
+
+
     fun getAllVets():Iterable<VeterinarianDAO> = vets.findAll()
 
     fun getVetByUsername(username:String)  : Optional<VeterinarianDAO> = vets.findByUsername(username)
 
 
-    fun getAcceptedAppointments(id:Long): List<AppointmentDAO> {
+    fun getAcceptedAppointments(username: String): List<AppointmentDAO> {
 
-
-        val vet  = vets.findByIdWithAppointmentAccepted(id).orElseThrow { NotFoundException("There is no Vet with Id $id") }
+        val vet  = vets.findByUsernameWithAppointmentAccepted(username).orElseThrow { NotFoundException("There is no Vet with Id $username") }
         return vet.appointments
     }
 /*
@@ -91,20 +93,20 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
     */
 
 
-    fun getPendingAppointments(id: Long): List<AppointmentDAO> {
-        vets.findByIdAndFrozenIsFalse(id).orElseThrow { NotFoundException("There is no Vet with Id $id") }
-        return appointments.getPendingByVetId(id);
+    fun getPendingAppointments(username: String): List<AppointmentDAO> {
+        val vet = vets.findByUsernameAndFrozenIsFalse(username).orElseThrow { NotFoundException("There is no Vet with Id $username") }
+        return appointments.getPendingByVetId(vet.id);
     }
 
-    fun setSchedule(id: Long, shifts: List<ShiftsDTO>) {
-        val vet = getVetbyId(id)
+    fun setSchedule(username: String, shifts: List<ShiftsDTO>) {
+        val vet = getVetbyUsername(username)
         vet.schedule = shifts.map { ShiftsDAO(it, vet)}
         vets.save(vet)
     }
 
-    fun addShift(vetId: Long, newShift:ShiftsDAO) { //TODO: why is this not used?
+    fun addShift(username: String, newShift:ShiftsDAO) { //TODO: why is this not used?
 
-        val shifts = getVetbyId(vetId).schedule
+        val shifts = getVetbyUsername(username).schedule
 
         val duration = ChronoUnit.HOURS.between(newShift.start, newShift.end)
 
@@ -180,7 +182,10 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
         }
     }
 
-    fun getSchedule(id: Long): List<ShiftsDAO> = shiftRep.findByVetId(id)
+    fun getSchedule(username: String): List<ShiftsDAO> {
+        val vet = vets.findByUsername(username).orElseThrow { NotFoundException("There is no Appointment with Username $username") }
+        return shiftRep.findByVetId(vet.id)
+    }
 
     fun update(id: Long, vet: VeterinarianDTO) {
         val oldVetDAO = getVetbyId(id)

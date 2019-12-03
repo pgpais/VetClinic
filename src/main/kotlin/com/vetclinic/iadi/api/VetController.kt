@@ -23,10 +23,10 @@ class VetController (val vets:VetService) {
         ApiResponse(code = 404, message = "Could not find the Veterinarian you were looking for")
     ])
     @PreAuthorize("hasRole('ROLE_VET') and hasRole('ROLE_ADMIN')")
-    @GetMapping("/{id}")
-    fun getById(@PathVariable id:Long): VeterinarianDTO =
+    @GetMapping("/{username}")
+    fun getByUsername(@PathVariable username:String): VeterinarianDTO =
             handle4xx {
-                VeterinarianDTO(vets.getVetbyId(id))
+                VeterinarianDTO(vets.getVetbyUsername(username))
             }
 
     @ApiOperation(value = "Get all Veterinarians", response = VeterinarianDTO::class)
@@ -50,10 +50,10 @@ class VetController (val vets:VetService) {
 
     ])
     @PreAuthorize("hasRole('ROLE_VET')")
-    @GetMapping("/{id}/appointments/pending")
-    fun getPendingAppointments(@PathVariable id:Long):List<AppointmentDTO> =
+    @GetMapping("/{username}/appointments/pending")
+    fun getPendingAppointments(@PathVariable username: String):List<AppointmentDTO> =
         handle4xx {
-            vets.getPendingAppointments(id).map{AppointmentDTO(it)}
+            vets.getPendingAppointments(username).map{AppointmentDTO(it)}
         }
 
     @ApiOperation(value = "Get a list of all appointments of a vet", response = List::class)
@@ -64,10 +64,10 @@ class VetController (val vets:VetService) {
 
     ])
     @PreAuthorize("hasRole('ROLE_VET')")
-    @GetMapping("/{id}/appointments")
-    fun getAcceptedAppointments(@PathVariable id:Long):List<AppointmentDTO> =
+    @GetMapping("/{username}/appointments")
+    fun getAcceptedAppointments(@PathVariable username: String):List<AppointmentDTO> =
             handle4xx {
-                vets.getAcceptedAppointments(id).map{AppointmentDTO(it)}
+                vets.getAcceptedAppointments(username).map{AppointmentDTO(it)}
             }
 /*
     @ApiOperation(value = "Accept a pending appointment", response = Unit::class)
@@ -126,8 +126,6 @@ class VetController (val vets:VetService) {
 
     }
 
-
-
     @ApiOperation(value = "Get a Veterinarian's schedule", response = VetShiftDTO::class)
     @ApiResponses(value = [
         ApiResponse(code = 200, message = "Successfully updated a user's information"),
@@ -135,11 +133,11 @@ class VetController (val vets:VetService) {
         ApiResponse(code = 401, message = "You are not authorized to use this resource"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
     ])
-    @GetMapping("/schedule/{id}")
-    fun getSchedule(@PathVariable id:Long) : VetShiftDTO =
+    @GetMapping("/schedule/{username}")
+    fun getSchedule(@PathVariable username: String) : VetShiftDTO =
         handle4xx {
-            VetShiftDTO(VeterinarianDTO(vets.getVetbyId(id)),
-                                        (vets.getSchedule(id).map{ ShiftsDTO(it)}))
+            VetShiftDTO(VeterinarianDTO(vets.getVetbyUsername(username)),
+                                        (vets.getSchedule(username).map{ ShiftsDTO(it)}))
     }
 
     @ApiOperation(value = "Set a Veterinarian's schedule", response = VetShiftDTO::class)
@@ -150,9 +148,9 @@ class VetController (val vets:VetService) {
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
     ])
     @PostMapping("/schedule")
-    fun setSchedule(@PathVariable id:Long, @RequestBody shifts: List<ShiftsDTO>) =
+    fun setSchedule(@RequestParam username: String, @RequestBody shifts: List<ShiftsDTO>) =
             handle4xx {
-                vets.setSchedule(id, shifts)
+                vets.setSchedule(username, shifts)
             }
 
     @PostMapping("")

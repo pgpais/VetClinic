@@ -90,9 +90,9 @@ class ClientService(val clientRepository: ClientRepository, val apts: Appointmen
             pets.save(petDAO)
     }
 
-    fun update(id: Long, client: ClientDTO) {
-        val clientDAO = getClientById(id)
-        val newClientDAO = ClientDAO(id, clientDAO.username, clientDAO.pets, clientDAO.appointments, client)
+    fun update(username: String, client: ClientDTO) {
+        val clientDAO = getClientByUsername(username)
+        val newClientDAO = ClientDAO(0, clientDAO.username, clientDAO.pets, clientDAO.appointments, client)
 
         clients.save(newClientDAO)
     }
