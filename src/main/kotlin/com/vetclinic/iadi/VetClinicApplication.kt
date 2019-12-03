@@ -42,7 +42,7 @@ class VetClinicApplication {
 
         val user2 = ClientDAO(0L,"Client124", BCryptPasswordEncoder().encode("123"), "manel","","",6,"",emptyList(), emptyList())
 
-        val vet = VeterinarianDAO(0L,"VET123", "123","Joaquina" ,"www.google.com", "",7,"",emptyList(), emptyList())
+        val vet = VeterinarianDAO(0L,"VET123", BCryptPasswordEncoder().encode("123"),"Joaquina" ,"www.google.com", "",7,"",emptyList(), emptyList())
 
         val pantufas = PetDAO(0L, "pantufas", "Dog", "www.google.com", user, emptyList(),false)
         val bigodes = PetDAO(0L, "bigodes", "Cat", "www.google.com", user2, emptyList(),false)
