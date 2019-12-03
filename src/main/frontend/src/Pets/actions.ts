@@ -22,7 +22,9 @@ export const ADD_PET = 'ADD_PET';
 export const REQUEST_PETS = 'REQUEST_PETS';
 export const RECEIVE_PETS = 'RECEIVE_PETS';
 
-export interface AddPetAction extends Action { name:string }
+export interface AddPetAction extends Action {
+    photo: string;
+    name:string }
 export interface ReceivePetAction extends Action { data:Pet[] }
 
 export const addPet = (pet:Pet) => ({type:ADD_PET, data:pet});

@@ -18,14 +18,22 @@ import React, {ChangeEvent, useEffect, useState} from "react";
 import {connect} from "react-redux";
 import {fetchPets} from "./actions";
 import {GlobalState} from "../App";
+import "./Pets.css"
 
-export interface Pet { id:number, name:string }
+export interface Pet { id:number, name:string, photo:string }
 export interface PetState { pets: Pet[], isFetching: boolean }
 
 //TODO: create Pet Component to be able to operate it (create appointments and such)
+
+const Pet = (props:{pet:Pet}) =>
+    <div className={"entityView"}>
+        Name: {props.pet.name} | ID: {props.pet.id}
+        <img src={props.pet.photo}/>
+    </div>
+
 const PetList = (props:{pets:Pet[]}) =>
     <ul>
-        { props.pets.map((pet:Pet) => <li key={pet.id}>{pet.name}</li>)}
+        { props.pets.map((pet:Pet) => <li key={pet.id}><Pet pet={pet}/></li>)}
     </ul>;
 
 const ProtoFilteredPetList = (props:{pets:Pet[], username:string,  loadPets:(username:string, filter:string)=>void}) => {
