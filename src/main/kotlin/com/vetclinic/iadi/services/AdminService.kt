@@ -6,6 +6,7 @@ import com.vetclinic.iadi.api.VeterinarianDTO
 import com.vetclinic.iadi.api.handle4xx
 import com.vetclinic.iadi.model.*
 import org.springframework.data.jpa.domain.AbstractPersistable_.id
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -14,6 +15,7 @@ class AdminService(val vets: VeterinaryRepository, val admins: AdminRepository, 
 
     fun createAdmin(admin: AdminDTO) {
         val adminDAO = AdminDAO(admin)
+        adminDAO.pass = BCryptPasswordEncoder().encode(admin.pass)
         if( adminDAO.id != 0L){
             throw PreconditionFailedException("Id must be 0 on insertion")
         } else
