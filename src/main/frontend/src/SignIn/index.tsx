@@ -61,6 +61,7 @@ const ProtoSignInForm = (props: {
 
   let submitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("login submit");
     props.performSignIn(username, password);
     setUsername("");
     setPassword("");
@@ -114,7 +115,7 @@ const ProtoSignInForm = (props: {
     setPassword(e.target.value);
   };
 
-  let registerForm = (
+  let registerForm = (<>
     <Form onSubmit={registerSubmitHandler}>
       {/* <div>
         <label>
@@ -149,7 +150,7 @@ const ProtoSignInForm = (props: {
       </div> */}
 
       <Form.Group controlId="formBasicPassword">
-        <Form.Label>Name</Form.Label>
+        <Form.Label>Password</Form.Label>
         <Form.Control
           type="password"
           value={password}
@@ -165,7 +166,7 @@ const ProtoSignInForm = (props: {
 
       <Form.Group controlId="formBasicName">
         <Form.Label>Name</Form.Label>
-        <Form.Control type="text" value={photo} onChange={photoChangeHandler} />
+        <Form.Control type="text" value={name} onChange={nameChangeHandler} />
         <Form.Text className="text-muted">
           {" "}
           First and Last names please
@@ -189,6 +190,7 @@ const ProtoSignInForm = (props: {
           <input type="text" value={email} onChange={emailChangeHandler} />
         </label>
       </div> */}
+
       <Form.Group controlId="formBasicEmail">
         <Form.Label>Email address</Form.Label>
         <Form.Control
@@ -233,48 +235,51 @@ const ProtoSignInForm = (props: {
         />
         <Form.Text className="text-muted"></Form.Text>
       </Form.Group>
-      <button>Register</button>
-      <button onClick={() => setRegister(false)}>Cancel</button>
+      <button type={"submit"}>Register</button>
     </Form>
+    <button onClick={() => setRegister(false)}>Cancel</button>
+    </>
   );
 
-  let signInForm = (
-    <form onSubmit={submitHandler}>
-      <div>
-        <label>
-          Username:{" "}
-          <input
+  let signInForm = (<>
+    <Form onSubmit={submitHandler}>
+      <Form.Group controlId="formBasicUsername">
+        <Form.Label>Username</Form.Label>
+        <Form.Control
             type="text"
             value={username}
             onChange={usernameChangeHandler}
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          Password:{" "}
-          <input
+        />
+        <Form.Text className="text-muted"></Form.Text>
+      </Form.Group>
+      <Form.Group controlId="formBasicPassword">
+        <Form.Label>Password</Form.Label>
+        <Form.Control
             type="password"
             value={password}
             onChange={passwordChangeHandler}
-          />
-        </label>
-      </div>
-      <Button>Sign In</Button>
-      <Button onClick={() => setRegister(true)}> Register </Button>
-    </form>
+        />
+        <Form.Text className="text-muted"></Form.Text>
+      </Form.Group>
+      <Button type={"submit"}>Sign In</Button>
+    </Form>
+    <Button onClick={() => setRegister(true)}> Register </Button>
+    </>
   );
 
-  let signOutForm = <Button onClick={handlerLogout}>Sign out</Button>;
+  let signOutForm =
+    <>
+      Logged in as {localStorage.getItem("username")} <br/>
+      <Button onClick={handlerLogout}>Sign out</Button>
+    </>;
 
   return (
     <>
-      {" "}
-      {isRegister
-        ? registerForm
-        : props.isSignedIn
-        ? signOutForm
-        : signInForm}{" "}
+      {isRegister ?
+          registerForm
+        : props.isSignedIn ?
+              signOutForm
+            : signInForm}
     </>
   );
   // add a message space for alerts (you were signed out, expired session)
