@@ -25,10 +25,10 @@ import thunk from "redux-thunk";
 import { connect, Provider } from "react-redux";
 import { createLogger } from "redux-logger";
 import { Home, VetState } from "../Home";
-import {Appointment} from "../Appointment";
+import {Appointment, AptState} from "../Appointment";
 
 export interface GlobalState {
-  apts: Appointment[];
+  apts: AptState;
   username: string;
   pets: PetState;
   signIn: SignInState;

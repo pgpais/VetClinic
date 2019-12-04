@@ -13,11 +13,11 @@ const AptList = (props:{apts:Appointment[]}) =>
 
 export const ProtoAppointmentList = (props:{apts:Appointment[], loadApts:() => void}) => {
     useEffect(() => props.loadApts(), []);
-
+    console.log(props.apts);
     return <AptList apts={props.apts}/>
 };
 
-const mapStateToProps = (state:GlobalState) => ({apts: state.apts});
+const mapStateToProps = (state:GlobalState) => ({apts: state.apts.apts});
 const mapDispatchToProps = (dispatch:any) => ({loadApts:()=> {dispatch(fetchApts())} });
 export const AppointmentList = connect(mapStateToProps, mapDispatchToProps)(ProtoAppointmentList);
 
