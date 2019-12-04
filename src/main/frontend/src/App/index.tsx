@@ -14,42 +14,53 @@
  limitations under the License.
  */
 
-import React from 'react';
-import './App.css';
-import SignInForm, {SignInState} from "../SignIn";
-import {FilteredPetList, PetState} from '../Pets'
+import React from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
+import SignInForm, { SignInState } from "../SignIn";
+import { FilteredPetList, PetState } from "../Pets";
 import reducer from "./reducers";
-import {applyMiddleware, createStore} from "redux";
-import thunk from 'redux-thunk';
-import {connect, Provider} from "react-redux";
-import {createLogger} from "redux-logger";
-import {Home, VetState} from "../Home";
+import { applyMiddleware, createStore } from "redux";
+import thunk from "redux-thunk";
+import { connect, Provider } from "react-redux";
+import { createLogger } from "redux-logger";
+import { Home, VetState } from "../Home";
 
-export interface GlobalState {username: string, pets: PetState, signIn: SignInState, vets:VetState }
+export interface GlobalState {
+  username: string;
+  pets: PetState;
+  signIn: SignInState;
+  vets: VetState;
+}
 
-const ProtoPage = (props:{isSignedIn:boolean}) => {
-    //TODO: move this to home?
-    //TODO: show different stuff on Home based on role
-  return (<>
-            <>
-              <SignInForm/>
-              { props.isSignedIn && <FilteredPetList/> }
-            </>
-            <Home/> //TODO: show different stuff based on role
-          </>);
+const ProtoPage = (props: { isSignedIn: boolean }) => {
+  //TODO: move this to home?
+  //TODO: show different stuff on Home based on role
+  return (
+    <>
+      <>
+        <SignInForm />
+        {props.isSignedIn && <FilteredPetList />}
+      </>
+      <Home /> //TODO: show different stuff based on role
+    </>
+  );
 };
-const mapStateToProps = (state:GlobalState) => ({isSignedIn: state.signIn.isSignedIn, username:state.username});
+const mapStateToProps = (state: GlobalState) => ({
+  isSignedIn: state.signIn.isSignedIn,
+  username: state.username
+});
 const Page = connect(mapStateToProps)(ProtoPage);
 
 const logger = createLogger(); // see the console for the effect of this middleware
-let store = createStore(reducer, applyMiddleware( thunk, logger ));
+let store = createStore(reducer, applyMiddleware(thunk, logger));
 
 const App = () => {
-    return (
-        <Provider store={store}>
-            <Page/>
-        </Provider>
-    );
+  return (
+    <Provider store={store}>
+      <Page />
+    </Provider>
+  );
 };
 
 export default App;

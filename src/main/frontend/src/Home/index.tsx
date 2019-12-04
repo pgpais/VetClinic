@@ -5,6 +5,7 @@ import { GlobalState } from "../App";
 import ProtoClientHome from "./ClientHome";
 import ProtoAdminHome from "./AdminHome";
 import ProtoVetHome from "./VetHome";
+import ListGroup from "react-bootstrap/ListGroup";
 
 export interface Vet {
   vetId: number;
@@ -20,11 +21,11 @@ const VetList = (props: { vets: Vet[]; loadVets: () => void }) => {
   useEffect(() => props.loadVets(), []);
 
   return (
-    <ul>
+    <ListGroup>
       {props.vets.map((vet: Vet) => (
-        <li key={vet.vetId}>{vet.name}</li>
+        <ListGroup.Item key={vet.vetId}>{vet.name}</ListGroup.Item>
       ))}
-    </ul>
+    </ListGroup>
   );
 };
 
