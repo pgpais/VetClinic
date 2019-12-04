@@ -1,9 +1,27 @@
 import React, {ChangeEvent, useEffect, useState} from "react";
+import {FilteredPetList} from "../../Pets";
+import {Appointment, AppointmentList, ProtoAppointmentList} from "../../Appointment";
 
-const ProtoClientHome = () =>
-    <>
-        CLIENTHOME
+
+
+const ShowAppointments = () => {
+
+    let [isShowing, setIsShowing] = useState(true);
+
+    return <>
+            <button onClick={() => setIsShowing(!isShowing)}>{isShowing? "Hide Appointments" : "Show Appointments"}</button>
+            {isShowing && <AppointmentList/>}
+        </>
+};
+
+const ProtoClientHome = () => {
+
+
+    return <>
+        <ShowAppointments/>
+        <FilteredPetList/>
     </>;
+};
 
 
 export default ProtoClientHome;
