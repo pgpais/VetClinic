@@ -58,5 +58,5 @@ const ProtoFilteredPetList = (props:{pets:Pet[], username:string,  loadPets:(use
 };
 
 const mapStateToProps = (state:GlobalState) => ({username:state.signIn.username, pets:state.pets.pets});
-const mapDispatchToProps = (dispatch:any) => ({loadPets:(username:string, filter:string) => { dispatch(fetchPets(username, filter))}});
+const mapDispatchToProps = (dispatch:any) => ({loadPets:(username:string, filter:string) => { dispatch(fetchPets(username, filter))} });
 export const FilteredPetList = connect(mapStateToProps,mapDispatchToProps)(ProtoFilteredPetList);

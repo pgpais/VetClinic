@@ -119,8 +119,8 @@ interface AdminRepository: JpaRepository<AdminDAO, Long>{
 }
 
 interface ClientRepository : JpaRepository<ClientDAO, Long> {
-    @Query("select c from ClientDAO c inner join fetch c.appointments where c.id = :id")
-    fun findByIdWithAppointment(id:Long) : Optional<ClientDAO>
+    @Query("select c from ClientDAO c inner join fetch c.appointments where c.username = :username")
+    fun findByUsernameWithAppointment(username:String) : Optional<ClientDAO>
 
     @Query("select c from ClientDAO c inner join fetch c.pets where c.id = :id")
     fun findByIdWithPets(id: Long): Optional<ClientDAO>

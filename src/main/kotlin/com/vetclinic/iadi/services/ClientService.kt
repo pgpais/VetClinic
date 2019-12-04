@@ -34,9 +34,9 @@ class ClientService(val clientRepository: ClientRepository, val apts: Appointmen
 
     fun getClientById(id:Long) = clientRepository.findById(id).orElseThrow{NotFoundException("Couldn't find client with id $id")}
 
-    fun getAppointments(userId: Long) : List<AppointmentDAO>{
-        val client = clientRepository.findByIdWithAppointment(userId)
-                .orElseThrow {NotFoundException("There is no client with id $userId")}
+    fun getAppointments(username:String) : List<AppointmentDAO>{
+        val client = clientRepository.findByUsernameWithAppointment(username)
+                .orElseThrow {NotFoundException("There is no client with username $username")}
         return client.appointments
     }
 

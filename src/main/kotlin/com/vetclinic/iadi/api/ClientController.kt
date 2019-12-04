@@ -1,7 +1,6 @@
 package com.vetclinic.iadi.api
 
 
-import ch.qos.logback.core.net.server.Client
 import com.vetclinic.iadi.services.ClientService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -81,8 +80,6 @@ class ClientController(val clients:ClientService){
             handle4xx { clients.getPets(username).map{PetDTO(it)}
             }
 
-    //TODO: remove from here
-    /*
     @ApiOperation(value="Get appointments of this user", response = List::class)
     @ApiResponses(
             ApiResponse(code = 200, message = "Successfully retrieve client's appointments"),
@@ -91,9 +88,13 @@ class ClientController(val clients:ClientService){
             ApiResponse(code = 404, message = "User does not exist")
     )
     @PreAuthorize("hasRole('ROLE_CLIENT')")
-    @GetMapping("/apts/{userId}")
-    fun getAppointments(@PathVariable userId:Long): List<AppointmentDTO> =
-            handle4xx { clients.getAppointments(userId).map{AppointmentDTO(it)} }
+    @GetMapping("/{username}/apts")
+    fun getAppointments(@PathVariable username:String): List<AppointmentDTO> =
+            handle4xx { clients.getAppointments(username).map{AppointmentDTO(it)} }
+
+    //TODO: remove from here
+    /*
+
 
 
     @ApiOperation(value = "Book appointment for this user", response = Unit::class)
