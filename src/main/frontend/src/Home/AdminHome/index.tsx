@@ -50,6 +50,8 @@ const ProtoAdminHome = (props: {
   let usernameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
   };
+
+  //TODO: not being used? vets have name, no?
   let nameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
@@ -208,6 +210,12 @@ const ProtoAdminHome = (props: {
     </Form>
   );
   return <> {registerForm} </>;
+  /*TODO: fazer o register form desaparecer
+    faz um botao que altere o estado (Vê o signIn)
+    e depois fazes aquela cena do {isRegister && registerForm}
+    e ele só mostra o register quando isso ficar a true.
+    eventualmente vamos ter deletes e cenas assim, por isso mais vale ir escondendo
+   */
 };
 
 const mapDispatchToProps = (dispatch: any) => ({
