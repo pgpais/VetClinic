@@ -25,7 +25,7 @@ import thunk from "redux-thunk";
 import { connect, Provider } from "react-redux";
 import { createLogger } from "redux-logger";
 import { Home, VetState } from "../Home";
-import {Appointment, AptState} from "../Appointment";
+import { Appointment, AptState } from "../Appointment";
 
 export interface GlobalState {
   apts: AptState;
@@ -43,7 +43,7 @@ const ProtoPage = (props: { isSignedIn: boolean }) => {
       <>
         <SignInForm />
       </>
-      <Home /> //TODO: show different stuff based on role
+      <Home />
     </>
   );
 };
