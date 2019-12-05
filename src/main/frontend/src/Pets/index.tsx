@@ -113,9 +113,10 @@ const ProtoPetRegistration = (
   const [name, setName] = useState("");
   const [species, setSpecies] = useState("");
   const [photo, setPhoto] = useState("");
-  const [owner, setOwner] = useState("");
+  let user = localStorage.getItem("username");
+  const [owner, setOwner] = useState(user? user: "");
   const [appointments, setAppointments] = useState("");
-  const [chip, setChip] = useState("");
+  const [chip, setChip] = useState("110841e3-e6fb-4191-8fd8-5674a5107c3a");
   const [physDesc, setPhysDesc] = useState("");
   const [healthDesc, setHealthDesc] = useState("");
   const [removed, setRemoved] = useState(false);
@@ -139,7 +140,7 @@ const ProtoPetRegistration = (
     setAppointments("");
     setName("");
     setPhoto("");
-    setChip("");
+    setChip("110841e3-e6fb-4191-8fd8-5674a5107c3a");
     setHealthDesc("");
     setPhysDesc("");
     setRemoved(false);
@@ -147,11 +148,10 @@ const ProtoPetRegistration = (
     setOwner(user? user: "");
   };
 
-  let usernameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+  let nameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
 
-  //TODO: not being used? vets have name, no?
 
   let photoChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setPhoto(e.target.value);
@@ -184,7 +184,7 @@ const ProtoPetRegistration = (
           <Form.Control
             type="text"
             value={name}
-            onChange={usernameChangeHandler}
+            onChange={nameChangeHandler}
           />
           <Form.Text className="text-muted"></Form.Text>
         </Form.Group>
@@ -251,7 +251,7 @@ const ProtoPetRegistration = (
     </div> */}
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Owner</Form.Label>
-          <Form.Control type="text" value={owner} placeholder={owner} />
+          <Form.Control type="text" value={owner} readOnly placeholder={owner} />
           <Form.Text className="text-muted"></Form.Text>
         </Form.Group>
         {/* <div>
@@ -261,15 +261,6 @@ const ProtoPetRegistration = (
       </label>
     </div> */}
 
-        <Form.Group controlId="formBasicPhone">
-          <Form.Label>Chip</Form.Label>
-          <Form.Control
-            type="number"
-            value={chip}
-            onChange={chipChangeHandler}
-          />
-          <Form.Text className="text-muted"></Form.Text>
-        </Form.Group>
         {/* <div>
       <label>
         Address:{" "}
@@ -304,9 +295,6 @@ const ProtoPetRegistration = (
             value={healthDesc}
             onChange={healthChangeHandler}
           />
-          <Form.Text className="text-muted">
-            Has to be something like 110841e3-e6fb-4191-8fd8-5674a5107c3
-          </Form.Text>
         </Form.Group>
         <button onClick={() => setRegister(false)}>Register Pet</button>
       </Form>
@@ -314,13 +302,6 @@ const ProtoPetRegistration = (
   );
 
   return registerForm;
-  /*TODO: fazer o register form desaparecer
-    faz um botao que altere o estado (Vê o signIn)
-    e depois fazes aquela cena do {isRegister && registerForm}
-    e ele só mostra o register quando isso ficar a true.
-    eventualmente vamos ter deletes e cenas assim, por isso mais vale ir escondendo
-   */
-
 };
 
 

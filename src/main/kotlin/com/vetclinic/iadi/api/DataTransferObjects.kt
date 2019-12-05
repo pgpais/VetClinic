@@ -5,9 +5,9 @@ import java.net.URL
 import java.time.LocalDateTime
 import java.util.*
 
-data class PetDTO(val id:Long, val name: String, val species: String, val photo: String, val ownerId:Long, val chip: UUID, val deleted:Boolean
+data class PetDTO(val id:Long, val name: String, val species: String, val photo: String, val owner:String, val chip: UUID, val deleted:Boolean
 ) {
-    constructor(pet: PetDAO) : this(pet.id, pet.name, pet.species, pet.photo, pet.owner.id, pet.chip, pet.removed)
+    constructor(pet: PetDAO) : this(pet.id, pet.name, pet.species, pet.photo, pet.owner.username, pet.chip, pet.removed)
 }
 
 data class PetAptsDTO(val pet:PetDTO, val apts:List<AppointmentDTO>) {
