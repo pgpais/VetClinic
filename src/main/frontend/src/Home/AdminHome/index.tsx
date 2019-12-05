@@ -3,8 +3,9 @@ import { requestAdminRegister } from "./actions";
 import { GlobalState } from "../../App";
 import { connect } from "react-redux";
 import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 
-const ProtoAdminHome = (props: {
+const Register = (props: {
   performRegister: (
     username: string,
     password: string,
@@ -24,6 +25,7 @@ const ProtoAdminHome = (props: {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [employeeId, setEmployeeId] = useState("");
+  const [isRegister, setRegister] = useState(false);
 
   let registerSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -77,18 +79,19 @@ const ProtoAdminHome = (props: {
   };
 
   let registerForm = (
-    <Form onSubmit={registerSubmitHandler}>
-      <Form.Group controlId="formBasicUsername">
-        <Form.Label>Username</Form.Label>
-        <Form.Control
-          type="text"
-          value={username}
-          onChange={usernameChangeHandler}
-        />
-        <Form.Text className="text-muted"></Form.Text>
-      </Form.Group>
+    <>
+      <Form onSubmit={registerSubmitHandler}>
+        <Form.Group controlId="formBasicUsername">
+          <Form.Label>Username</Form.Label>
+          <Form.Control
+            type="text"
+            value={username}
+            onChange={usernameChangeHandler}
+          />
+          <Form.Text className="text-muted"></Form.Text>
+        </Form.Group>
 
-      {/* <div>
+        {/* <div>
         <label>
           Password:{" "}
           <input
@@ -99,115 +102,124 @@ const ProtoAdminHome = (props: {
         </label>
       </div> */}
 
-      <Form.Group controlId="formBasicPassword">
-        <Form.Label>Name</Form.Label>
-        <Form.Control
-          type="password"
-          value={password}
-          onChange={passwordChangeHandler}
-        />
-        <Form.Text className="text-muted"></Form.Text>
-      </Form.Group>
-      {/* <div>
+        <Form.Group controlId="formBasicPassword">
+          <Form.Label>Name</Form.Label>
+          <Form.Control
+            type="password"
+            value={password}
+            onChange={passwordChangeHandler}
+          />
+          <Form.Text className="text-muted"></Form.Text>
+        </Form.Group>
+        {/* <div>
         <label>
           Name: <input type="text" value={name} onChange={nameChangeHandler} />
         </label>
       </div> */}
 
-      <Form.Group controlId="formBasicName">
-        <Form.Label>Name</Form.Label>
-        <Form.Control type="text" value={photo} onChange={photoChangeHandler} />
-        <Form.Text className="text-muted">
-          {" "}
-          First and Last names please
-        </Form.Text>
-      </Form.Group>
-      {/* <div>
+        <Form.Group controlId="formBasicName">
+          <Form.Label>Name</Form.Label>
+          <Form.Control
+            type="text"
+            value={photo}
+            onChange={photoChangeHandler}
+          />
+          <Form.Text className="text-muted">
+            {" "}
+            First and Last names please
+          </Form.Text>
+        </Form.Group>
+        {/* <div>
         <label>
           Photo:{" "}
           <input type="text" value={photo} onChange={photoChangeHandler} />
         </label>
       </div> */}
 
-      <Form.Group controlId="formBasicPhoto">
-        <Form.Label>Photo URL</Form.Label>
-        <Form.Control type="text" value={photo} onChange={photoChangeHandler} />
-        <Form.Text className="text-muted"></Form.Text>
-      </Form.Group>
-      {/* <div>
+        <Form.Group controlId="formBasicPhoto">
+          <Form.Label>Photo URL</Form.Label>
+          <Form.Control
+            type="text"
+            value={photo}
+            onChange={photoChangeHandler}
+          />
+          <Form.Text className="text-muted"></Form.Text>
+        </Form.Group>
+        {/* <div>
         <label>
           Email:{" "}
           <input type="text" value={email} onChange={emailChangeHandler} />
         </label>
       </div> */}
-      <Form.Group controlId="formBasicEmail">
-        <Form.Label>Email address</Form.Label>
-        <Form.Control
-          type="text"
-          value={email}
-          onChange={emailChangeHandler}
-          placeholder="name@example.com"
-        />
-        <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
-        </Form.Text>
-      </Form.Group>
-      {/* <div>
+        <Form.Group controlId="formBasicEmail">
+          <Form.Label>Email address</Form.Label>
+          <Form.Control
+            type="text"
+            value={email}
+            onChange={emailChangeHandler}
+            placeholder="name@example.com"
+          />
+          <Form.Text className="text-muted">
+            We'll never share your email with anyone else.
+          </Form.Text>
+        </Form.Group>
+        {/* <div>
         <label>
           phone:{" "}
           <input type="number" value={phone} onChange={phoneChangeHandler} />
         </label>
       </div> */}
 
-      <Form.Group controlId="formBasicPhone">
-        <Form.Label>Phone Number</Form.Label>
-        <Form.Control
-          type="number"
-          value={phone}
-          onChange={phoneChangeHandler}
-        />
-        <Form.Text className="text-muted"></Form.Text>
-      </Form.Group>
-      {/* <div>
+        <Form.Group controlId="formBasicPhone">
+          <Form.Label>Phone Number</Form.Label>
+          <Form.Control
+            type="number"
+            value={phone}
+            onChange={phoneChangeHandler}
+          />
+          <Form.Text className="text-muted"></Form.Text>
+        </Form.Group>
+        {/* <div>
         <label>
           Address:{" "}
           <input type="text" value={address} onChange={addressChangeHandler} />
         </label>
       </div> */}
 
-      <Form.Group controlId="formBasicPhone">
-        <Form.Label>Address</Form.Label>
-        <Form.Control
-          type="text"
-          value={address}
-          onChange={addressChangeHandler}
-        />
-        <Form.Text className="text-muted"></Form.Text>
-      </Form.Group>
-      <div>
-        <label>
-          EmployeeId:{" "}
-          <input
+        <Form.Group controlId="formBasicPhone">
+          <Form.Label>Address</Form.Label>
+          <Form.Control
+            type="text"
+            value={address}
+            onChange={addressChangeHandler}
+          />
+          <Form.Text className="text-muted"></Form.Text>
+        </Form.Group>
+        {/* <div>
+          <label>
+            EmployeeId:{" "}
+            <input
+              type="text"
+              value={employeeId}
+              onChange={employeeIdChangeHandler}
+            />
+          </label>
+        </div> */}
+
+        <Form.Group controlId="formBasicEmployeeID">
+          <Form.Label>Employee Id</Form.Label>
+          <Form.Control
             type="text"
             value={employeeId}
             onChange={employeeIdChangeHandler}
           />
-        </label>
-      </div>
-
-      <Form.Group controlId="formBasicEmployeeID">
-        <Form.Label>Employee Id</Form.Label>
-        <Form.Control
-          type="text"
-          value={employeeId}
-          onChange={employeeIdChangeHandler}
-        />
-        <Form.Text className="text-muted">
-          Has to be something like 110841e3-e6fb-4191-8fd8-5674a5107c3
-        </Form.Text>
-      </Form.Group>
-      <button>Register</button>
-    </Form>
+          <Form.Text className="text-muted">
+            Has to be something like 110841e3-e6fb-4191-8fd8-5674a5107c3
+          </Form.Text>
+        </Form.Group>
+        <button onClick={() => setRegister(false)}>Register</button>
+      </Form>
+    </>
   );
   return <> {registerForm} </>;
   /*TODO: fazer o register form desaparecer
@@ -247,6 +259,30 @@ const mapStateToProps = (state: GlobalState) => ({
   isSignedIn: state.signIn.isSignedIn
 });
 
-const AdminHome = connect(mapStateToProps, mapDispatchToProps)(ProtoAdminHome);
+export const RegistrationAdmin = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Register);
 
-export default AdminHome;
+const ShowRegistration = () => {
+  let [isShowing, setIsShowing] = useState(true);
+
+  return (
+    <>
+      {isShowing && <RegistrationAdmin />}
+      <button onClick={() => setIsShowing(!isShowing)}>
+        {isShowing ? "Cancel Registration" : "Register"}
+      </button>
+    </>
+  );
+};
+
+const ProtoAdminHome = () => {
+  return (
+    <>
+      <ShowRegistration />
+    </>
+  );
+};
+
+export default ProtoAdminHome;

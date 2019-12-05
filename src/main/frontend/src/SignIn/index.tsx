@@ -263,7 +263,8 @@ const ProtoSignInForm = (props: {
       </Form.Group>
       <Button type={"submit"}>Sign In</Button>
     </Form>
-    <Button onClick={() => setRegister(true)}> Register </Button>
+    
+    
     </>
   );
 
