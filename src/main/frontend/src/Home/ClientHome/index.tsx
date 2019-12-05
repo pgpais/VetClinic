@@ -133,9 +133,16 @@ const ProtoAppointmentRegistration = (props: {
             <option>3</option>
             <option>4</option>
             <option>5</option>
+            <option>6</option>
           </Form.Control>
         </Form.Group>
-        <button onClick={() => setRegister(false)}>Book Appointment</button>
+        <button
+          onClick={() => {
+            setRegister(false);
+          }}
+        >
+          Book Appointment
+        </button>
       </Form>
     </>
   );

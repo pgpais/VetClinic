@@ -53,6 +53,9 @@ class VetClinicApplication {
         pets.save(pantufas)
         pets.save(bigodes)
         vets.save(vet)
+
+        val appointmentDAO = AppointmentDAO(0, LocalDateTime.now().toString(),"", AppointmentStatus.PENDING,"", pantufas, user, vet)
+        apts.save(appointmentDAO)
     }
 
 
