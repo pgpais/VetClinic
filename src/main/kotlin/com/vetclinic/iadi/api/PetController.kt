@@ -49,11 +49,11 @@ class PetController(val pets: PetService) {
         ApiResponse(code = 401, message = "You are not authorized to use this resource"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
     ])
-    @PostMapping("/{id}")
-    fun addNewPet(@PathVariable id: Long, @RequestBody pet: PetDTO) =
+    @PostMapping("")
+    fun addNewPet(@RequestBody pet: PetDTO) =
 
             handle4xx {
-                pets.addNew(pet, id)
+                pets.addNew(pet)
             }
 
     @ApiOperation(value = "Update a pet", response = Unit::class)

@@ -19,9 +19,9 @@ class PetService(val pets: PetRepository, val appointments: AppointmentRepositor
 
     fun getAllPets() = pets.findAllByRemovedFalse()
 
-    fun addNew(pet: PetDTO, ownerId:Long) {
+    fun addNew(pet: PetDTO) {
 
-        val owner = clients.findById(ownerId).orElseThrow { NotFoundException("There is no Client with Id $ownerId") }
+        val owner = clients.findByUsername(pet.owner).orElseThrow { NotFoundException("There is no Client with Username ${pet.owner}") }
         val petDAO = PetDAO(pet, owner)
 
         //if it exists
