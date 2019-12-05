@@ -13,10 +13,10 @@ data class PetDTO(val id:Long, val name: String, val species: String, val photo:
 data class PetAptsDTO(val pet:PetDTO, val apts:List<AppointmentDTO>) {
 }
 
-data class AppointmentDTO(val id:Long, val date: LocalDateTime, val desc: String, var status:AppointmentStatus,
-                          var reason:String, var petId: Long, var clientId: Long, var vetId: Long){
+data class AppointmentDTO(val id:Long, val date: String, val desc: String, var status:AppointmentStatus,
+                          var reason:String, var petId: Long, var client: String, var vetId: Long){
 
-    constructor(apt: AppointmentDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, apt.pet.id, apt.client.id, apt.vet.id)
+    constructor(apt: AppointmentDAO) : this(apt.id, apt.date, apt.desc, apt.status, apt.reason, apt.pet.id, apt.client.username, apt.vet.id)
 }
 
 

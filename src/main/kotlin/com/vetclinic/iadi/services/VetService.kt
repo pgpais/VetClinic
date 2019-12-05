@@ -1,13 +1,14 @@
 package com.vetclinic.iadi.services
 
 import com.vetclinic.iadi.api.ShiftsDTO
-import com.vetclinic.iadi.api.VetShiftDTO
 import com.vetclinic.iadi.api.VeterinarianDTO
 import com.vetclinic.iadi.model.*
 import org.springframework.stereotype.Service
-import java.lang.Exception
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
+
 
 @Service
 class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRepository, val shiftRep: ShiftsRepository) {
@@ -72,8 +73,10 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
 
         vet.schedule.forEach {
 
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
+            val dateTime = LocalDateTime.parse(app.date, formatter)
             //has to be in the middle of a shift and can't
-            if (app.date.isAfter(it.start) and app.date.isBefore(it.end) and (ChronoUnit.MINUTES.between(app.date, it.end) <= 30))
+            if (dateTime.isAfter(it.start) and dateTime.isBefore(it.end) and (ChronoUnit.MINUTES.between(dateTime, it.end) <= 30))
                 return true
 
         }

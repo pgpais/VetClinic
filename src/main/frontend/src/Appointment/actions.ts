@@ -18,3 +18,73 @@ export function fetchApts() {
             .then(data => { data && dispatch(receiveApts(data as Appointment[]))})
     }
 }
+
+export const ADD_NEW_APPOINTMENT = "ADD_APPOINTMENT";
+
+export const register = (token: string | null) => ({
+    type: ADD_NEW_APPOINTMENT,
+    data: token
+});
+
+export function requestAppointmentRegister(
+    date: any,
+    time:any,
+    description: string,
+    status: string,
+    reason: string,
+    pet: any,
+    client: any,
+    vet: any
+) {
+    return (dispatch: any) =>
+        performAppointmentRegister(
+            date,
+            time,
+            description,
+            status,
+            reason,
+            pet,
+            client,
+            vet
+        ).then(token => dispatch(register(token)));
+}
+
+async function performAppointmentRegister(
+    date: any,
+    time:any,
+    description: string,
+    status: string,
+    reason: string,
+    pet: any,
+    client: any,
+    vet: any
+) {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    return fetch("/appointments", {
+        method: "POST",
+        headers: myHeaders,
+        body: JSON.stringify({
+            date:date + " " + time,
+            desc:description,
+            status:status,
+            reason: reason,
+            pet:pet,
+            client:client,
+            vet:vet
+        })
+    })
+        .then(response => {
+            if (response.ok) return response.headers.get("Authorization");
+            else {
+                console.log(`Error: ${response.status}: ${response.statusText}`);
+                return null;
+                // and add a message to the Ui: wrong password ?? other errors?
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            return null;
+        });
+}

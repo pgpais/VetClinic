@@ -45,7 +45,7 @@ enum class AppointmentStatus(val status: Int) {
 @Entity
 data class AppointmentDAO(
         @Id @GeneratedValue val id:Long,
-        var date: LocalDateTime,
+        var date: String,
         var desc:String,
         var status: AppointmentStatus,
         var reason:String,

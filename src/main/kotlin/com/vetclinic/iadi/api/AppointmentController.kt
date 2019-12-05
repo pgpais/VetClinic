@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*
 
 
 @RestController
-@PreAuthorize("hasRole('ROLE_VET')") // TODO: Wrong - Clients book appointments.
+@PreAuthorize("hasRole('ROLE_CLIENT')") // TODO: Wrong - Clients book appointments.
 @RequestMapping("/appointments")
 class AppointmentController(val apts: AppointmentService, val petService: PetService, val clientService: ClientService, val vetService: VetService) {
 
@@ -30,7 +30,7 @@ class AppointmentController(val apts: AppointmentService, val petService: PetSer
     ])
     @GetMapping("")
     fun getAllAppointments() : List<AppointmentDTO> =
-            apts.getAllAppointments().map { AppointmentDTO(it.id, it.date, it.desc, it.status, it.reason, it.pet.id, it.client.id, it.vet.id) }
+            apts.getAllAppointments().map { AppointmentDTO(it.id, it.date, it.desc, it.status, it.reason, it.pet.id, it.client.username, it.vet.id) }
 
     @ApiOperation(value = "Get the details of an appointment by Id", response = AppointmentDTO::class)
     @ApiResponses(value = [
@@ -41,7 +41,7 @@ class AppointmentController(val apts: AppointmentService, val petService: PetSer
     ])
     @GetMapping("/{id}")
     fun getById(@PathVariable id:Long) : AppointmentDTO =
-            handle4xx { apts.getAppointmentByID(id).let { AppointmentDTO(it.id, it.date, it.desc, it.status, it.reason, it.pet.id, it.client.id, it.vet.id) } }
+            handle4xx { apts.getAppointmentByID(id).let { AppointmentDTO(it.id, it.date, it.desc, it.status, it.reason, it.pet.id, it.client.username, it.vet.id) } }
 
 
     @ApiOperation(value = "Add an appointment", response = Unit::class)
@@ -53,7 +53,8 @@ class AppointmentController(val apts: AppointmentService, val petService: PetSer
     @PostMapping("")
     fun newAppointment(@RequestBody apt: AppointmentDTO) =
             handle4xx {
-                apts.newAppointment(AppointmentDAO(apt, petService.getPetById(apt.petId), clientService.getClientById(apt.clientId), vetService.getVetbyId(apt.vetId)))
+                println(apt)
+                apts.newAppointment(AppointmentDAO(apt, petService.getPetById(apt.petId), clientService.getClientByUsername(apt.client), vetService.getVetbyId(apt.vetId)))
             }
 
     @ApiOperation(value = "Delete an appointment", response = Unit::class)

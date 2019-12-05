@@ -137,7 +137,7 @@ class PetControllerTester {
     @Test
     fun `Test checking appointments`() {
         val louro = PetDAO(0, "louro", "Papagaio","www.google.com", user, emptyList(),false)
-        val apt = AppointmentDAO(2, LocalDateTime.now(),"consulta",AppointmentStatus.ACCEPTED,"", louro, user, vet)
+        val apt = AppointmentDAO(2, LocalDateTime.now().toString(),"consulta",AppointmentStatus.ACCEPTED,"", louro, user, vet)
         louro.appointments = listOf(apt)
 
         Mockito.`when`(pets.getAppointments(1)).thenReturn(listOf(apt))
@@ -166,7 +166,7 @@ class PetControllerTester {
     @Test
     fun `Test adding an appointment to a pet`() {
         val louro = PetDAO(1, "louro", "Papagaio","www.google.com", user, emptyList(),false)
-        val apt = AppointmentDTO(0, LocalDateTime.now(), "consulta", AppointmentStatus.ACCEPTED, "", louro.id, user.id, vet.id)
+        val apt = AppointmentDTO(0, LocalDateTime.now().toString(), "consulta", AppointmentStatus.ACCEPTED, "", louro.id, user.username, vet.id)
         val aptDAO = AppointmentDAO(apt,louro, user, vet)
         louro.appointments = listOf(aptDAO)
 
@@ -187,7 +187,7 @@ class PetControllerTester {
     @Test
     fun `Bad request on id not 0`() {
         val louro = PetDAO(1, "louro", "Papagaio","www.google.com", user, emptyList(),false)
-        val apt = AppointmentDTO(2, LocalDateTime.now(), "consulta", AppointmentStatus.ACCEPTED, "", louro.id, user.id, vet.id)
+        val apt = AppointmentDTO(2, LocalDateTime.now().toString(), "consulta", AppointmentStatus.ACCEPTED, "", louro.id, user.username, vet.id)
         val aptDAO = AppointmentDAO(apt,louro, user, vet)
         louro.appointments = listOf(aptDAO)
 

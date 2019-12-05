@@ -63,7 +63,7 @@ class ClientService(val clientRepository: ClientRepository, val apts: Appointmen
 
         val vet = vets.findByIdAndFrozenIsFalse(apt.vetId).orElseThrow { NotFoundException("${apt.vetId} not found") }
         val pet = pets.findById(apt.petId).orElseThrow{NotFoundException("Pet not found ${apt.petId}")}
-        val client = clients.findById(apt.clientId).orElseThrow { NotFoundException("Client not found ${apt.clientId}") }
+        val client = clients.findByUsername(apt.client).orElseThrow { NotFoundException("Client not found ${apt.client}") }
 
         val apt = AppointmentDAO(apt, pet, client, vet)
 
