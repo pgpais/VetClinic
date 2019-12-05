@@ -24,7 +24,7 @@ const Register = (props: {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [employeeId, setEmployeeId] = useState("");
+  const [employeeId, setEmployeeId] = useState("110841e3-e6fb-4191-8fd8-5674a5107c3a");
   const [isRegister, setRegister] = useState(false);
 
   let registerSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
@@ -46,7 +46,7 @@ const Register = (props: {
     setEmail("");
     setPhone("");
     setAddress("");
-    setEmployeeId("");
+    setEmployeeId("110841e3-e6fb-4191-8fd8-5674a5107c3a");
   };
 
   let usernameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -103,7 +103,7 @@ const Register = (props: {
       </div> */}
 
         <Form.Group controlId="formBasicPassword">
-          <Form.Label>Name</Form.Label>
+          <Form.Label>Password</Form.Label>
           <Form.Control
             type="password"
             value={password}
@@ -121,8 +121,8 @@ const Register = (props: {
           <Form.Label>Name</Form.Label>
           <Form.Control
             type="text"
-            value={photo}
-            onChange={photoChangeHandler}
+            value={name}
+            onChange={nameChangeHandler}
           />
           <Form.Text className="text-muted">
             {" "}
@@ -205,18 +205,6 @@ const Register = (props: {
             />
           </label>
         </div> */}
-
-        <Form.Group controlId="formBasicEmployeeID">
-          <Form.Label>Employee Id</Form.Label>
-          <Form.Control
-            type="text"
-            value={employeeId}
-            onChange={employeeIdChangeHandler}
-          />
-          <Form.Text className="text-muted">
-            Has to be something like 110841e3-e6fb-4191-8fd8-5674a5107c3
-          </Form.Text>
-        </Form.Group>
         <button onClick={() => setRegister(false)}>Register</button>
       </Form>
     </>
@@ -265,7 +253,7 @@ export const RegistrationAdmin = connect(
 )(Register);
 
 const ShowRegistration = () => {
-  let [isShowing, setIsShowing] = useState(true);
+  let [isShowing, setIsShowing] = useState(false);
 
   return (
     <>

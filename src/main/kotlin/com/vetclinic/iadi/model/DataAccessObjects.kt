@@ -166,7 +166,7 @@ data class AdminDAO(
         override var address:String,
 
         @UniqueElements
-        val employeeID: UUID = UUID.randomUUID()
+        var employeeID: UUID = UUID.randomUUID()
 
 
         ) : RegisteredUsersDAO(id, username, pass, name, photo, email, phone, address) {

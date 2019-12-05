@@ -16,6 +16,7 @@ class AdminService(val vets: VeterinaryRepository, val admins: AdminRepository, 
     fun createAdmin(admin: AdminDTO) {
         val adminDAO = AdminDAO(admin)
         adminDAO.pass = BCryptPasswordEncoder().encode(admin.pass)
+        adminDAO.employeeID = UUID.randomUUID();
         if( adminDAO.id != 0L){
             throw PreconditionFailedException("Id must be 0 on insertion")
         } else

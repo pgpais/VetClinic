@@ -26,6 +26,8 @@ export interface Pet {
   id: number;
   name: string;
   photo: string;
+
+
 }
 export interface PetState {
   pets: Pet[];
@@ -93,19 +95,18 @@ export const FilteredPetList = connect(
   mapDispatchToProps
 )(ProtoFilteredPetList);
 
-const Register = (
-  state: GlobalState,
+const ProtoPetRegistration = (
   props: {
     performRegister: (
-      name: string,
-      species: string,
-      photo: string,
-      owner: string,
-      appointments: any,
-      chip: string,
-      physDesc: string,
-      healthDesc: string,
-      removed: boolean
+        name: string,
+        species: string,
+        photo: string,
+        owner: string,
+        appointments: any,
+        chip: string,
+        physDesc: string,
+        healthDesc: string,
+        removed: boolean
     ) => void;
   }
 ) => {
@@ -142,7 +143,8 @@ const Register = (
     setHealthDesc("");
     setPhysDesc("");
     setRemoved(false);
-    setOwner(state.signIn.username);
+    let user = localStorage.getItem("username");
+    setOwner(user? user: "");
   };
 
   let usernameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -168,171 +170,197 @@ const Register = (
 
   let physChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setPhysDesc(e.target.value);
+  };
 
-    let ownerChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-      setOwner(e.target.value);
-    };
+  let ownerChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setOwner(e.target.value);
+  };
 
-    let registerForm = (
-      <>
-        <Form onSubmit={registerSubmitHandler}>
-          <Form.Group controlId="formBasicUsername">
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              type="text"
-              value={name}
-              onChange={usernameChangeHandler}
-            />
-            <Form.Text className="text-muted"></Form.Text>
-          </Form.Group>
+  let registerForm = (
+    <>
+      <Form onSubmit={registerSubmitHandler}>
+        <Form.Group controlId="formBasicUsername">
+          <Form.Label>Name</Form.Label>
+          <Form.Control
+            type="text"
+            value={name}
+            onChange={usernameChangeHandler}
+          />
+          <Form.Text className="text-muted"></Form.Text>
+        </Form.Group>
 
-          {/* <div>
+        {/* <div>
+      <label>
+        Password:{" "}
+        <input
+          type="password"
+          value={password}
+          onChange={passwordChangeHandler}
+        />
+      </label>
+    </div> */}
+
+        <Form.Group controlId="formBasicPassword">
+          <Form.Label>species</Form.Label>
+          <Form.Control
+            type="text"
+            value={species}
+            onChange={speciesChangeHandler}
+          />
+          <Form.Text className="text-muted"></Form.Text>
+        </Form.Group>
+        {/* <div>
+      <label>
+        Name: <input type="text" value={name} onChange={nameChangeHandler} />
+      </label>
+    </div> */}
+
+        <Form.Group controlId="formBasicName">
+          <Form.Label>Name</Form.Label>
+          <Form.Control
+            type="text"
+            value={photo}
+            onChange={photoChangeHandler}
+          />
+          <Form.Text className="text-muted">
+            {" "}
+            First and Last names please
+          </Form.Text>
+        </Form.Group>
+        {/* <div>
+      <label>
+        Photo:{" "}
+        <input type="text" value={photo} onChange={photoChangeHandler} />
+      </label>
+    </div> */}
+
+        <Form.Group controlId="formBasicPhoto">
+          <Form.Label>Photo URL</Form.Label>
+          <Form.Control
+            type="text"
+            value={photo}
+            onChange={photoChangeHandler}
+          />
+          <Form.Text className="text-muted"></Form.Text>
+        </Form.Group>
+        {/* <div>
+      <label>
+        Email:{" "}
+        <input type="text" value={email} onChange={emailChangeHandler} />
+      </label>
+    </div> */}
+        <Form.Group controlId="formBasicEmail">
+          <Form.Label>Owner</Form.Label>
+          <Form.Control type="text" value={owner} placeholder={owner} />
+          <Form.Text className="text-muted"></Form.Text>
+        </Form.Group>
+        {/* <div>
+      <label>
+        phone:{" "}
+        <input type="number" value={phone} onChange={phoneChangeHandler} />
+      </label>
+    </div> */}
+
+        <Form.Group controlId="formBasicPhone">
+          <Form.Label>Chip</Form.Label>
+          <Form.Control
+            type="number"
+            value={chip}
+            onChange={chipChangeHandler}
+          />
+          <Form.Text className="text-muted"></Form.Text>
+        </Form.Group>
+        {/* <div>
+      <label>
+        Address:{" "}
+        <input type="text" value={address} onChange={addressChangeHandler} />
+      </label>
+    </div> */}
+
+        <Form.Group controlId="formBasicPhone">
+          <Form.Label>Physical Description</Form.Label>
+          <Form.Control
+            type="text"
+            value={physDesc}
+            onChange={physChangeHandler}
+          />
+          <Form.Text className="text-muted"></Form.Text>
+        </Form.Group>
+        {/* <div>
         <label>
-          Password:{" "}
+          EmployeeId:{" "}
           <input
-            type="password"
-            value={password}
-            onChange={passwordChangeHandler}
+            type="text"
+            value={employeeId}
+            onChange={employeeIdChangeHandler}
           />
         </label>
       </div> */}
 
-          <Form.Group controlId="formBasicPassword">
-            <Form.Label>species</Form.Label>
-            <Form.Control
-              type="text"
-              value={species}
-              onChange={speciesChangeHandler}
-            />
-            <Form.Text className="text-muted"></Form.Text>
-          </Form.Group>
-          {/* <div>
-        <label>
-          Name: <input type="text" value={name} onChange={nameChangeHandler} />
-        </label>
-      </div> */}
+        <Form.Group controlId="formBasicEmployeeID">
+          <Form.Label>Health Description</Form.Label>
+          <Form.Control
+            type="text"
+            value={healthDesc}
+            onChange={healthChangeHandler}
+          />
+          <Form.Text className="text-muted">
+            Has to be something like 110841e3-e6fb-4191-8fd8-5674a5107c3
+          </Form.Text>
+        </Form.Group>
+        <button onClick={() => setRegister(false)}>Register Pet</button>
+      </Form>
+    </>
+  );
 
-          <Form.Group controlId="formBasicName">
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              type="text"
-              value={photo}
-              onChange={photoChangeHandler}
-            />
-            <Form.Text className="text-muted">
-              {" "}
-              First and Last names please
-            </Form.Text>
-          </Form.Group>
-          {/* <div>
-        <label>
-          Photo:{" "}
-          <input type="text" value={photo} onChange={photoChangeHandler} />
-        </label>
-      </div> */}
+  return registerForm;
+  /*TODO: fazer o register form desaparecer
+    faz um botao que altere o estado (Vê o signIn)
+    e depois fazes aquela cena do {isRegister && registerForm}
+    e ele só mostra o register quando isso ficar a true.
+    eventualmente vamos ter deletes e cenas assim, por isso mais vale ir escondendo
+   */
 
-          <Form.Group controlId="formBasicPhoto">
-            <Form.Label>Photo URL</Form.Label>
-            <Form.Control
-              type="text"
-              value={photo}
-              onChange={photoChangeHandler}
-            />
-            <Form.Text className="text-muted"></Form.Text>
-          </Form.Group>
-          {/* <div>
-        <label>
-          Email:{" "}
-          <input type="text" value={email} onChange={emailChangeHandler} />
-        </label>
-      </div> */}
-          <Form.Group controlId="formBasicEmail">
-            <Form.Label>Owner</Form.Label>
-            <Form.Control type="text" value={owner} placeholder={owner} />
-            <Form.Text className="text-muted"></Form.Text>
-          </Form.Group>
-          {/* <div>
-        <label>
-          phone:{" "}
-          <input type="number" value={phone} onChange={phoneChangeHandler} />
-        </label>
-      </div> */}
+};
 
-          <Form.Group controlId="formBasicPhone">
-            <Form.Label>Chip</Form.Label>
-            <Form.Control
-              type="number"
-              value={chip}
-              onChange={chipChangeHandler}
-            />
-            <Form.Text className="text-muted"></Form.Text>
-          </Form.Group>
-          {/* <div>
-        <label>
-          Address:{" "}
-          <input type="text" value={address} onChange={addressChangeHandler} />
-        </label>
-      </div> */}
 
-          <Form.Group controlId="formBasicPhone">
-            <Form.Label>Physical Description</Form.Label>
-            <Form.Control
-              type="text"
-              value={physDesc}
-              onChange={physChangeHandler}
-            />
-            <Form.Text className="text-muted"></Form.Text>
-          </Form.Group>
-          {/* <div>
-          <label>
-            EmployeeId:{" "}
-            <input
-              type="text"
-              value={employeeId}
-              onChange={employeeIdChangeHandler}
-            />
-          </label>
-        </div> */}
 
-          <Form.Group controlId="formBasicEmployeeID">
-            <Form.Label>Health Discription</Form.Label>
-            <Form.Control
-              type="text"
-              value={healthDesc}
-              onChange={healthChangeHandler}
-            />
-            <Form.Text className="text-muted">
-              Has to be something like 110841e3-e6fb-4191-8fd8-5674a5107c3
-            </Form.Text>
-          </Form.Group>
-          <button onClick={() => setRegister(false)}>Register</button>
-        </Form>
-      </>
-    );
-    return <> {registerForm} </>;
-    /*TODO: fazer o register form desaparecer
-      faz um botao que altere o estado (Vê o signIn)
-      e depois fazes aquela cena do {isRegister && registerForm}
-      e ele só mostra o register quando isso ficar a true.
-      eventualmente vamos ter deletes e cenas assim, por isso mais vale ir escondendo
-     */
-  };
+const ShowRegistration = (props:{performRegister: (
+      name: string,
+      species: string,
+      photo: string,
+      owner: string,
+      appointments: any,
+      chip: string,
+      physDesc: string,
+      healthDesc: string,
+      removed: boolean
+  ) => void;}) => {
+  let [isShowing, setIsShowing] = useState(false);
+
+  return (
+    <>
+      {isShowing && <ProtoPetRegistration  performRegister={props.performRegister}/>}
+      <button onClick={() => setIsShowing(!isShowing)}>
+        {isShowing ? "Cancel Registration" : "Register Pet"}
+      </button>
+    </>
+  );
 };
 
 const mapDispatchToProps1 = (dispatch: any) => ({
   performRegister: (
-    name: string,
-    species: string,
-    photo: string,
-    owner: any,
-    appointments: any,
-    chip: string,
-    physDesc: string,
-    healthDesc: string,
-    removed: boolean
+      name: string,
+      species: string,
+      photo: string,
+      owner: any,
+      appointments: any,
+      chip: string,
+      physDesc: string,
+      healthDesc: string,
+      removed: boolean
   ) => {
-    dispatch(
-      requestPetRegister(
+    dispatch(requestPetRegister(
         name,
         species,
         photo,
@@ -342,38 +370,11 @@ const mapDispatchToProps1 = (dispatch: any) => ({
         physDesc,
         healthDesc,
         removed
-      )
+        )
     );
   }
 });
 
-export const RegistrationAdmin = connect(
-  mapStateToProps,
-  mapDispatchToProps1
-)(Register);
-
-const ShowRegistration = () => {
-  let [isShowing, setIsShowing] = useState(true);
-
-  return (
-    <>
-      {isShowing && <RegistrationAdmin />}
-      <button onClick={() => setIsShowing(!isShowing)}>
-        {isShowing ? "Cancel Registration" : "Register"}
-      </button>
-    </>
-  );
-};
-
-const ProtoPetRegistration = () => {
-  return (
-    <>
-      <ShowRegistration />
-    </>
-  );
-};
-
 export const PetRegistration = connect(
-  mapStateToProps,
   mapDispatchToProps1
-)(ProtoPetRegistration);
+)(ShowRegistration);

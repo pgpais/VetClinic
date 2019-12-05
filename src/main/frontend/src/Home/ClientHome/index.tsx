@@ -1,5 +1,5 @@
 import React, {ChangeEvent, useEffect, useState} from "react";
-import {FilteredPetList} from "../../Pets";
+import {FilteredPetList, PetRegistration} from "../../Pets";
 import {Appointment, AppointmentList, ProtoAppointmentList} from "../../Appointment";
 
 
@@ -20,6 +20,7 @@ const ProtoClientHome = () => {
     return <>
         <ShowAppointments/>
         <FilteredPetList/>
+        <PetRegistration/>
     </>;
 };
 
