@@ -1,5 +1,9 @@
 import React, { ChangeEvent, useEffect, useState, FormEvent } from "react";
-import { FilteredPetList, PetRegistration } from "../../Pets";
+import {
+  FilteredPetList,
+  PetRegistration,
+  FilteredPetSelect
+} from "../../Pets";
 import {
   Appointment,
   AppointmentList,
@@ -9,6 +13,7 @@ import { connect } from "react-redux";
 import { requestAppointmentRegister } from "../../Appointment/actions";
 import Form from "react-bootstrap/Form";
 import FormGroup from "react-bootstrap/FormGroup";
+import { Vet } from "..";
 
 const ProtoAppointmentRegistration = (props: {
   performAppointmentRegister: (
@@ -94,7 +99,6 @@ const ProtoAppointmentRegistration = (props: {
           />
           <Form.Text className="text-muted"> </Form.Text>
         </FormGroup>
-        ;
         <FormGroup>
           <Form.Label>Time</Form.Label>
           <Form.Control
@@ -105,35 +109,32 @@ const ProtoAppointmentRegistration = (props: {
           />
           <Form.Text className="text-muted"> </Form.Text>
         </FormGroup>
-        ;
         <Form.Group controlId="formBasicPassword">
           <Form.Label>Description</Form.Label>
           <Form.Control
             type="text"
-            value={description}
+            value={pet}
             onChange={descriptionChangeHandler}
           />
           <Form.Text className="text-muted"></Form.Text>
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect1">
           <Form.Label>Pet</Form.Label>
-          <Form.Control as="select" value={pet} onChange={petChangeHandler}>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
+          <Form.Control
+            as="select"
+            value={pet}
+            initialvalue={""}
+            placeholder={""}
+            onChange={petChangeHandler}
+          >
+            <option></option>
+            <FilteredPetSelect />
           </Form.Control>
         </Form.Group>
         <Form.Group controlId="exampleForm.ControlSelect1">
           <Form.Label>Vet</Form.Label>
           <Form.Control as="select" value={vet} onChange={vetChangeHandler}>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-            <option>6</option>
+            <option />
           </Form.Control>
         </Form.Group>
         <button

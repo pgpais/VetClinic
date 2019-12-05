@@ -26,8 +26,6 @@ export interface Pet {
   id: number;
   name: string;
   photo: string;
-
-
 }
 export interface PetState {
   pets: Pet[];
@@ -95,26 +93,63 @@ export const FilteredPetList = connect(
   mapDispatchToProps
 )(ProtoFilteredPetList);
 
-const ProtoPetRegistration = (
-  props: {
-    performPetRegister: (
-        name: string,
-        species: string,
-        photo: string,
-        owner: string,
-        appointments: any,
-        chip: string,
-        physDesc: string,
-        healthDesc: string,
-        removed: boolean
-    ) => void;
+const PetListSelect = (props: { pets: Pet[] }) => (
+  <>
+    {props.pets.map((pet: Pet) => (
+      <option value={pet.id}>{pet.name}</option>
+    ))}
+  </>
+);
+
+const ProtoFilteredPetSelect = (props: {
+  pets: Pet[];
+  username: string;
+  loadPets: (username: string, filter: string) => void;
+}) => {
+  const [filter, setFilter] = useState("");
+  let handle = (e: ChangeEvent<HTMLInputElement>) => setFilter(e.target.value);
+  // eslint-disable-next-line
+  useEffect(() => props.loadPets(props.username, filter), [filter]);
+
+  return (
+    <>
+      <PetListSelect pets={props.pets} />
+    </>
+  );
+};
+
+const mapStateToProps2 = (state: GlobalState) => ({
+  username: state.signIn.username,
+  pets: state.pets.pets
+});
+const mapDispatchToProps2 = (dispatch: any) => ({
+  loadPets: (username: string, filter: string) => {
+    dispatch(fetchPets(username, filter));
   }
-) => {
+});
+export const FilteredPetSelect = connect(
+  mapStateToProps2,
+  mapDispatchToProps2
+)(ProtoFilteredPetSelect);
+
+const ProtoPetRegistration = (props: {
+  performPetRegister: (
+    name: string,
+    species: string,
+    photo: string,
+    owner: string,
+    appointments: any,
+    chip: string,
+    physDesc: string,
+    healthDesc: string,
+    removed: boolean
+  ) => void;
+}) => {
   const [name, setName] = useState("");
   const [species, setSpecies] = useState("");
   const [photo, setPhoto] = useState("");
   let user = localStorage.getItem("username");
-  const [owner, setOwner] = useState(user? user: "");
+  const [owner, setOwner] = useState(user ? user : "");
   const [appointments, setAppointments] = useState("");
   const [chip, setChip] = useState("110841e3-e6fb-4191-8fd8-5674a5107c3a");
   const [physDesc, setPhysDesc] = useState("");
@@ -145,13 +180,12 @@ const ProtoPetRegistration = (
     setPhysDesc("");
     setRemoved(false);
     let user = localStorage.getItem("username");
-    setOwner(user? user: "");
+    setOwner(user ? user : "");
   };
 
   let nameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
-
 
   let photoChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setPhoto(e.target.value);
@@ -181,11 +215,7 @@ const ProtoPetRegistration = (
       <Form onSubmit={registerSubmitHandler}>
         <Form.Group controlId="formBasicUsername">
           <Form.Label>Name</Form.Label>
-          <Form.Control
-            type="text"
-            value={name}
-            onChange={nameChangeHandler}
-          />
+          <Form.Control type="text" value={name} onChange={nameChangeHandler} />
           <Form.Text className="text-muted"></Form.Text>
         </Form.Group>
 
@@ -238,7 +268,12 @@ const ProtoPetRegistration = (
     </div> */}
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Owner</Form.Label>
-          <Form.Control type="text" value={owner} readOnly placeholder={owner} />
+          <Form.Control
+            type="text"
+            value={owner}
+            readOnly
+            placeholder={owner}
+          />
           <Form.Text className="text-muted"></Form.Text>
         </Form.Group>
         {/* <div>
@@ -291,24 +326,26 @@ const ProtoPetRegistration = (
   return registerForm;
 };
 
-
-
-const ShowRegistration = (props:{performPetRegister: (
-      name: string,
-      species: string,
-      photo: string,
-      owner: string,
-      appointments: any,
-      chip: string,
-      physDesc: string,
-      healthDesc: string,
-      removed: boolean
-  ) => void;}) => {
+const ShowRegistration = (props: {
+  performPetRegister: (
+    name: string,
+    species: string,
+    photo: string,
+    owner: string,
+    appointments: any,
+    chip: string,
+    physDesc: string,
+    healthDesc: string,
+    removed: boolean
+  ) => void;
+}) => {
   let [isShowing, setIsShowing] = useState(false);
 
   return (
     <>
-      {isShowing && <ProtoPetRegistration  performPetRegister={props.performPetRegister}/>}
+      {isShowing && (
+        <ProtoPetRegistration performPetRegister={props.performPetRegister} />
+      )}
       <button onClick={() => setIsShowing(!isShowing)}>
         {isShowing ? "Cancel Registration" : "Register Pet"}
       </button>
@@ -318,17 +355,18 @@ const ShowRegistration = (props:{performPetRegister: (
 
 const mapDispatchToProps1 = (dispatch: any) => ({
   performPetRegister: (
-      name: string,
-      species: string,
-      photo: string,
-      owner: any,
-      appointments: any,
-      chip: string,
-      physDesc: string,
-      healthDesc: string,
-      removed: boolean
+    name: string,
+    species: string,
+    photo: string,
+    owner: any,
+    appointments: any,
+    chip: string,
+    physDesc: string,
+    healthDesc: string,
+    removed: boolean
   ) => {
-    dispatch(requestPetRegister(
+    dispatch(
+      requestPetRegister(
         name,
         species,
         photo,
@@ -338,11 +376,12 @@ const mapDispatchToProps1 = (dispatch: any) => ({
         physDesc,
         healthDesc,
         removed
-        )
+      )
     );
   }
 });
 
-export const PetRegistration = connect(null,
+export const PetRegistration = connect(
+  null,
   mapDispatchToProps1
 )(ShowRegistration);
