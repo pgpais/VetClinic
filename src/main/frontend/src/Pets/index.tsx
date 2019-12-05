@@ -97,7 +97,7 @@ export const FilteredPetList = connect(
 
 const ProtoPetRegistration = (
   props: {
-    performRegister: (
+    performPetRegister: (
         name: string,
         species: string,
         photo: string,
@@ -125,7 +125,7 @@ const ProtoPetRegistration = (
 
   let registerSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    props.performRegister(
+    props.performPetRegister(
       name,
       species,
       photo,
@@ -214,19 +214,6 @@ const ProtoPetRegistration = (
         Name: <input type="text" value={name} onChange={nameChangeHandler} />
       </label>
     </div> */}
-
-        <Form.Group controlId="formBasicName">
-          <Form.Label>Name</Form.Label>
-          <Form.Control
-            type="text"
-            value={photo}
-            onChange={photoChangeHandler}
-          />
-          <Form.Text className="text-muted">
-            {" "}
-            First and Last names please
-          </Form.Text>
-        </Form.Group>
         {/* <div>
       <label>
         Photo:{" "}
@@ -306,7 +293,7 @@ const ProtoPetRegistration = (
 
 
 
-const ShowRegistration = (props:{performRegister: (
+const ShowRegistration = (props:{performPetRegister: (
       name: string,
       species: string,
       photo: string,
@@ -321,7 +308,7 @@ const ShowRegistration = (props:{performRegister: (
 
   return (
     <>
-      {isShowing && <ProtoPetRegistration  performRegister={props.performRegister}/>}
+      {isShowing && <ProtoPetRegistration  performPetRegister={props.performPetRegister}/>}
       <button onClick={() => setIsShowing(!isShowing)}>
         {isShowing ? "Cancel Registration" : "Register Pet"}
       </button>
@@ -330,7 +317,7 @@ const ShowRegistration = (props:{performRegister: (
 };
 
 const mapDispatchToProps1 = (dispatch: any) => ({
-  performRegister: (
+  performPetRegister: (
       name: string,
       species: string,
       photo: string,
@@ -356,6 +343,6 @@ const mapDispatchToProps1 = (dispatch: any) => ({
   }
 });
 
-export const PetRegistration = connect(
+export const PetRegistration = connect(null,
   mapDispatchToProps1
 )(ShowRegistration);

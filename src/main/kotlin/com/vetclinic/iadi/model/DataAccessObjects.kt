@@ -22,7 +22,7 @@ data class PetDAO(
         var healthDesc: String,
         var removed:Boolean = false
 ) {
-    constructor(pet: PetDTO, owner: ClientDAO) : this(pet.id,pet.name,pet.species, pet.photo, owner, emptyList(), pet.chip, "", "", pet.deleted)
+    constructor(pet: PetDTO, owner: ClientDAO) : this(pet.id,pet.name,pet.species, pet.photo, owner, emptyList(), pet.chip, pet.phys_desc, pet.health_desc, pet.deleted)
     constructor(pet: PetDTO, owner: ClientDAO, apts:List<AppointmentDAO>) : this(pet.id,pet.name,pet.species, pet.photo, owner, apts, pet.chip, "", "", pet.deleted)
     constructor(id: Long, name: String, species: String, photo: String, owner: ClientDAO, appointments: List<AppointmentDAO>, deleted: Boolean) :
             this(id, name, species, photo, owner, appointments, physDesc = "", healthDesc = "",removed = false)

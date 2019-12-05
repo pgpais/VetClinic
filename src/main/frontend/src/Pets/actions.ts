@@ -63,28 +63,28 @@ export function requestPetRegister(
   name: string,
   species: string,
   photo: string,
-  owner: any,
+  owner_id: any,
   appointments: any,
   chip: string,
-  physDesc: string,
-  healthDesc: string,
+  phys_desc: string,
+  health_desc: string,
   removed: boolean
 ) {
   return (dispatch: any) =>
-    performRegister(
+    performPetRegister(
       name,
       species,
       photo,
-      owner,
+      owner_id,
       appointments,
       chip,
-      physDesc,
-      healthDesc,
+      phys_desc,
+      health_desc,
       removed
     ).then(token => dispatch(register(token)));
 }
 
-async function performRegister(
+async function performPetRegister(
   name: string,
   species: string,
   photo: string,
@@ -108,8 +108,8 @@ async function performRegister(
       owner: owner,
       appointments: appointments,
       chip: chip,
-      physDesc: physDesc,
-      healthDesc: healthDesc,
+      phys_desc: physDesc,
+      health_desc: healthDesc,
       removed: removed
     })
   })

@@ -125,7 +125,7 @@ class PetControllerTester {
         Mockito.`when`(clients.getClientById(nonNullAny(Long::class.java)))
                 .thenReturn(user);
 
-        Mockito.`when`(pets.addNew(nonNullAny(PetDTO::class.java), user.id))
+        Mockito.`when`(pets.addNew(nonNullAny(PetDTO::class.java)))
                 .then { assertThat(it.getArgument(0), equalTo(louroDAO)); it.getArgument(0) }
 
         mvc.perform(post(petsURL)
