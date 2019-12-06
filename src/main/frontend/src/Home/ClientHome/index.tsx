@@ -15,10 +15,6 @@ import Form from "react-bootstrap/Form";
 import FormGroup from "react-bootstrap/FormGroup";
 import { requestPetDelete } from "../../Pets/actions";
 
-
-
-
-
 const ShowAppointments = () => {
   let [isShowing, setIsShowing] = useState(true);
   let [isCreatingAppointment, setCreatingAppointment] = useState(false);

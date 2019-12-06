@@ -31,7 +31,7 @@ const initialState = {
 function petReducer(state:PetState = initialState, action:Action):PetState {
     switch (action.type) {
         case ADD_PET:
-            return {...state, pets:[...state.pets, { id:0, name: (action as AddPetAction).name, photo: (action as AddPetAction).photo}]};
+            return {...state, pets:[...state.pets, (action as AddPetAction).pet]};
         case REQUEST_PETS:
             return {...state, isFetching:true};
         case RECEIVE_PETS:

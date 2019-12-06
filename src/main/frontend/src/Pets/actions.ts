@@ -26,8 +26,7 @@ export const RECEIVE_PETS = "RECEIVE_PETS";
 export const DELETE_PET = "DELETE_PET";
 
 export interface AddPetAction extends Action {
-  photo: string;
-  name: string;
+  pet:Pet
 }
 export interface ReceivePetAction extends Action {
   data: Pet[];
