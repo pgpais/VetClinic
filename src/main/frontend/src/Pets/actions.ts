@@ -144,8 +144,7 @@ export function requestPetDelete(id: number) {
 async function performDeletePet(id: number) {
   const myHeaders = new Headers();
 
-  console.log(id);
-  return fetch("/pets?id=${id}", {
+  return fetch("/pets?id=" + id.toString(), {
     method: "DELETE",
     headers: myHeaders
   })

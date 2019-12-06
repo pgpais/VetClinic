@@ -78,6 +78,7 @@ class PetController(val pets: PetService) {
     fun deletePet(@RequestParam id: Long) =
 
             handle4xx {
+                print("deleted")
                 pets.delete(id) }
 
     @ApiOperation(value = "Get a list of a pet's appointments", response = List::class)
