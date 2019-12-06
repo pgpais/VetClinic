@@ -202,17 +202,17 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
         vets.save(newVetDAO)
     }
 
-    fun updateAppointment(aptId: Long, mode: String, reason: String?) {
+    fun updateAppointment(aptId: Long, mode: String, reason: String) {
 
         val app = appointments.findById(aptId).orElseThrow{NotFoundException("There is no Appointment with Id $aptId")}
 
         if(app.status == AppointmentStatus.PENDING) {
             when (mode) {
                 "rejected" -> {
-                    reason?.let {
+                    if(reason.compareTo("") != 0){
                         appointments.updateStatusById(aptId, reason, AppointmentStatus.REJECTED)
                     }
-                    throw Exception("Must give reason when rejecting appointment")
+                    else throw Exception("Must give reason when rejecting appointment")
                 }
                 "accepted" -> {
 

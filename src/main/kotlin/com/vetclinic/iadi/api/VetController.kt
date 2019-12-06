@@ -135,7 +135,7 @@ class VetController (val vets:VetService) {
 
     ])
     @PutMapping("/appointments/{aptId}")
-    fun updateAppointmentStatus(@PathVariable aptId:Long, @RequestParam mode:String, @RequestParam reason:String?){
+    fun updateAppointmentStatus(@PathVariable aptId:Long, @RequestParam mode:String, @RequestParam reason:String){
         handle4xx {
             vets.updateAppointment(aptId,mode,reason)}
 

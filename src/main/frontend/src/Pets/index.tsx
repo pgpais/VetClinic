@@ -31,8 +31,8 @@ export interface Pet {
   photo: string;
   apts: Appointment[];
   chip: string;
-  physDesc: string;
-  healthDesc: string;
+  phys_desc: string;
+  health_desc: string;
 }
 export interface PetState {
   pets: Pet[];
@@ -44,8 +44,8 @@ export interface PetState {
 const PetDetail = (props:{ pet: Pet}) => {
 
   return(<div className={"entityDetail"}>
-        Physical Description: {props.pet.physDesc} <br/>
-        Health: {props.pet.healthDesc}
+        Physical Description: {props.pet.phys_desc} <br/>
+        Health: {props.pet.health_desc}
       </div>
   )
 };
