@@ -21,12 +21,12 @@ import { GlobalState } from "../App";
 import "./Pets.css";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import {Appointment} from "../Appointment";
+import { Appointment } from "../Appointment";
 
 export interface Pet {
   id: number;
   name: string;
-  species:string;
+  species: string;
   owner: string;
   photo: string;
   apts: Appointment[];
@@ -41,13 +41,13 @@ export interface PetState {
 
 //TODO: create Pet Component to be able to operate it (create appointments and such)
 
-const PetDetail = (props:{ pet: Pet}) => {
-
-  return(<div className={"entityDetail"}>
-        Physical Description: {props.pet.phys_desc} <br/>
-        Health: {props.pet.health_desc}
-      </div>
-  )
+const PetDetail = (props: { pet: Pet }) => {
+  return (
+    <div className={"entityDetail"}>
+      Physical Description: {props.pet.phys_desc} <br />
+      Health: {props.pet.health_desc}
+    </div>
+  );
 };
 
 const PetMaster = (props: { pet: Pet }) => {
@@ -55,12 +55,15 @@ const PetMaster = (props: { pet: Pet }) => {
 
   return (
     <>
-      <div className={"entityMaster"} onClick={() => setShowDetail(!showDetail)}>
+      <div
+        className={"entityMaster"}
+        onClick={() => setShowDetail(!showDetail)}
+      >
         <img src={props.pet.photo} alt={"Pet " + props.pet.name + " photo"} />{" "}
         <br />
         Name: {props.pet.name} | ID: {props.pet.id}
       </div>
-      {showDetail && <PetDetail pet={props.pet}/>}
+      {showDetail && <PetDetail pet={props.pet} />}
     </>
   );
 };
@@ -88,7 +91,7 @@ const ProtoFilteredPetList = (props: {
   return (
     <>
       <PetList pets={props.pets} />
-      <input onChange={handle} value={filter} />
+      <input onChange={handle} value={filter} placeholder={"Pet Filter"} />
     </>
   );
 };
@@ -110,14 +113,14 @@ export const FilteredPetList = connect(
 const PetListSelect = (props: { pets: Pet[] }) => (
   <>
     {props.pets.map((pet: Pet) => (
-      <option value={pet.id} key={pet.id}>{pet.name}</option>
+      <option value={pet.id} key={pet.id}>
+        {pet.name}
+      </option>
     ))}
   </>
 );
 
-const ProtoFilteredPetSelect = (props: {
-  pets: Pet[];
-}) => {
+const ProtoFilteredPetSelect = (props: { pets: Pet[] }) => {
   // eslint-disable-next-line
 
   return (
@@ -130,12 +133,12 @@ const ProtoFilteredPetSelect = (props: {
 const mapStateToProps2 = (state: GlobalState) => ({
   pets: state.pets.pets
 });
-export const FilteredPetSelect = connect(
-  mapStateToProps2
-)(ProtoFilteredPetSelect);
+export const FilteredPetSelect = connect(mapStateToProps2)(
+  ProtoFilteredPetSelect
+);
 
 const ProtoPetRegistration = (props: {
-  setShowing:(b:boolean) => void,
+  setShowing: (b: boolean) => void;
   performPetRegister: (
     name: string,
     species: string,
@@ -346,7 +349,10 @@ const ShowRegistration = (props: {
   return (
     <>
       {isShowing && (
-        <ProtoPetRegistration setShowing={setIsShowing} performPetRegister={props.performPetRegister} />
+        <ProtoPetRegistration
+          setShowing={setIsShowing}
+          performPetRegister={props.performPetRegister}
+        />
       )}
       <button onClick={() => setIsShowing(!isShowing)}>
         {isShowing ? "Cancel Registration" : "Register Pet"}

@@ -14,31 +14,35 @@
  limitations under the License.
  */
 
-import {Action} from "redux";
+import { Action } from "redux";
 import {
-    ADD_PET,
-    AddPetAction,
-    RECEIVE_PETS,
-    ReceivePetAction,
-    REQUEST_PETS
-} from './actions';
-import {PetState} from "./index";
+  ADD_PET,
+  AddPetAction,
+  RECEIVE_PETS,
+  ReceivePetAction,
+  REQUEST_PETS
+} from "./actions";
+import { PetState } from "./index";
 
 const initialState = {
-    pets:[],
-    isFetching:false,
+  pets: [],
+  isFetching: false
 };
-function petReducer(state:PetState = initialState, action:Action):PetState {
-    switch (action.type) {
-        case ADD_PET:
-            return {...state, pets:[...state.pets, (action as AddPetAction).pet]};
-        case REQUEST_PETS:
-            return {...state, isFetching:true};
-        case RECEIVE_PETS:
-            return {...state, isFetching:false, pets: (action as ReceivePetAction).data};
-        default:
-            return state
-    }
+function petReducer(state: PetState = initialState, action: Action): PetState {
+  switch (action.type) {
+    case ADD_PET:
+      return { ...state, pets: [...state.pets] }; // (action as AddPetAction).pet this breaks the program "pet undefined"
+    case REQUEST_PETS:
+      return { ...state, isFetching: true };
+    case RECEIVE_PETS:
+      return {
+        ...state,
+        isFetching: false,
+        pets: (action as ReceivePetAction).data
+      };
+    default:
+      return state;
+  }
 }
 
-export default petReducer
+export default petReducer;
