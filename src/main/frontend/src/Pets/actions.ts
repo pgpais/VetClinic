@@ -23,6 +23,7 @@ import { URLSearchParams } from "url";
 export const ADD_PET = "ADD_PET";
 export const REQUEST_PETS = "REQUEST_PETS";
 export const RECEIVE_PETS = "RECEIVE_PETS";
+export const DELETE_PET = "DELETE_PET";
 
 export interface AddPetAction extends Action {
   photo: string;
@@ -37,6 +38,10 @@ export const requestPets = () => ({ type: REQUEST_PETS });
 export const receivePets = (data: Pet[]) => ({
   type: RECEIVE_PETS,
   data: data
+});
+export const delete_pet = (token: string | null) => ({
+  type: DELETE_PET,
+  data: token
 });
 
 export function fetchPets(username: string | null, filter: string) {
@@ -54,6 +59,7 @@ export function fetchPets(username: string | null, filter: string) {
     // in this particular implementation of the service. {pet: Pet, appointments:List<AppointmentDTO>}
   };
 }
+
 export const ADD_NEW_PET = "ADD_PET";
 
 export const register = (token: string | null) => ({
@@ -85,6 +91,7 @@ export function requestPetRegister(
       removed
     ).then(token => dispatch(register(token)));
 }
+
 
 async function performPetRegister(
   name: string,
@@ -129,16 +136,9 @@ async function performPetRegister(
     });
 }
 
-export const DELETE_PET = "DELETE_PET";
-
-export const delete_pet = (token: string | null) => ({
-  type: DELETE_PET,
-  data: token
-});
-
 export function requestPetDelete(id: number) {
   return (dispatch: any) =>
-    performDeletePet(id).then(token => dispatch(register(token)));
+    performDeletePet(id).then(token => dispatch(delete_pet(token)));
 }
 
 async function performDeletePet(id: number) {
