@@ -12,11 +12,18 @@ export interface Appointment {
   client: string;
   petId: string;
   vetId: string;
-  aptDate: Date;
+  date: string;
   status: string;
+  reason: string;
 }
 export interface AptState {
   apts: Appointment[];
+  isFetchingApts: boolean;
+  pending_apts: Appointment[];
+}
+
+export interface PendingAptState {
+  pending_apts: Appointment[];
   isFetchingApts: boolean;
 }
 
@@ -214,12 +221,15 @@ export const AppointmentRegistration = connect(
 )(ShowRegistration);
 
 const ProtoAppointmentView = (props: { apt: Appointment }) => {
+  let date = new Date(props.apt.date).toUTCString();
   return (
     <>
+      Date: {date} <br />
       Client: {props.apt.client} <br />
       Pet: {props.apt.petId} <br />
       Veterinary: {props.apt.vetId} <br />
-      Status: {props.apt.status}
+      Status: {props.apt.status} <br />
+      Reason: {props.apt.reason}
     </>
   );
 };
@@ -239,7 +249,6 @@ export const ProtoAppointmentList = (props: {
   loadApts: () => void;
 }) => {
   useEffect(() => props.loadApts(), []);
-  console.log(props.apts);
   return <AptList apts={props.apts} />;
 };
 const mapStateToProps = (state: GlobalState) => ({ apts: state.apts.apts });

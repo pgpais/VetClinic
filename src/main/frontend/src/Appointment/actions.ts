@@ -5,13 +5,27 @@ import { getData } from "../Utils/NetworkUtils";
 export const ADD_APT = "ADD_APT";
 export const REQUEST_APTS = "REQUEST_APTS";
 export const RECEIVE_APTS = "RECEIVE_APTS";
+export const RECEIVE_PENDING_APTS = "RECEIVE_PENDING_APTS";
+
 export const UPDATE_APT = "UPDATE_APPOINTMENT";
+export const REQUEST_PENDING_APTS = "REQUEST_PENDING_APTS";
 
 export interface ReceiveAptsAction extends Action {
   data: Appointment[];
 }
 
+export interface ReceivePendingAptsAction extends Action {
+  data: Appointment[];
+}
+
 export const requestApts = () => ({ type: REQUEST_APTS });
+export const requestPendingApts = () => ({ type: REQUEST_PENDING_APTS });
+
+export const receivePendingApts = (data: Appointment[]) => ({
+  type: RECEIVE_PENDING_APTS,
+  data: data
+});
+
 export const receiveApts = (data: Appointment[]) => ({
   type: RECEIVE_APTS,
   data: data
@@ -23,6 +37,26 @@ export function fetchApts() {
     dispatch(requestApts());
     return getData(`/client/${username}/apts`, []).then(data => {
       data && dispatch(receiveApts(data as Appointment[]));
+    });
+  };
+}
+
+export function fetchAptsVet() {
+  return (dispatch: any) => {
+    let username = localStorage.getItem("username");
+    dispatch(requestApts());
+    return getData(`/vets/${username}/appointments`, []).then(data => {
+      data && dispatch(receiveApts(data as Appointment[]));
+    });
+  };
+}
+
+export function fetchPendingAptsVet() {
+  return (dispatch: any) => {
+    let username = localStorage.getItem("username");
+    dispatch(requestPendingApts());
+    return getData(`/vets/${username}/appointments/pending`, []).then(data => {
+      data && dispatch(receivePendingApts(data as Appointment[]));
     });
   };
 }
@@ -107,7 +141,7 @@ export function requestUpdateAppointment(
 ) {
   return (dispatch: any) =>
     performUpdateAppointment(id, reason, mode).then(token =>
-      dispatch(register(token))
+      dispatch(update(token))
     );
 }
 

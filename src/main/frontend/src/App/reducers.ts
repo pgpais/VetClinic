@@ -14,12 +14,19 @@
  limitations under the License.
  */
 
-import petReducer from '../Pets/reducers'
-import {combineReducers} from "redux";
+import petReducer from "../Pets/reducers";
+import { combineReducers } from "redux";
 import signInReducer from "../SignIn/reducers";
 import vetReducer from "../Home/reducers";
 import aptReducer from "../Appointment/reducers";
+import pendingAptReducer from "../Appointment/reducers";
 
-const reducer = combineReducers({pets: petReducer, signIn:signInReducer, vets:vetReducer, apts:aptReducer });
+const reducer = combineReducers({
+  pets: petReducer,
+  signIn: signInReducer,
+  vets: vetReducer,
+  apts: aptReducer,
+  pendingApts: pendingAptReducer
+});
 
-export default reducer
+export default reducer;

@@ -36,6 +36,11 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
         val vet  = vets.findByUsernameWithAppointmentAccepted(username).orElseThrow { NotFoundException("There is no Vet with Id $username") }
         return vet.appointments
     }
+
+    fun getAppointments(username: String): List<AppointmentDAO> {
+        val vet  = vets.findByUsernameWithAppointment(username).orElseThrow { NotFoundException("There is no Vet with Id $username") }
+        return vet.appointments
+    }
 /*
     fun rejectAppointment(id:Long, reason:String){
         val app = appointments.findById(id).orElseThrow{NotFoundException("There is no Appointment with Id $id")}
@@ -71,6 +76,7 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
      */
     fun checkIfAcceptable(vet:VeterinarianDAO, app:AppointmentDAO):Boolean {
 
+        return true
         vet.schedule.forEach {
 
             val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
@@ -224,6 +230,8 @@ class VetService(val vets: VeterinaryRepository, val appointments: AppointmentRe
         else throw PreconditionFailedException("The Appointment cannot be completed because it's Status is ${app.status}")
 
     }
+
+
 
 }
 

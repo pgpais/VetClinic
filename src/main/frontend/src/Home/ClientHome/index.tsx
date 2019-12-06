@@ -5,9 +5,11 @@ import {
   FilteredPetSelect
 } from "../../Pets";
 import {
-    Appointment,
-    AppointmentList, AppointmentRegistration,
-    ProtoAppointmentList, ProtoAppointmentRegistration
+  Appointment,
+  AppointmentList,
+  AppointmentRegistration,
+  ProtoAppointmentList,
+  ProtoAppointmentRegistration
 } from "../../Appointment";
 import { connect } from "react-redux";
 import { requestAppointmentRegister } from "../../Appointment/actions";
@@ -16,7 +18,7 @@ import FormGroup from "react-bootstrap/FormGroup";
 import { requestPetDelete } from "../../Pets/actions";
 
 const ShowAppointments = () => {
-  let [isShowing, setIsShowing] = useState(true);
+  let [isShowing, setIsShowing] = useState(false);
   let [isCreatingAppointment, setCreatingAppointment] = useState(false);
 
   return (
