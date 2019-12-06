@@ -138,7 +138,7 @@ export const delete_pet = (token: string | null) => ({
 
 export function requestPetDelete(id: number) {
   return (dispatch: any) =>
-    performDeletePet(id).then(token => dispatch(register(token)));
+    performDeletePet(id).then(token => dispatch(delete_pet(token)));
 }
 
 async function performDeletePet(id: number) {
