@@ -27,8 +27,6 @@ import {PetState} from "./index";
 const initialState = {
     pets:[],
     isFetching:false,
-    isFetchingApts:false,
-    apts:[],
 };
 function petReducer(state:PetState = initialState, action:Action):PetState {
     switch (action.type) {

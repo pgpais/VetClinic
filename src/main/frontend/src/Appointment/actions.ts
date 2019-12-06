@@ -2,6 +2,7 @@ import { Action } from "redux";
 import { Appointment } from "./index";
 import { getData } from "../Utils/NetworkUtils";
 
+export const ADD_APT = "ADD_APT";
 export const REQUEST_APTS = "REQUEST_APTS";
 export const RECEIVE_APTS = "RECEIVE_APTS";
 
@@ -25,10 +26,9 @@ export function fetchApts() {
   };
 }
 
-export const ADD_NEW_APPOINTMENT = "ADD_APPOINTMENT";
 
 export const register = (token: string | null) => ({
-  type: ADD_NEW_APPOINTMENT,
+  type: ADD_APT,
   data: token
 });
 

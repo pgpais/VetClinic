@@ -30,7 +30,6 @@ export interface Pet {
 export interface PetState {
   pets: Pet[];
   isFetching: boolean;
-  isFetchingApts: boolean;
 }
 
 //TODO: create Pet Component to be able to operate it (create appointments and such)

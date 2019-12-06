@@ -1,6 +1,6 @@
 import {Action} from "redux";
 import {AptState} from "./index";
-import {RECEIVE_APTS, ReceiveAptsAction, REQUEST_APTS} from "./actions";
+import {ADD_APT, RECEIVE_APTS, ReceiveAptsAction, REQUEST_APTS} from "./actions";
 
 const initialState = {
     apts:[],
@@ -9,6 +9,8 @@ const initialState = {
 
 function aptReducer(state:AptState = initialState, action:Action):AptState {
     switch (action.type) {
+        case ADD_APT:
+            return {...state}; //TODO: change state to add new added Apt
         case REQUEST_APTS:
             return {...state, isFetchingApts:true};
         case RECEIVE_APTS:
