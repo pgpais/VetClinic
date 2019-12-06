@@ -52,8 +52,9 @@ class PetController(val pets: PetService) {
     @PostMapping("")
     fun addNewPet(@RequestBody pet: PetDTO) =
 
-            handle4xx {
-                pets.addNew(pet)
+             handle4xx {
+                    print(pet)
+                    pets.addNew(pet)
             }
 
     @ApiOperation(value = "Update a pet", response = Unit::class)
@@ -73,9 +74,11 @@ class PetController(val pets: PetService) {
         ApiResponse(code = 401, message = "You are not authorized to use this resource"),
         ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden")
     ])
-    @DeleteMapping("/{id}")
-    fun deletePet(@PathVariable id: Long) =
-            handle4xx { pets.delete(id) }
+    @DeleteMapping("")
+    fun deletePet(@RequestParam id: Long) =
+
+            handle4xx {
+                pets.delete(id) }
 
     @ApiOperation(value = "Get a list of a pet's appointments", response = List::class)
     @ApiResponses(value = [

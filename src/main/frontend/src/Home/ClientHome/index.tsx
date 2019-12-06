@@ -13,7 +13,7 @@ import { connect } from "react-redux";
 import { requestAppointmentRegister } from "../../Appointment/actions";
 import Form from "react-bootstrap/Form";
 import FormGroup from "react-bootstrap/FormGroup";
-import { Vet } from "..";
+import { requestPetDelete } from "../../Pets/actions";
 
 const ProtoAppointmentRegistration = (props: {
   performAppointmentRegister: (
@@ -135,6 +135,7 @@ const ProtoAppointmentRegistration = (props: {
           <Form.Label>Vet</Form.Label>
           <Form.Control as="select" value={vet} onChange={vetChangeHandler}>
             <option />
+            <option>6</option>
           </Form.Control>
         </Form.Group>
         <button
@@ -220,10 +221,78 @@ const ShowAppointments = () => {
       <button onClick={() => setCreatingAppointment(!isCreatingAppointment)}>
         {isCreatingAppointment ? "Cancel" : "Create Appointment"}{" "}
       </button>
+
       {isCreatingAppointment && <AppointmentRegistration />}
     </>
   );
 };
+
+const ProtoDelete = (props: { performDelete: (id: number) => void }) => {
+  const [id, setId] = useState("");
+
+  const [isDeleting, setDeleting] = useState(false);
+
+  let registerSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    props.performDelete(parseInt(id));
+    setId("");
+  };
+
+  let idChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    setId(e.target.value);
+  };
+
+  let deletionForm = (
+    <>
+      <Form onSubmit={registerSubmitHandler}>
+        <Form.Group controlId="exampleForm.ControlSelect1">
+          <Form.Label>Pet</Form.Label>
+          <Form.Control
+            as="select"
+            value={id}
+            initialvalue={""}
+            placeholder={""}
+            onChange={idChangeHandler}
+          >
+            <option></option>
+            <FilteredPetSelect />
+          </Form.Control>
+        </Form.Group>
+
+        <button
+          onClick={() => {
+            setDeleting(false);
+          }}
+        >
+          Delete Pet
+        </button>
+      </Form>
+    </>
+  );
+
+  return deletionForm;
+};
+
+const ShowDelete = (props: { performDeletePet: (id: number) => void }) => {
+  let [isShowing, setIsShowing] = useState(false);
+
+  return (
+    <>
+      <button onClick={() => setIsShowing(!isShowing)}>
+        {isShowing ? "Cancel" : "Delete Pet"}{" "}
+      </button>
+      <>{isShowing && <ProtoDelete performDelete={props.performDeletePet} />}</>
+    </>
+  );
+};
+
+const mapDispatchToPropsDelete = (dispatch: any) => ({
+  performDeletePet: (id: number) => {
+    dispatch(requestPetDelete(id));
+  }
+});
+
+export const PetDeletion = connect(null, mapDispatchToPropsDelete)(ShowDelete);
 
 const ProtoClientHome = () => {
   return (
@@ -231,6 +300,7 @@ const ProtoClientHome = () => {
       <FilteredPetList />
       <PetRegistration />
       <ShowAppointments />
+      <PetDeletion />
     </>
   );
 };

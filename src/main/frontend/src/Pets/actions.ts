@@ -17,6 +17,8 @@
 import { getData } from "../Utils/NetworkUtils";
 import { Action } from "redux";
 import { Pet } from "./index";
+import { number } from "prop-types";
+import { URLSearchParams } from "url";
 
 export const ADD_PET = "ADD_PET";
 export const REQUEST_PETS = "REQUEST_PETS";
@@ -112,6 +114,40 @@ async function performPetRegister(
       health_desc: healthDesc,
       removed: removed
     })
+  })
+    .then(response => {
+      if (response.ok) return response.headers.get("Authorization");
+      else {
+        console.log(`Error: ${response.status}: ${response.statusText}`);
+        return null;
+        // and add a message to the Ui: wrong password ?? other errors?
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      return null;
+    });
+}
+
+export const DELETE_PET = "DELETE_PET";
+
+export const delete_pet = (token: string | null) => ({
+  type: DELETE_PET,
+  data: token
+});
+
+export function requestPetDelete(id: number) {
+  return (dispatch: any) =>
+    performDeletePet(id).then(token => dispatch(register(token)));
+}
+
+async function performDeletePet(id: number) {
+  const myHeaders = new Headers();
+
+  console.log(id);
+  return fetch("/pets?id=${id}", {
+    method: "DELETE",
+    headers: myHeaders
   })
     .then(response => {
       if (response.ok) return response.headers.get("Authorization");
