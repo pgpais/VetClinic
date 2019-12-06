@@ -5,6 +5,7 @@ import {fetchApts, requestAppointmentRegister} from "./actions";
 import Form from "react-bootstrap/Form";
 import FormGroup from "react-bootstrap/FormGroup";
 import {FilteredPetSelect} from "../Pets";
+import {VetListSelect} from "../Home";
 
 export interface Appointment {id:number, client:string, petId:string, vetId:string, aptDate:Date}
 export interface AptState {apts:Appointment[], isFetchingApts:boolean}
@@ -129,6 +130,7 @@ export const ProtoAppointmentRegistration = (props: {
                     <Form.Label>Vet</Form.Label>
                     <Form.Control as="select" value={vet} onChange={vetChangeHandler}>
                         <option />
+                        <VetListSelect/>
                     </Form.Control>
                 </Form.Group>
                 <button
