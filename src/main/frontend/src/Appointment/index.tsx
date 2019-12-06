@@ -4,8 +4,8 @@ import { GlobalState } from "../App";
 import { fetchApts, requestAppointmentRegister } from "./actions";
 import Form from "react-bootstrap/Form";
 import FormGroup from "react-bootstrap/FormGroup";
-import {FilteredPetSelect} from "../Pets";
-import {VetListSelect} from "../Home";
+import { FilteredPetSelect } from "../Pets";
+import { VetListSelect } from "../Home";
 
 export interface Appointment {
   id: number;
@@ -13,6 +13,7 @@ export interface Appointment {
   petId: string;
   vetId: string;
   aptDate: Date;
+  status: string;
 }
 export interface AptState {
   apts: Appointment[];
@@ -90,69 +91,68 @@ export const ProtoAppointmentRegistration = (props: {
     setVet(e.target.value);
   };
 
-    let registerForm = (
-        <>
-            <Form onSubmit={registerSubmitHandler}>
-                <FormGroup>
-                    <Form.Label>Date</Form.Label>
-                    <Form.Control
-                        type="date"
-                        value={date}
-                        onChange={dateChangeHandler}
-                        placeholder={"dd/mm/aaaa hh:mm"}
-                    />
-                    <Form.Text className="text-muted"> </Form.Text>
-                </FormGroup>
-                <FormGroup>
-                    <Form.Label>Time</Form.Label>
-                    <Form.Control
-                        type="time"
-                        value={time}
-                        onChange={timeChangeHandler}
-                        placeholder={"dd/mm/aaaa hh:mm"}
-                    />
-                    <Form.Text className="text-muted"> </Form.Text>
-                </FormGroup>
-                <Form.Group controlId="formBasicPassword">
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control
-                        type="text"
-                        value={description}
-                        onChange={descriptionChangeHandler}
-                    />
-                    <Form.Text className="text-muted"></Form.Text>
-                </Form.Group>
-                <Form.Group controlId="exampleForm.ControlSelect1">
-                    <Form.Label>Pet</Form.Label>
-                    <Form.Control
-                        as="select"
-                        value={pet}
-                        initialvalue={""}
-                        placeholder={""}
-                        onChange={petChangeHandler}
-                    >
-                        <option></option>
-                        <FilteredPetSelect />
-                    </Form.Control>
-                </Form.Group>
-                <Form.Group controlId="exampleForm.ControlSelect1">
-                    <Form.Label>Vet</Form.Label>
-                    <Form.Control as="select" value={vet} onChange={vetChangeHandler}>
-                        <option />
-                        <VetListSelect/>
-                    </Form.Control>
-                </Form.Group>
-                <button
-                    onClick={() => {
-                        setRegister(false);
-                    }}
-                >
-                    Book Appointment
-                </button>
-            </Form>
-        </>
-    );
-            
+  let registerForm = (
+    <>
+      <Form onSubmit={registerSubmitHandler}>
+        <FormGroup>
+          <Form.Label>Date</Form.Label>
+          <Form.Control
+            type="date"
+            value={date}
+            onChange={dateChangeHandler}
+            placeholder={"dd/mm/aaaa hh:mm"}
+          />
+          <Form.Text className="text-muted"> </Form.Text>
+        </FormGroup>
+        <FormGroup>
+          <Form.Label>Time</Form.Label>
+          <Form.Control
+            type="time"
+            value={time}
+            onChange={timeChangeHandler}
+            placeholder={"dd/mm/aaaa hh:mm"}
+          />
+          <Form.Text className="text-muted"> </Form.Text>
+        </FormGroup>
+        <Form.Group controlId="formBasicPassword">
+          <Form.Label>Description</Form.Label>
+          <Form.Control
+            type="text"
+            value={description}
+            onChange={descriptionChangeHandler}
+          />
+          <Form.Text className="text-muted"></Form.Text>
+        </Form.Group>
+        <Form.Group controlId="exampleForm.ControlSelect1">
+          <Form.Label>Pet</Form.Label>
+          <Form.Control
+            as="select"
+            value={pet}
+            initialvalue={""}
+            placeholder={""}
+            onChange={petChangeHandler}
+          >
+            <option></option>
+            <FilteredPetSelect />
+          </Form.Control>
+        </Form.Group>
+        <Form.Group controlId="exampleForm.ControlSelect1">
+          <Form.Label>Vet</Form.Label>
+          <Form.Control as="select" value={vet} onChange={vetChangeHandler}>
+            <option />
+            <VetListSelect />
+          </Form.Control>
+        </Form.Group>
+        <button
+          onClick={() => {
+            setRegister(false);
+          }}
+        >
+          Book Appointment
+        </button>
+      </Form>
+    </>
+  );
 
   return registerForm;
 };
@@ -219,6 +219,7 @@ const ProtoAppointmentView = (props: { apt: Appointment }) => {
       Client: {props.apt.client} <br />
       Pet: {props.apt.petId} <br />
       Veterinary: {props.apt.vetId} <br />
+      Status: {props.apt.status}
     </>
   );
 };

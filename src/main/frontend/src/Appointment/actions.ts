@@ -5,6 +5,7 @@ import { getData } from "../Utils/NetworkUtils";
 export const ADD_APT = "ADD_APT";
 export const REQUEST_APTS = "REQUEST_APTS";
 export const RECEIVE_APTS = "RECEIVE_APTS";
+export const UPDATE_APT = "UPDATE_APPOINTMENT";
 
 export interface ReceiveAptsAction extends Action {
   data: Appointment[];
@@ -25,7 +26,6 @@ export function fetchApts() {
     });
   };
 }
-
 
 export const register = (token: string | null) => ({
   type: ADD_APT,
@@ -81,6 +81,51 @@ async function performAppointmentRegister(
       vetId: vet
     })
   })
+    .then(response => {
+      if (response.ok) return response.headers.get("Authorization");
+      else {
+        console.log(`Error: ${response.status}: ${response.statusText}`);
+        return null;
+        // and add a message to the Ui: wrong password ?? other errors?
+      }
+    })
+    .catch(err => {
+      console.log(err);
+      return null;
+    });
+}
+
+export const update = (token: string | null) => ({
+  type: UPDATE_APT,
+  data: token
+});
+
+export function requestUpdateAppointment(
+  id: number,
+  reason: string,
+  mode: string
+) {
+  return (dispatch: any) =>
+    performUpdateAppointment(id, reason, mode).then(token =>
+      dispatch(register(token))
+    );
+}
+
+async function performUpdateAppointment(
+  id: number,
+  reason: string,
+  mode: string
+) {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  return fetch(
+    "/vets/appointments/" + id + "?mode=" + mode + "&reason=" + reason,
+    {
+      method: "PUT",
+      headers: myHeaders
+    }
+  )
     .then(response => {
       if (response.ok) return response.headers.get("Authorization");
       else {
