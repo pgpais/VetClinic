@@ -26,7 +26,7 @@ export const RECEIVE_PETS = "RECEIVE_PETS";
 export const DELETE_PET = "DELETE_PET";
 
 export interface AddPetAction extends Action {
-  pet:Pet
+  pet: Pet;
 }
 export interface ReceivePetAction extends Action {
   data: Pet[];
@@ -49,7 +49,7 @@ export function fetchPets(username: string | null, filter: string) {
     dispatch(requestPets());
     console.log("Username at fetchPets: " + username);
     return getData(
-      `/client/byUsername/${username}/pets?search=${encodeURI(filter)}`,
+      `/client/byUsername/${username}/pets?filter=${encodeURI(filter)}`,
       []
     ).then(data => {
       data && dispatch(receivePets(data as Pet[]));
@@ -90,7 +90,6 @@ export function requestPetRegister(
       removed
     ).then(token => dispatch(register(token)));
 }
-
 
 async function performPetRegister(
   name: string,

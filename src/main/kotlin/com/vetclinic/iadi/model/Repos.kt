@@ -131,6 +131,10 @@ interface ClientRepository : JpaRepository<ClientDAO, Long> {
     @Query("select c from ClientDAO c inner join fetch c.pets p where c.username = :username and p.removed = false")
     fun findByUsernameWithPets(username: String): Optional<ClientDAO>
 
+    @Query("select c from ClientDAO c inner join fetch c.pets p where c.username = :username and p.removed = false and p.name like :filter%")
+    fun findByUsernameWithPetsNameFilter(username: String, filter:String): Optional<ClientDAO>
+
+
     fun findByUsername(username:String) : Optional<ClientDAO>
 
 }

@@ -76,8 +76,8 @@ class ClientController(val clients:ClientService){
         ApiResponse(code = 404, message = "Some information could not be found")])
     @PreAuthorize("hasRole('ROLE_CLIENT') and principal.getName() == #username")
     @GetMapping("byUsername/{username}/pets")
-    fun getPets(@PathVariable username: String): List<PetDTO> =
-            handle4xx { clients.getPets(username).map{PetDTO(it)}
+    fun getPets(@PathVariable username: String, @RequestParam filter:String): List<PetDTO> =
+            handle4xx { clients.getPetsLike(username, filter).map{PetDTO(it)}
             }
 
     @ApiOperation(value="Get appointments of this user", response = List::class)
