@@ -37,8 +37,6 @@ export interface PetState {
 const Pet = (props: { pet: Pet }) => {
   let [showApt, setShowApt] = useState(false);
 
-  //TODO: create separate folder for a single Pet
-
   return (
     <>
       <div className={"entityView"} onClick={() => setShowApt(!showApt)}>
@@ -120,6 +118,7 @@ export const FilteredPetSelect = connect(
 )(ProtoFilteredPetSelect);
 
 const ProtoPetRegistration = (props: {
+  setShowing:(b:boolean) => void,
   performPetRegister: (
     name: string,
     species: string,
@@ -143,8 +142,6 @@ const ProtoPetRegistration = (props: {
   const [healthDesc, setHealthDesc] = useState("");
   const [removed, setRemoved] = useState(false);
 
-  const [isRegister, setRegister] = useState(false);
-
   let registerSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     props.performPetRegister(
@@ -166,6 +163,7 @@ const ProtoPetRegistration = (props: {
     setHealthDesc("");
     setPhysDesc("");
     setRemoved(false);
+    props.setShowing(false);
     let user = localStorage.getItem("username");
     setOwner(user ? user : "");
   };
@@ -305,7 +303,7 @@ const ProtoPetRegistration = (props: {
             onChange={healthChangeHandler}
           />
         </Form.Group>
-        <button onClick={() => setRegister(false)}>Register Pet</button>
+        <button>Register Pet</button>
       </Form>
     </>
   );
@@ -331,7 +329,7 @@ const ShowRegistration = (props: {
   return (
     <>
       {isShowing && (
-        <ProtoPetRegistration performPetRegister={props.performPetRegister} />
+        <ProtoPetRegistration setShowing={setIsShowing} performPetRegister={props.performPetRegister} />
       )}
       <button onClick={() => setIsShowing(!isShowing)}>
         {isShowing ? "Cancel Registration" : "Register Pet"}
