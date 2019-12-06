@@ -16,20 +16,31 @@ export interface VetState {
   isFetching: boolean;
 }
 
-const ProtoVetListSelect = (props: { vets: Vet[] }) => (
-    <>
-      {props.vets.map((vet: Vet) => (
-          <option value={vet.vetId}>{vet.name}</option>
-      ))}
-    </>
-);
+const ProtoVetListSelect = (props: { vets: Vet[], loadVets: () => void }) => {
+
+  useEffect(() => props.loadVets(), []);
+
+  return(
+      <>
+        {props.vets.map((vet: Vet) => (
+            <option value={vet.vetId}>{vet.name}</option>
+        ))}
+      </>
+  );
+}
 
 const mapStateToPropsVetList = (state: GlobalState) => ({
   vets: state.vets.vets
 });
-export const VetListSelect = connect(mapStateToPropsVetList)(ProtoVetListSelect);
+const mapDispatchToPropsVetList = (dispatch: any) => ({
+  loadVets: () => {
+    dispatch(fetchVets());
+  }
+});
+export const VetListSelect = connect(mapStateToPropsVetList, mapDispatchToPropsVetList)(ProtoVetListSelect);
+
 // Add a Vet or User component here. so it is clickable to find more information on this user
-const VetList = (props: { vets: Vet[]; loadVets: () => void }) => {
+const VetList = (props: { vets: Vet[], loadVets: () => void }) => {
   useEffect(() => props.loadVets(), []);
 
   return (
