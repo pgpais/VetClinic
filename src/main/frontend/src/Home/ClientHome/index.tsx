@@ -28,7 +28,7 @@ const ShowAppointments = () => {
       </button>
       {isShowing && <AppointmentList />}
       <button onClick={() => setCreatingAppointment(!isCreatingAppointment)}>
-        {isCreatingAppointment ? "Cancel" : "Create Appointment"}{" "}
+        {isCreatingAppointment ? "Cancel" : "Book Appointment"}{" "}
       </button>
 
       {isCreatingAppointment && <AppointmentRegistration />}

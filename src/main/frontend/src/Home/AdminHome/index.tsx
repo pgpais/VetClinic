@@ -24,7 +24,9 @@ const Register = (props: {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [employeeId, setEmployeeId] = useState("110841e3-e6fb-4191-8fd8-5674a5107c3a");
+  const [employeeId, setEmployeeId] = useState(
+    "110841e3-e6fb-4191-8fd8-5674a5107c3a"
+  );
   const [isRegister, setRegister] = useState(false);
 
   let registerSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
@@ -119,11 +121,7 @@ const Register = (props: {
 
         <Form.Group controlId="formBasicName">
           <Form.Label>Name</Form.Label>
-          <Form.Control
-            type="text"
-            value={name}
-            onChange={nameChangeHandler}
-          />
+          <Form.Control type="text" value={name} onChange={nameChangeHandler} />
           <Form.Text className="text-muted">
             {" "}
             First and Last names please
@@ -205,7 +203,7 @@ const Register = (props: {
             />
           </label>
         </div> */}
-        <button onClick={() => setRegister(false)}>Register</button>
+        <button onClick={() => setRegister(false)}>Register Admin</button>
       </Form>
     </>
   );
@@ -259,7 +257,7 @@ const ShowRegistration = () => {
     <>
       {isShowing && <RegistrationAdmin />}
       <button onClick={() => setIsShowing(!isShowing)}>
-        {isShowing ? "Cancel Registration" : "Register"}
+        {isShowing ? "Cancel Registration" : "Register new Admin"}
       </button>
     </>
   );
