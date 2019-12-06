@@ -102,19 +102,24 @@ const ShowUpdate = (props: {
   );
 };
 
-const mapDispatchToPropsDelete = (dispatch: any) => ({
-  performDeletePet: (id: number, reason: string, mode: string) => {
+const mapDispatchToPropsUpdate = (dispatch: any) => ({
+  performUpdateAppointment: (id: number, reason: string, mode: string) => {
     dispatch(requestUpdateAppointment(id, reason, mode));
   }
 });
 
 export const UpdateAppointment = connect(
   null,
-  mapDispatchToPropsDelete
+  mapDispatchToPropsUpdate
 )(ShowUpdate);
 
 const ProtoVetHome = () => {
-  return <>{/* <UpdateAppointment /> */}</>;
+  return (
+    <>
+      {" "}
+      <UpdateAppointment />{" "}
+    </>
+  );
 };
 
 export default ProtoVetHome;
