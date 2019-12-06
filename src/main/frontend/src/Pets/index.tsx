@@ -41,16 +41,26 @@ export interface PetState {
 
 //TODO: create Pet Component to be able to operate it (create appointments and such)
 
-const Pet = (props: { pet: Pet }) => {
-  let [showApt, setShowApt] = useState(false);
+const PetDetail = (props:{ pet: Pet}) => {
+
+  return(<div className={"entityDetail"}>
+        Physical Description: {props.pet.physDesc} <br/>
+        Health: {props.pet.healthDesc}
+      </div>
+  )
+};
+
+const PetMaster = (props: { pet: Pet }) => {
+  let [showDetail, setShowDetail] = useState(false);
 
   return (
     <>
-      <div className={"entityView"} onClick={() => setShowApt(!showApt)}>
+      <div className={"entityMaster"} onClick={() => setShowDetail(!showDetail)}>
         <img src={props.pet.photo} alt={"Pet " + props.pet.name + " photo"} />{" "}
         <br />
         Name: {props.pet.name} | ID: {props.pet.id}
       </div>
+      {showDetail && <PetDetail pet={props.pet}/>}
     </>
   );
 };
@@ -59,7 +69,7 @@ const PetList = (props: { pets: Pet[] }) => (
   <ul>
     {props.pets.map((pet: Pet) => (
       <li key={pet.id}>
-        <Pet pet={pet} />
+        <PetMaster pet={pet} />
       </li>
     ))}
   </ul>
