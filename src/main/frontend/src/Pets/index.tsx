@@ -95,7 +95,7 @@ export const FilteredPetList = connect(
 const PetListSelect = (props: { pets: Pet[] }) => (
   <>
     {props.pets.map((pet: Pet) => (
-      <option value={pet.id}>{pet.name}</option>
+      <option value={pet.id} key={pet.id}>{pet.name}</option>
     ))}
   </>
 );

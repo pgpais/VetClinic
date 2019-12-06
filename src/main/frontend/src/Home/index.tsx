@@ -23,7 +23,7 @@ const ProtoVetListSelect = (props: { vets: Vet[], loadVets: () => void }) => {
   return(
       <>
         {props.vets.map((vet: Vet) => (
-            <option value={vet.vetId}>{vet.name}</option>
+            <option value={vet.vetId} key={vet.vetId}>{vet.name}</option>
         ))}
       </>
   );
