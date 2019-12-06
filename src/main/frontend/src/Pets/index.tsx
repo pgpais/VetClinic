@@ -21,11 +21,18 @@ import { GlobalState } from "../App";
 import "./Pets.css";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import {Appointment} from "../Appointment";
 
 export interface Pet {
   id: number;
   name: string;
+  species:string;
+  owner: string;
   photo: string;
+  apts: Appointment[];
+  chip: string;
+  physDesc: string;
+  healthDesc: string;
 }
 export interface PetState {
   pets: Pet[];
